@@ -1,0 +1,446 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DCDE50D01A878B0000F54539 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDE50CF1A878B0000F54539 /* main.m */; };
+		DCDE50D31A878B0000F54539 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDE50D21A878B0000F54539 /* AppDelegate.m */; };
+		DCDE50D61A878B0000F54539 /* BrainActivity.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DCDE50D41A878B0000F54539 /* BrainActivity.xcdatamodeld */; };
+		DCDE50D91A878B0000F54539 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDE50D81A878B0000F54539 /* ViewController.m */; };
+		DCDE50DC1A878B0000F54539 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCDE50DA1A878B0000F54539 /* Main.storyboard */; };
+		DCDE50DE1A878B0000F54539 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCDE50DD1A878B0000F54539 /* Images.xcassets */; };
+		DCDE50E11A878B0000F54539 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCDE50DF1A878B0000F54539 /* LaunchScreen.xib */; };
+		DCDE50ED1A878B0000F54539 /* BrainActivityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDE50EC1A878B0000F54539 /* BrainActivityTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DCDE50E71A878B0000F54539 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DCDE50C21A878B0000F54539 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCDE50C91A878B0000F54539;
+			remoteInfo = BrainActivity;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		DCDE50CA1A878B0000F54539 /* BrainActivity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrainActivity.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCDE50CE1A878B0000F54539 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DCDE50CF1A878B0000F54539 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		DCDE50D11A878B0000F54539 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		DCDE50D21A878B0000F54539 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		DCDE50D51A878B0000F54539 /* BrainActivity.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BrainActivity.xcdatamodel; sourceTree = "<group>"; };
+		DCDE50D71A878B0000F54539 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		DCDE50D81A878B0000F54539 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		DCDE50DB1A878B0000F54539 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		DCDE50DD1A878B0000F54539 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		DCDE50E01A878B0000F54539 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		DCDE50E61A878B0000F54539 /* BrainActivityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrainActivityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCDE50EB1A878B0000F54539 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DCDE50EC1A878B0000F54539 /* BrainActivityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrainActivityTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DCDE50C71A878B0000F54539 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCDE50E31A878B0000F54539 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DCDE50C11A878B0000F54539 = {
+			isa = PBXGroup;
+			children = (
+				DCDE50CC1A878B0000F54539 /* BrainActivity */,
+				DCDE50E91A878B0000F54539 /* BrainActivityTests */,
+				DCDE50CB1A878B0000F54539 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DCDE50CB1A878B0000F54539 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DCDE50CA1A878B0000F54539 /* BrainActivity.app */,
+				DCDE50E61A878B0000F54539 /* BrainActivityTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DCDE50CC1A878B0000F54539 /* BrainActivity */ = {
+			isa = PBXGroup;
+			children = (
+				DCDE50D11A878B0000F54539 /* AppDelegate.h */,
+				DCDE50D21A878B0000F54539 /* AppDelegate.m */,
+				DCDE50D71A878B0000F54539 /* ViewController.h */,
+				DCDE50D81A878B0000F54539 /* ViewController.m */,
+				DCDE50DA1A878B0000F54539 /* Main.storyboard */,
+				DCDE50DD1A878B0000F54539 /* Images.xcassets */,
+				DCDE50DF1A878B0000F54539 /* LaunchScreen.xib */,
+				DCDE50D41A878B0000F54539 /* BrainActivity.xcdatamodeld */,
+				DCDE50CD1A878B0000F54539 /* Supporting Files */,
+			);
+			path = BrainActivity;
+			sourceTree = "<group>";
+		};
+		DCDE50CD1A878B0000F54539 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				DCDE50CE1A878B0000F54539 /* Info.plist */,
+				DCDE50CF1A878B0000F54539 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		DCDE50E91A878B0000F54539 /* BrainActivityTests */ = {
+			isa = PBXGroup;
+			children = (
+				DCDE50EC1A878B0000F54539 /* BrainActivityTests.m */,
+				DCDE50EA1A878B0000F54539 /* Supporting Files */,
+			);
+			path = BrainActivityTests;
+			sourceTree = "<group>";
+		};
+		DCDE50EA1A878B0000F54539 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				DCDE50EB1A878B0000F54539 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DCDE50C91A878B0000F54539 /* BrainActivity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCDE50F01A878B0000F54539 /* Build configuration list for PBXNativeTarget "BrainActivity" */;
+			buildPhases = (
+				DCDE50C61A878B0000F54539 /* Sources */,
+				DCDE50C71A878B0000F54539 /* Frameworks */,
+				DCDE50C81A878B0000F54539 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BrainActivity;
+			productName = BrainActivity;
+			productReference = DCDE50CA1A878B0000F54539 /* BrainActivity.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DCDE50E51A878B0000F54539 /* BrainActivityTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCDE50F31A878B0000F54539 /* Build configuration list for PBXNativeTarget "BrainActivityTests" */;
+			buildPhases = (
+				DCDE50E21A878B0000F54539 /* Sources */,
+				DCDE50E31A878B0000F54539 /* Frameworks */,
+				DCDE50E41A878B0000F54539 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DCDE50E81A878B0000F54539 /* PBXTargetDependency */,
+			);
+			name = BrainActivityTests;
+			productName = BrainActivityTests;
+			productReference = DCDE50E61A878B0000F54539 /* BrainActivityTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DCDE50C21A878B0000F54539 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Sergey Dikarev";
+				TargetAttributes = {
+					DCDE50C91A878B0000F54539 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					DCDE50E51A878B0000F54539 = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = DCDE50C91A878B0000F54539;
+					};
+				};
+			};
+			buildConfigurationList = DCDE50C51A878B0000F54539 /* Build configuration list for PBXProject "BrainActivity" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DCDE50C11A878B0000F54539;
+			productRefGroup = DCDE50CB1A878B0000F54539 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DCDE50C91A878B0000F54539 /* BrainActivity */,
+				DCDE50E51A878B0000F54539 /* BrainActivityTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DCDE50C81A878B0000F54539 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCDE50DC1A878B0000F54539 /* Main.storyboard in Resources */,
+				DCDE50E11A878B0000F54539 /* LaunchScreen.xib in Resources */,
+				DCDE50DE1A878B0000F54539 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCDE50E41A878B0000F54539 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DCDE50C61A878B0000F54539 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCDE50D61A878B0000F54539 /* BrainActivity.xcdatamodeld in Sources */,
+				DCDE50D31A878B0000F54539 /* AppDelegate.m in Sources */,
+				DCDE50D91A878B0000F54539 /* ViewController.m in Sources */,
+				DCDE50D01A878B0000F54539 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCDE50E21A878B0000F54539 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCDE50ED1A878B0000F54539 /* BrainActivityTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DCDE50E81A878B0000F54539 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCDE50C91A878B0000F54539 /* BrainActivity */;
+			targetProxy = DCDE50E71A878B0000F54539 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		DCDE50DA1A878B0000F54539 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DCDE50DB1A878B0000F54539 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		DCDE50DF1A878B0000F54539 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DCDE50E01A878B0000F54539 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		DCDE50EE1A878B0000F54539 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DCDE50EF1A878B0000F54539 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DCDE50F11A878B0000F54539 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = BrainActivity/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		DCDE50F21A878B0000F54539 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = BrainActivity/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		DCDE50F41A878B0000F54539 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = BrainActivityTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BrainActivity.app/BrainActivity";
+			};
+			name = Debug;
+		};
+		DCDE50F51A878B0000F54539 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = BrainActivityTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BrainActivity.app/BrainActivity";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DCDE50C51A878B0000F54539 /* Build configuration list for PBXProject "BrainActivity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCDE50EE1A878B0000F54539 /* Debug */,
+				DCDE50EF1A878B0000F54539 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCDE50F01A878B0000F54539 /* Build configuration list for PBXNativeTarget "BrainActivity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCDE50F11A878B0000F54539 /* Debug */,
+				DCDE50F21A878B0000F54539 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		DCDE50F31A878B0000F54539 /* Build configuration list for PBXNativeTarget "BrainActivityTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCDE50F41A878B0000F54539 /* Debug */,
+				DCDE50F51A878B0000F54539 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		DCDE50D41A878B0000F54539 /* BrainActivity.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				DCDE50D51A878B0000F54539 /* BrainActivity.xcdatamodel */,
+			);
+			currentVersion = DCDE50D51A878B0000F54539 /* BrainActivity.xcdatamodel */;
+			path = BrainActivity.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = DCDE50C21A878B0000F54539 /* Project object */;
+}
