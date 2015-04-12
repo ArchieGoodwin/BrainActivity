@@ -1,0 +1,14 @@
+//
+//  MainVC.h
+//  BrainActivity
+//
+//  Created by Nero Wolfe on 12/04/15.
+//  Copyright (c) 2015 Sergey Dikarev. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "CBManager.h"
+@interface MainVC : UIViewController <CBManagerDelegate>
+@property (strong, nonatomic) IBOutlet UILabel *lblStatus;
+
+@end
