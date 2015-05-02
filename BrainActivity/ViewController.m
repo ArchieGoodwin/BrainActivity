@@ -587,13 +587,6 @@
     //}
     
     
-    //double mx = [self findMax:data3 arrayKey:@"data"];
-    
-    /*if(isnan(mx) || mx == 0 || mx == INFINITY || mx > 10000000000)
-    {
-        mx = 100000000;
-        
-    }*/
     
     [self.fftGraph reloadData];
     

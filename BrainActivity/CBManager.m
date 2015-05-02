@@ -257,7 +257,7 @@
             
             
             
-             NSDictionary *ret = @{@"counter" : [NSNumber numberWithFloat:([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithFloat:orderNumber], @"channel_1" : [NSNumber numberWithShort:channel1], @"channel_2" : [NSNumber numberWithShort:channel2], @"channel_3" : [NSNumber numberWithShort:channel3], @"channel_4" : [NSNumber numberWithShort:channel4]};
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithFloat:([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithFloat:orderNumber], @"channel_1" : [NSNumber numberWithShort:channel1], @"channel_2" : [NSNumber numberWithShort:channel2], @"channel_3" : [NSNumber numberWithShort:channel3], @"channel_4" : [NSNumber numberWithShort:channel4]};
             
             return ret;
 
