@@ -18,7 +18,6 @@
 		DCDE50DC1A878B0000F54539 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCDE50DA1A878B0000F54539 /* Main.storyboard */; };
 		DCDE50DE1A878B0000F54539 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCDE50DD1A878B0000F54539 /* Images.xcassets */; };
 		DCDE50E11A878B0000F54539 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCDE50DF1A878B0000F54539 /* LaunchScreen.xib */; };
-		DCDE50ED1A878B0000F54539 /* BrainActivityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDE50EC1A878B0000F54539 /* BrainActivityTests.m */; };
 		DCDE50FA1A878FB500F54539 /* O1_125.txt in Resources */ = {isa = PBXBuildFile; fileRef = DCDE50F81A878FB500F54539 /* O1_125.txt */; };
 		DCDE50FB1A878FB500F54539 /* T5_125.txt in Resources */ = {isa = PBXBuildFile; fileRef = DCDE50F91A878FB500F54539 /* T5_125.txt */; };
 		DCDE50FD1A87929400F54539 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCDE50FC1A87929400F54539 /* Security.framework */; };
@@ -30,16 +29,6 @@
 		DCE4B12C1AD6999300B3C75E /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE4B12B1AD6999300B3C75E /* CoreBluetooth.framework */; };
 		DCE4B1301AD699A100B3C75E /* CBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE4B12E1AD699A100B3C75E /* CBManager.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		DCDE50E71A878B0000F54539 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DCDE50C21A878B0000F54539 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DCDE50C91A878B0000F54539;
-			remoteInfo = BrainActivity;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		3533F97766504CF898B7C96D /* Pods-BrainActivity.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrainActivity.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BrainActivity/Pods-BrainActivity.debug.xcconfig"; sourceTree = "<group>"; };
@@ -60,9 +49,6 @@
 		DCDE50DB1A878B0000F54539 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DCDE50DD1A878B0000F54539 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DCDE50E01A878B0000F54539 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		DCDE50E61A878B0000F54539 /* BrainActivityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrainActivityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DCDE50EB1A878B0000F54539 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DCDE50EC1A878B0000F54539 /* BrainActivityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrainActivityTests.m; sourceTree = "<group>"; };
 		DCDE50F81A878FB500F54539 /* O1_125.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = O1_125.txt; sourceTree = "<group>"; };
 		DCDE50F91A878FB500F54539 /* T5_125.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = T5_125.txt; sourceTree = "<group>"; };
 		DCDE50FC1A87929400F54539 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -92,13 +78,6 @@
 				DCDE50FF1A87929C00F54539 /* QuartzCore.framework in Frameworks */,
 				DCDE50FD1A87929400F54539 /* Security.framework in Frameworks */,
 				2B24A716638B22F3DCA7A5C0 /* libPods-BrainActivity.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DCDE50E31A878B0000F54539 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,7 +114,6 @@
 			isa = PBXGroup;
 			children = (
 				DCDE50CC1A878B0000F54539 /* BrainActivity */,
-				DCDE50E91A878B0000F54539 /* BrainActivityTests */,
 				DCDE50CB1A878B0000F54539 /* Products */,
 				5B439846758E9AD96E12D395 /* Pods */,
 				0F8887E665D7FDBEF0DAA73F /* Frameworks */,
@@ -146,7 +124,6 @@
 			isa = PBXGroup;
 			children = (
 				DCDE50CA1A878B0000F54539 /* BrainActivity.app */,
-				DCDE50E61A878B0000F54539 /* BrainActivityTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -183,23 +160,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		DCDE50E91A878B0000F54539 /* BrainActivityTests */ = {
-			isa = PBXGroup;
-			children = (
-				DCDE50EC1A878B0000F54539 /* BrainActivityTests.m */,
-				DCDE50EA1A878B0000F54539 /* Supporting Files */,
-			);
-			path = BrainActivityTests;
-			sourceTree = "<group>";
-		};
-		DCDE50EA1A878B0000F54539 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				DCDE50EB1A878B0000F54539 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -223,24 +183,6 @@
 			productReference = DCDE50CA1A878B0000F54539 /* BrainActivity.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DCDE50E51A878B0000F54539 /* BrainActivityTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DCDE50F31A878B0000F54539 /* Build configuration list for PBXNativeTarget "BrainActivityTests" */;
-			buildPhases = (
-				DCDE50E21A878B0000F54539 /* Sources */,
-				DCDE50E31A878B0000F54539 /* Frameworks */,
-				DCDE50E41A878B0000F54539 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				DCDE50E81A878B0000F54539 /* PBXTargetDependency */,
-			);
-			name = BrainActivityTests;
-			productName = BrainActivityTests;
-			productReference = DCDE50E61A878B0000F54539 /* BrainActivityTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -252,10 +194,6 @@
 				TargetAttributes = {
 					DCDE50C91A878B0000F54539 = {
 						CreatedOnToolsVersion = 6.1.1;
-					};
-					DCDE50E51A878B0000F54539 = {
-						CreatedOnToolsVersion = 6.1.1;
-						TestTargetID = DCDE50C91A878B0000F54539;
 					};
 				};
 			};
@@ -273,7 +211,6 @@
 			projectRoot = "";
 			targets = (
 				DCDE50C91A878B0000F54539 /* BrainActivity */,
-				DCDE50E51A878B0000F54539 /* BrainActivityTests */,
 			);
 		};
 /* End PBXProject section */
@@ -288,13 +225,6 @@
 				DCDE50DE1A878B0000F54539 /* Images.xcassets in Resources */,
 				DCDE50FB1A878FB500F54539 /* T5_125.txt in Resources */,
 				DCDE50FA1A878FB500F54539 /* O1_125.txt in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DCDE50E41A878B0000F54539 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,23 +290,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DCDE50E21A878B0000F54539 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DCDE50ED1A878B0000F54539 /* BrainActivityTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		DCDE50E81A878B0000F54539 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DCDE50C91A878B0000F54539 /* BrainActivity */;
-			targetProxy = DCDE50E71A878B0000F54539 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		DCDE50DA1A878B0000F54539 /* Main.storyboard */ = {
@@ -518,40 +432,6 @@
 			};
 			name = Release;
 		};
-		DCDE50F41A878B0000F54539 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = BrainActivityTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BrainActivity.app/BrainActivity";
-			};
-			name = Debug;
-		};
-		DCDE50F51A878B0000F54539 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = BrainActivityTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BrainActivity.app/BrainActivity";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -569,15 +449,6 @@
 			buildConfigurations = (
 				DCDE50F11A878B0000F54539 /* Debug */,
 				DCDE50F21A878B0000F54539 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DCDE50F31A878B0000F54539 /* Build configuration list for PBXNativeTarget "BrainActivityTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DCDE50F41A878B0000F54539 /* Debug */,
-				DCDE50F51A878B0000F54539 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
