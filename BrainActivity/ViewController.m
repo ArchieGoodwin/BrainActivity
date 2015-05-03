@@ -14,27 +14,34 @@
 @interface ViewController ()
 {
     NSTimer *timer;
-    NSMutableArray *array1;
-    NSArray *array2;
+
     NSMutableArray *data1;
     NSMutableArray *data2;
     NSMutableArray *data3;
     NSMutableArray *data4;
-
-    NSMutableArray *dataFFT;
-    NSInteger currentIndex;
     
+    NSMutableArray *dataFFT1;
+    NSMutableArray *dataFFT2;
+    NSMutableArray *dataFFT3;
+    NSMutableArray *dataFFT4;
+
+
+    NSInteger currentIndex;
+    NSInteger currentFFTIndex;
+
     NSInteger currentRange;
+    
+    NSInteger currentView;
     
 }
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *plotH;
 
+@property (strong, nonatomic) IBOutlet UISegmentedControl *segment;
 @property (nonatomic, readwrite, strong) CPTXYGraph *graph1;
 @property (nonatomic, readwrite, strong) CPTXYGraph *graph2;
 @property (nonatomic, readwrite, strong) CPTXYGraph *graph3;
 @property (nonatomic, readwrite, strong) CPTXYGraph *graph4;
 
-@property (nonatomic, readwrite, strong) CPTXYGraph *fftGraph;
 
 
 
@@ -45,28 +52,25 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dataReceived:) name:@"data_received" object:nil];
-    
+    currentView = 1;
+   
     currentRange = 600;
     
     currentIndex = 0;
+    currentFFTIndex = 0;
     
     data1 = [NSMutableArray new];
     data2 = [NSMutableArray new];
     data3 = [NSMutableArray new];
     data4 = [NSMutableArray new];
-    array1 = [NSMutableArray new];
 
-    dataFFT = [NSMutableArray new];
+    dataFFT1 = [NSMutableArray new];
+    dataFFT2 = [NSMutableArray new];
+    dataFFT3 = [NSMutableArray new];
+    dataFFT4 = [NSMutableArray new];
     
-    [self createCorePlot:_view1 withColor:[UIColor blueColor]];
-    [self createCorePlot:_view2 withColor:[UIColor redColor]];
-    [self createCorePlot:_view3 withColor:[UIColor orangeColor]];
-    [self createCorePlot:_view4 withColor:[UIColor blackColor]];
+    [self createGraphs];
 
-    [self create3CorePlot:_fftView withColor:[UIColor darkGrayColor]];
 
     //[self showChart];
     //[self showChart2];
@@ -75,18 +79,48 @@
     //[timer fire];
     // Do any additional setup after loading the view, typically from a nib.
      //[self fillFFTData:NSMakeRange(0, 8000)];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dataReceived:) name:@"data_received" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fftDataReceived:) name:@"fft_data_received" object:nil];
+
+}
+
+- (IBAction)changedView:(id)sender {
+    
+    UISegmentedControl *seg = (UISegmentedControl *)sender;
+    
+    currentView = seg.selectedSegmentIndex + 1;
+    
+    [self createGraphs];
+}
+
+-(void)createGraphs
+{
+    if(currentView == 1)
+    {
+        [self createCorePlot:_view1 withColor:[UIColor blueColor]];
+        [self createCorePlot:_view2 withColor:[UIColor redColor]];
+        [self createCorePlot:_view3 withColor:[UIColor orangeColor]];
+        [self createCorePlot:_view4 withColor:[UIColor blackColor]];
+    }
+    if(currentView == 2)
+    {
+        [self create3CorePlot:_view1 withColor:[UIColor darkGrayColor]];
+        [self create3CorePlot:_view2 withColor:[UIColor darkGrayColor]];
+        [self create3CorePlot:_view3 withColor:[UIColor darkGrayColor]];
+        [self create3CorePlot:_view4 withColor:[UIColor darkGrayColor]];
+
+    }
 }
 
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
     
-    
-    if([UIScreen mainScreen].bounds.size.height < 568)
-    {
-        self.plotH.constant = 60;
+
+        self.plotH.constant = ([UIScreen mainScreen].bounds.size.height - 130) / 4;
         [self.view layoutSubviews];
-    }
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -99,17 +133,12 @@
 - (IBAction)back:(id)sender {
 }
 
+
 -(void)dataReceived:(NSNotification *)notification
 {
-
+    
     
     NSDictionary *data = notification.userInfo;
-    
-    
-    
-   // NSLog(@"data: %@  number %i", data[@"channel_1"], [data[@"hardware_order_number"] integerValue]);
-    
-    [array1 addObject:[NSString stringWithFormat:@"%@", data[@"channel_1"]]];
     
     
     [data1 addObject:@{@"index": @(currentIndex), @"data" : data[@"channel_1"]}];
@@ -121,15 +150,6 @@
     [data4 addObject:@{@"index": @(currentIndex), @"data" : data[@"channel_4"]}];
     
     
-    //NSLog(@"data1: %@", data1);
-
-    
-    if(currentIndex % 128 == 0 && currentIndex > 126)
-    {
-        
-        [self fillFFTData:NSMakeRange(currentIndex - 128, 128)];
-        
-    }
     
     if(currentIndex > 625)
     {
@@ -137,7 +157,7 @@
         [data2 removeObjectAtIndex:0];
         [data3 removeObjectAtIndex:0];
         [data4 removeObjectAtIndex:0];
-
+        
     }
     
     if(currentIndex % 8 == 0)
@@ -146,7 +166,7 @@
         [self.graph2 reloadData];
         [self.graph3 reloadData];
         [self.graph4 reloadData];
-
+        
         CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph1.defaultPlotSpace;
         if(currentIndex > 625)
         {
@@ -160,7 +180,7 @@
             plotSpace2.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
             plotSpace2.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
         }
-
+        
         
         CPTXYPlotSpace *plotSpace3 = (CPTXYPlotSpace *)self.graph3.defaultPlotSpace;
         if(currentIndex > 625)
@@ -168,7 +188,7 @@
             plotSpace3.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
             plotSpace3.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
         }
-
+        
         
         CPTXYPlotSpace *plotSpace4 = (CPTXYPlotSpace *)self.graph4.defaultPlotSpace;
         if(currentIndex > 625)
@@ -176,11 +196,79 @@
             plotSpace4.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
             plotSpace4.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
         }
-
+        
     }
     
     
     currentIndex++;
+    
+}
+
+
+
+-(void)fftDataReceived:(NSNotification *)notification
+{
+
+    
+    NSDictionary *data = notification.userInfo;
+    
+    
+    [dataFFT1 addObject:@{@"index": @(currentIndex), @"data" : data[@"fft_channel_1"]}];
+    
+    [dataFFT1 addObject:@{@"index": @(currentIndex), @"data" : data[@"fft_channel_2"]}];
+    
+    [dataFFT1 addObject:@{@"index": @(currentIndex), @"data" : data[@"fft_channel_3"]}];
+    
+    [dataFFT1 addObject:@{@"index": @(currentIndex), @"data" : data[@"fft_channel_4"]}];
+    
+    
+    
+    if(currentFFTIndex > 50)
+    {
+        [dataFFT1 removeObjectAtIndex:0];
+        [dataFFT1 removeObjectAtIndex:0];
+        [dataFFT1 removeObjectAtIndex:0];
+        [dataFFT1 removeObjectAtIndex:0];
+
+    }
+
+    [self.graph1 reloadData];
+    [self.graph2 reloadData];
+    [self.graph3 reloadData];
+    [self.graph4 reloadData];
+
+    CPTXYPlotSpace *plotSpace1 = (CPTXYPlotSpace *)self.graph1.defaultPlotSpace;
+    if(currentFFTIndex > 49)
+    {
+        plotSpace1.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 50) length:CPTDecimalFromInt(50)];
+        plotSpace1.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-3) length:CPTDecimalFromInt(23)];
+    }
+    
+    CPTXYPlotSpace *plotSpace2 = (CPTXYPlotSpace *)self.graph2.defaultPlotSpace;
+    if(currentFFTIndex > 49)
+    {
+        plotSpace2.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 50) length:CPTDecimalFromDouble(50)];
+        plotSpace2.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-3) length:CPTDecimalFromInt(23)];
+    }
+
+    
+    CPTXYPlotSpace *plotSpace3 = (CPTXYPlotSpace *)self.graph3.defaultPlotSpace;
+    if(currentFFTIndex > 49)
+    {
+        plotSpace3.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 50) length:CPTDecimalFromDouble(50)];
+        plotSpace3.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-3) length:CPTDecimalFromInt(23)];
+    }
+
+    
+    CPTXYPlotSpace *plotSpace4 = (CPTXYPlotSpace *)self.graph4.defaultPlotSpace;
+    if(currentFFTIndex > 49)
+    {
+        plotSpace4.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 50) length:CPTDecimalFromDouble(50)];
+        plotSpace4.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-3) length:CPTDecimalFromInt(23)];
+    }
+
+
+    currentFFTIndex++;
 
 }
 
@@ -262,9 +350,24 @@
     CPTTheme *theme      = [CPTTheme themeNamed:kCPTPlainWhiteTheme];
     [newGraph applyTheme:theme];
     
-    if(view2addGraph == _fftView)
+    if(view2addGraph == _view1)
     {
-        self.fftGraph = newGraph;
+        self.graph1 = newGraph;
+        
+    }
+    if(view2addGraph == _view2)
+    {
+        self.graph2 = newGraph;
+        
+    }
+    if(view2addGraph == _view3)
+    {
+        self.graph3 = newGraph;
+        
+    }
+    if(view2addGraph == _view4)
+    {
+        self.graph4 = newGraph;
         
     }
     
@@ -306,13 +409,7 @@
     [y setLabelingPolicy:CPTAxisLabelingPolicyFixedInterval];
     [y setLabelTextStyle:textStyle];
     [y setLabelFormatter:axisFormatter];
-    
 
-
-    
-    
-    
-    
     
     
     // Create a blue plot area
@@ -358,395 +455,6 @@
     newGraph.paddingBottom = 2.0;
 }
 
-/*-(void)changePlotRange
-{
-    // Setup plot space
-    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph.defaultPlotSpace;
-    if(currentIndex > 125)
-    {
-        plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 125) length:CPTDecimalFromDouble(currentIndex)];
-        plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(0.0) length:CPTDecimalFromDouble(300.0)];
-    }
-    
-}*/
-
-
-
--(void)loadFiles
-{
-    NSError *error = nil;
-    NSString *filepath1 = [[NSBundle mainBundle] pathForResource:@"O1_125" ofType:@"txt" inDirectory:nil];
-    NSString *filepath2 = [[NSBundle mainBundle] pathForResource:@"T5_125" ofType:@"txt" inDirectory:nil];
-    
-    NSString *string1 = [NSString stringWithContentsOfFile:filepath1 encoding:NSASCIIStringEncoding error:&error];
-    NSString *string2 = [NSString stringWithContentsOfFile:filepath2 encoding:NSASCIIStringEncoding error:&error];
-    
-    //array1 = [string1 componentsSeparatedByString:@"\n"];
-    array2 = [string2 componentsSeparatedByString:@"\n"];
-    
-    array1 = [NSMutableArray new];
-    for(int i = 0; i < 8000; i++)
-    {
-        [array1 addObject:[NSString stringWithFormat:@"%f", (100 * sin(2*3.14159265*3*i/125))]];
-
-    }
-
-    
-    
-    NSLog(@"ampl 1 = %f", [self findAmplitude:array1]);
-    NSLog(@"ampl 2 = %f", [self findAmplitude:array2]);
-    
-    
-    
-   
-}
-
--(double)findMax:array arrayKey:obj {
-    
-    double max = [[[array objectAtIndex:0] objectForKey:obj] doubleValue];
-    for ( NSDictionary *dict in array ) {
-        if(max<[[dict objectForKey:obj] doubleValue])
-            max=[[dict objectForKey:obj] doubleValue];
-    }
-    return max;
-}
-
-
--(int)findMaxIndex:(double *)array  range:(NSRange)range{
-    int returnI = (int)range.location;
-    
-    double *subArray = (double *)malloc(range.length * sizeof(double));
-
-    for(int i = 0; i<range.length; i++)
-    {
-        subArray[i] = array[range.location + i];
-        //NSLog(@"%f", subArray[i]);
-    }
-    
-    double max = subArray[0];
-    for (int i = 1; i < range.length; i++) {
-        //NSLog(@"%f", subArray[i]);
-        if(max<subArray[i])
-        {
-            max=subArray[i];
-            returnI = (int)range.location + i;
-        }
-    }
-    return returnI;
-}
-
-
--(float)findMin:array arrayKey:obj {
-    float min = [[[array objectAtIndex:0] objectForKey:obj] floatValue];
-    for ( NSDictionary *dict in array ) {
-        if (min > [[dict objectForKey:obj] floatValue])min = [[dict objectForKey:obj] floatValue];
-    }
-    return min;
-}
-
--(float)findAmplitude:(NSArray *)arr
-{
-    float amplitude = 0;
-    for (int j = 0; j < (arr.count -1); j = j +2 ){
-
-        if (fabsf(((NSString *)arr[j]).floatValue) > fabsf(((NSString *)arr[j+1]).floatValue))
-            amplitude = amplitude + fabsf(((NSString *)arr[j]).floatValue) - fabsf(((NSString *)arr[j+1]).floatValue);
-        else amplitude = amplitude + fabsf(((NSString *)arr[j + 1]).floatValue) - fabsf(((NSString *)arr[j]).floatValue);
-        
-        
-    }
-     amplitude = fabsf(amplitude / arr.count * 2);
-    
-    return amplitude;
-}
-
--(NSDictionary *)fft:(double *)inp
-{
-    
-    //const int log2n = log2f(8000);
-    const int log2n = log2f(128);
-    const int n = 1 << log2n;
-    //const int n = 128;
-    const int nOver2 = n / 2;
-    
-    FFTSetupD fftSetup = vDSP_create_fftsetupD (log2n, kFFTRadix2);
-    
-    
-    DSPDoubleSplitComplex fft_data;
-    
-    //int i;
-    
-    //input = malloc(n * sizeof(float));
-    fft_data.realp = malloc(nOver2 * sizeof(double));
-    fft_data.imagp = malloc(nOver2 * sizeof(double));
-    
-    
-    /*printf("Input\n");
-    
-    for (i = 0; i < n; ++i)
-    {
-        printf("%d: %8g\n", i, inp[i]);
-    }*/
-    
-    vDSP_ctozD((DSPDoubleComplex *)inp, 2, &fft_data, 1, nOver2);
-    
-    /*printf("FFT Input\n");
-    
-    for (i = 0; i < nOver2; ++i)
-    {
-        printf("%d: %8g%8g\n", i, fft_data.realp[i], fft_data.imagp[i]);
-    }*/
-    
-    vDSP_fft_zripD (fftSetup, &fft_data, 1, log2n, kFFTDirection_Forward);
-    
-    /*printf("FFT output\n");
-    
-    for (i = 0; i < nOver2; ++i)
-    {
-        printf("%d: %8g%8g\n", i, fft_data.realp[i], fft_data.imagp[i]);
-    }*/
-    
-    /*for (i = 0; i < nOver2; ++i)
-    {
-        fft_data.realp[i] *= 0.5;
-        fft_data.imagp[i] *= 0.5;
-    }
-    
-    printf("Scaled FFT output\n");*/
-    
-    /*for (i = 0; i < nOver2; ++i)
-    {
-        printf("%d: %8g%8g\n", i, fft_data.realp[i], fft_data.imagp[i]);
-    }
-    
-    printf("Unpacked output\n");*/
-    
-    
-    double *output = (double *)malloc(nOver2 * sizeof(double));
-    for (int i = 0; i < nOver2; ++i)
-    {
-        output[i] = sqrt(fft_data.realp[i]*fft_data.realp[i] + fft_data.imagp[i]*fft_data.imagp[i]);
-    }
-    /*printf("FFT output\n");
-    for (i = 0; i < nOver2; ++i)
-    {
-        printf("%d:  %f\n", i, output[i]);
-    }*/
-    
-    //printf("DC  %d: %8g%8g\n", 0, fft_data.realp[0], 0.0); // DC
-    double *frequences = (double *)malloc(nOver2 * sizeof(double));
-    for (int i = 0; i < nOver2; ++i)
-    {
-
-        double freq = i * 25.0 / nOver2;
-        frequences[i] = freq;
-        //printf("%d: %8g\n", i, freq);
-    }
-    
-    int val1 = [self findMaxIndex:output range:NSMakeRange(8, 8)];
-    printf("max in 3-6: %8g  %f  max index: %d \n", frequences[val1], output[val1], val1);
-    
-    
-    int val2 = [self findMaxIndex:output range:NSMakeRange(18, 16)];
-    printf("max in 7-13: %8g  %f  max index: %d \n", frequences[val2], output[val2], val2);
-    
-    
-    int val3 = [self findMaxIndex:output range:NSMakeRange(36, 11)];
-    printf("max in 14-18: %8g  %f  max index: %d \n", frequences[val3], output[val3], val3);
-    //3-24, 25-46, 47-63
-    
-    //printf("%d: %8g%8g\n", nOver2, fft_data.imagp[0], 0.0); // Nyquist*/
-    
-    
-    return @{@"data1" : [NSNumber numberWithDouble:frequences[val1]], @"data2" : [NSNumber numberWithDouble:frequences[val2]], @"data3" : [NSNumber numberWithDouble:frequences[val3]]};
-    
-    
-   // return fft_data;
-}
-
--(void)fillFFTData:(NSRange)range
-{
-    
-    double *farray2 = malloc(sizeof(double) * range.length);
-    
-    
-    for(NSInteger i = 0; i < range.length; i++)
-    {
-        farray2[i] = [array1[i + range.location] doubleValue];
-
-        //NSLog(@"%f", farray2[i]);
-    }
-   
-    //DSPDoubleSplitComplex fftData = [self fft:farray2];
-    NSDictionary *fftData = [self fft:farray2];
-    ///[data3 removeAllObjects];
-    
-    NSInteger i = [((NSDictionary *)dataFFT.lastObject)[@"index"] integerValue] + 1;
-    
-        [dataFFT addObject:@{@"index": @(i), @"data" : fftData}];
-    //}
-    
-    
-    
-    [self.fftGraph reloadData];
-    
-    
-    CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.fftGraph.defaultPlotSpace;
-    
-  
-    if((currentIndex / 128) > 100)
-    {
-       
-        [dataFFT removeObjectAtIndex:0];
-        
-    }
-    /*if(currentIndex > 50 * 128)
-    {
-     
-        if(currentIndex % 128 == 0)
-        {
-            NSDecimalNumber *myNSDecimalNumber = [NSDecimalNumber decimalNumberWithDecimal:plotSpace.xRange.location];
-            
-            double ii = [myNSDecimalNumber doubleValue] + 1.0;
-            plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(ii) length:CPTDecimalFromDouble(50)];
-        }
-        
-
-    }
-    else
-    {*/
-    plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble((currentIndex / 128) > 100 ? (currentIndex / 128 - 100) : 0) length:CPTDecimalFromDouble(100)];
-
-    //}
-    
-    //plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(-mx) length:CPTDecimalFromDouble(mx * 2)];
-    plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(-3) length:CPTDecimalFromDouble(23)];
-}
-
--(void)randomData
-{
-    
-    if(currentIndex < (array1.count - 1))
-    {
-        //float *farray = (float *)malloc(sizeof(float) * 1);
-        //NSLog(@"%f", ((NSString  *)array1[currentIndex]).floatValue / 1000 );
-        //farray[0] = ((NSString  *)array1[currentIndex]).floatValue / 1000.0 / 100.0;
-        //for(int i = 0; i < 16; i++)
-        //{
-        
-        
-        //NSInteger index  = [((NSDictionary *)data3.lastObject)[@"index"] integerValue];
-        
-        //[((NSDictionary *)data3.lastObject)[@"data"][@"data3"] doubleValue]
-        
-        
-        
-        
-        
-            [data1 addObject:@{@"index": @(currentIndex), @"data" : [NSNumber numberWithFloat:(((NSString  *)array1[currentIndex]).floatValue ) ]}];
-            
-            [data2 addObject:@{@"index": @(currentIndex), @"data" : [NSNumber numberWithFloat:(((NSString  *)array2[currentIndex]).floatValue / 1000.0) ]}];
-            
-            currentIndex++;
-        //}
-        
-        
-        if(currentIndex % 128 == 0)
-        {
-            
-            [self fillFFTData:NSMakeRange(currentIndex - 128, 128)];
-
-        }
-        
-        if(currentIndex > 625)
-        {
-            [data1 removeObjectAtIndex:0];
-            [data2 removeObjectAtIndex:0];
-
-        }
-        
-       
-        
-        
-       /* if(currentIndex % 125 == 0)
-        {
-            
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                float ampl1 = [self findAmplitude:[array1 objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(currentIndex - 125, 125)]]];
-
-                _ampl1.text = [NSString stringWithFormat:@"Amplitude: %f", ampl1/1000];
-                
-                float ampl2 = [self findAmplitude:[array2 objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(currentIndex - 125, 125)]]];
-                
-                _ampl2.text = [NSString stringWithFormat:@"Amplitude: %f", ampl2/1000];
-            });
-            
-            
-            
-            
-        }*/
-        
-
-        //float *farray2 = (float *)malloc(sizeof(float) * 1);
-        //NSLog(@"%f", ((NSString  *)array1[currentIndex]).floatValue);
-        //farray2[0] = ((NSString  *)array2[currentIndex]).floatValue / 1000.0 / 100.0;
-        //[self sendData2:farray2];
-        
-        if(currentIndex % 8 == 0)
-        {
-            [self.graph1 reloadData];
-            [self.graph2 reloadData];
-            
-            CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph1.defaultPlotSpace;
-            if(currentIndex > 625)
-            {
-                plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
-                plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(-150.0) length:CPTDecimalFromDouble(300.0)];
-            }
-            
-            CPTXYPlotSpace *plotSpace2 = (CPTXYPlotSpace *)self.graph2.defaultPlotSpace;
-            if(currentIndex > 625)
-            {
-                plotSpace2.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
-                plotSpace2.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(-150.0) length:CPTDecimalFromDouble(300.0)];
-            }
-
-        }
-        
-               //[self redrawChart:_chart];
-        //[self redrawChart:_chart2];
-        
-
-    }
-    else
-    {
-        currentIndex = 0;
-        
-        CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph1.defaultPlotSpace;
-
-        plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(0.0) length:CPTDecimalFromDouble(625.0)];
-        plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(-150.0) length:CPTDecimalFromDouble(300.0)];
-        
-        CPTXYPlotSpace *plotSpace2 = (CPTXYPlotSpace *)self.graph2.defaultPlotSpace;
-        plotSpace2.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(0.0) length:CPTDecimalFromDouble(625.0)];
-        plotSpace2.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(-150.0) length:CPTDecimalFromDouble(300.0)];
-        
-        [data1 removeAllObjects];
-        [data2 removeAllObjects];
-        [dataFFT removeAllObjects];
-        
-        [self loadFiles];
-
-        
-        [self.graph1 reloadData];
-        [self.graph2 reloadData];
-    }
-   
-    
-    
-    
-}
 
 
 #pragma mark -
@@ -754,11 +462,15 @@
 
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {
-    if(plot.graph == self.fftGraph)
+    if(currentView == 2)
     {
-        return dataFFT.count;
+        return dataFFT1.count;
     }
-    return data1.count;
+    if(currentView == 1)
+    {
+        return data1.count;
+    }
+    return 0;
 }
 
 -(id)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
@@ -766,62 +478,142 @@
 
     if(plot.graph == self.graph1)
     {
+        if(currentView == 1)
+        {
+            NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+            NSNumber *num = data1[index][key];
+            
+            return num;
+        }
+        if(currentView == 2)
+        {
+            if([plot.identifier  isEqual: @"Blue Plot"])
+            {
+                NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT1[index][key] : dataFFT1[index][key][@"data1"];
+                return num;
+                
+            }
+            if([plot.identifier  isEqual: @"Yellow Plot"])
+            {
+                NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT1[index][key] : dataFFT1[index][key][@"data2"];
+                return num;
+                
+            }
+            if([plot.identifier  isEqual: @"Grey Plot"])
+            {
+                NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT1[index][key] : dataFFT1[index][key][@"data3"];
+                return num;
+                
+            }
+        }
         
-        NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
-        NSNumber *num = data1[index][key];
-        
-        return num;
     }
     if(plot.graph == self.graph2)
     {
-        
-        NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
-        NSNumber *num = data2[index][key];
-        
-        return num;
+        if(currentView == 1)
+        {
+            NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+            NSNumber *num = data2[index][key];
+            
+            return num;
+        }
+        if(currentView == 2)
+        {
+            if([plot.identifier  isEqual: @"Blue Plot"])
+            {
+                NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT2[index][key] : dataFFT2[index][key][@"data1"];
+                return num;
+                
+            }
+            if([plot.identifier  isEqual: @"Yellow Plot"])
+            {
+                NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT2[index][key] : dataFFT2[index][key][@"data2"];
+                return num;
+                
+            }
+            if([plot.identifier  isEqual: @"Grey Plot"])
+            {
+                NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT2[index][key] : dataFFT2[index][key][@"data3"];
+                return num;
+                
+            }
+        }
     }
     if(plot.graph == self.graph3)
     {
-        
-        NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
-        NSNumber *num = data3[index][key];
-        
-        return num;
+        if(currentView == 1)
+        {
+            NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+            NSNumber *num = data3[index][key];
+            
+            return num;
+        }
+        if(currentView == 2)
+        {
+            if([plot.identifier  isEqual: @"Blue Plot"])
+            {
+                NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT3[index][key] : dataFFT3[index][key][@"data1"];
+                return num;
+                
+            }
+            if([plot.identifier  isEqual: @"Yellow Plot"])
+            {
+                NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT3[index][key] : dataFFT3[index][key][@"data2"];
+                return num;
+                
+            }
+            if([plot.identifier  isEqual: @"Grey Plot"])
+            {
+                NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT3[index][key] : dataFFT3[index][key][@"data3"];
+                return num;
+                
+            }
+        }
     }
     if(plot.graph == self.graph4)
     {
-        
-        NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
-        NSNumber *num = data4[index][key];
-        
-        return num;
-    }
-    if(plot.graph == self.fftGraph)
-    {
-        if([plot.identifier  isEqual: @"Blue Plot"])
+        if(currentView == 1)
         {
             NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
-            NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT[index][key] : dataFFT[index][key][@"data1"];
-            return num;
-
-        }
-        if([plot.identifier  isEqual: @"Yellow Plot"])
-        {
-            NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
-            NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT[index][key] : dataFFT[index][key][@"data2"];
-            return num;
-
-        }
-        if([plot.identifier  isEqual: @"Grey Plot"])
-        {
-            NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
-            NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT[index][key] : dataFFT[index][key][@"data3"];
-            return num;
+            NSNumber *num = data4[index][key];
             
+            return num;
+        }
+        if(currentView == 2)
+        {
+            if([plot.identifier  isEqual: @"Blue Plot"])
+            {
+                NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT4[index][key] : dataFFT4[index][key][@"data1"];
+                return num;
+                
+            }
+            if([plot.identifier  isEqual: @"Yellow Plot"])
+            {
+                NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT4[index][key] : dataFFT4[index][key][@"data2"];
+                return num;
+                
+            }
+            if([plot.identifier  isEqual: @"Grey Plot"])
+            {
+                NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT4[index][key] : dataFFT4[index][key][@"data3"];
+                return num;
+                
+            }
         }
     }
     
-
     return [NSNumber numberWithDouble:0.0];
 }
 

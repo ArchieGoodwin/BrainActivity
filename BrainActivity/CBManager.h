@@ -19,8 +19,10 @@
 @property (strong, nonatomic) NSMutableData *rawdata;
 @property (strong, nonatomic) NSMutableArray *rawvalues;
 @property (strong, nonatomic) NSMutableArray *fftData;
-
-
+@property (strong, nonatomic) NSMutableArray *green;
+@property (strong, nonatomic) NSMutableArray *yellow;
+@property (strong, nonatomic) NSMutableArray *red1;
+@property (strong, nonatomic) NSMutableArray *red2;
 
 -(void)start;
 -(void)stop;
@@ -28,6 +30,7 @@
 @end
 
 @protocol CBManagerDelegate <NSObject>
+
 
 -(void)CB_dataUpdatedWithDictionary:(NSDictionary *)data;
 

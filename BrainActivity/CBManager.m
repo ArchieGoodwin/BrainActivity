@@ -516,11 +516,10 @@ const double K = 1000000000 * VRef / 0x7FFF;
         NSDictionary *val = _rawvalues[i + range.location];
         
         farray1[i] = [val[@"channel_1"] doubleValue];
-        farray2[i] = [val[@"channel_1"] doubleValue];
-        farray3[i] = [val[@"channel_1"] doubleValue];
-        farray4[i] = [val[@"channel_1"] doubleValue];
+        farray2[i] = [val[@"channel_2"] doubleValue];
+        farray3[i] = [val[@"channel_3"] doubleValue];
+        farray4[i] = [val[@"channel_4"] doubleValue];
 
-        //NSLog(@"%f", farray2[i]);
     }
     
     NSDictionary *fftData1 = [self fft:farray1];
@@ -548,12 +547,10 @@ const double K = 1000000000 * VRef / 0x7FFF;
     for(int i = 0; i<range.length; i++)
     {
         subArray[i] = array[range.location + i];
-        //NSLog(@"%f", subArray[i]);
     }
     
     double max = subArray[0];
     for (int i = 1; i < range.length; i++) {
-        //NSLog(@"%f", subArray[i]);
         if(max<subArray[i])
         {
             max=subArray[i];
@@ -562,5 +559,55 @@ const double K = 1000000000 * VRef / 0x7FFF;
     }
     return returnI;
 }
+
+-(double)findMax:array arrayKey:obj {
+    
+    double max = [[[array objectAtIndex:0] objectForKey:obj] doubleValue];
+    for ( NSDictionary *dict in array ) {
+        if(max<[[dict objectForKey:obj] doubleValue])
+            max=[[dict objectForKey:obj] doubleValue];
+    }
+    return max;
+}
+
+
+
+-(float)findMin:array arrayKey:obj {
+    float min = [[[array objectAtIndex:0] objectForKey:obj] floatValue];
+    for ( NSDictionary *dict in array ) {
+        if (min > [[dict objectForKey:obj] floatValue])min = [[dict objectForKey:obj] floatValue];
+    }
+    return min;
+}
+
+-(float)findAmplitude:(NSArray *)arr
+{
+    float amplitude = 0;
+    for (int j = 0; j < (arr.count -1); j = j +2 ){
+        
+        if (fabsf(((NSString *)arr[j]).floatValue) > fabsf(((NSString *)arr[j+1]).floatValue))
+            amplitude = amplitude + fabsf(((NSString *)arr[j]).floatValue) - fabsf(((NSString *)arr[j+1]).floatValue);
+        else amplitude = amplitude + fabsf(((NSString *)arr[j + 1]).floatValue) - fabsf(((NSString *)arr[j]).floatValue);
+        
+        
+    }
+    amplitude = fabsf(amplitude / arr.count * 2);
+    
+    return amplitude;
+}
+
+
+
+#pragma mark -
+#pragma mark Indicators
+
+-(void)processGreen
+{
+    
+}
+
+
+
+
 
 @end

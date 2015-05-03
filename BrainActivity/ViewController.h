@@ -18,6 +18,5 @@
 @property (strong, nonatomic) IBOutlet CPTGraphHostingView *view1;
 @property (strong, nonatomic) IBOutlet CPTGraphHostingView *view2;
 
-@property (strong, nonatomic) IBOutlet CPTGraphHostingView *fftView;
 @end
 

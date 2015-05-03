@@ -33,15 +33,23 @@
 }
 
 
+-(void)CB_fftDataUpdatedWithDictionary:(NSDictionary *)data
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"fft_data_received" object:nil userInfo:data];
+    
+    if([data objectForKey:@"error"] != nil)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.lblStatus.text = [data objectForKey:@"error"];
+        });
+    }
+    
+}
+
 
 -(void)CB_dataUpdatedWithDictionary:(NSDictionary *)data
 {
-    //NSLog(@"data received %@", data);
-    
-    
-    
-    
-    
+
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"data_received" object:nil userInfo:data];
     
