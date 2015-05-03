@@ -33,9 +33,15 @@
     
     NSInteger currentView;
     
+    
 }
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *plotH;
 
+@property (nonatomic, strong) NSTimer *samplingTimer;
+
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *plotH;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *leftSpace;
+
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *rightSpace;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segment;
 @property (nonatomic, readwrite, strong) CPTXYGraph *graph1;
 @property (nonatomic, readwrite, strong) CPTXYGraph *graph2;
@@ -43,6 +49,10 @@
 @property (nonatomic, readwrite, strong) CPTXYGraph *graph4;
 
 
+@property (strong, nonatomic) IBOutlet UIView *greenView;
+@property (strong, nonatomic) IBOutlet UIView *yellowView;
+@property (strong, nonatomic) IBOutlet UIView *red1View;
+@property (strong, nonatomic) IBOutlet UIView *red2View;
 
 
 @end
@@ -72,6 +82,8 @@
     [self createGraphs];
 
 
+    _leftSpace.constant = 400;
+    _rightSpace.constant = -400;
     //[self showChart];
     //[self showChart2];
     
@@ -83,6 +95,33 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dataReceived:) name:@"data_received" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fftDataReceived:) name:@"fft_data_received" object:nil];
 
+    
+    _samplingTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(masterTimer) userInfo:nil repeats:YES];
+
+}
+
+-(void)masterTimer {
+    
+    if(currentView == 3)
+    {
+        NSLog(@"timer fired");
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if([_manager processGreenForChannel:1])
+            {
+                _greenView.backgroundColor = [UIColor colorWithRed:0.0/255.0 green:128.0/255.0 blue:0.0/255.0 alpha:1.0];
+            }
+            else
+            {
+                _greenView.backgroundColor = [UIColor lightGrayColor];
+            }
+
+        });
+    }
+   
+    
+    
 }
 
 - (IBAction)changedView:(id)sender {
@@ -90,8 +129,18 @@
     UISegmentedControl *seg = (UISegmentedControl *)sender;
     
     currentView = seg.selectedSegmentIndex + 1;
-    
-    [self createGraphs];
+    if(currentView < 3)
+    {
+        _leftSpace.constant = self.view.frame.size.width;
+        _rightSpace.constant = -self.view.frame.size.width;
+        [self createGraphs];
+
+    }
+    else
+    {
+        _leftSpace.constant = -16.0;
+        _rightSpace.constant = -16.0;
+    }
 }
 
 -(void)createGraphs
@@ -118,9 +167,18 @@
     [super viewDidLayoutSubviews];
     
 
-        self.plotH.constant = ([UIScreen mainScreen].bounds.size.height - 130) / 4;
-        [self.view layoutSubviews];
+    self.plotH.constant = ([UIScreen mainScreen].bounds.size.height - 130) / 4;
+    [self.view layoutSubviews];
     
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    
+    [_samplingTimer invalidate];
+    _samplingTimer = nil;
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -160,44 +218,49 @@
         
     }
     
-    if(currentIndex % 8 == 0)
+    if(currentView == 1)
     {
-        [self.graph1 reloadData];
-        [self.graph2 reloadData];
-        [self.graph3 reloadData];
-        [self.graph4 reloadData];
-        
-        CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph1.defaultPlotSpace;
-        if(currentIndex > 625)
+        if(currentIndex % 8 == 0)
         {
-            plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromInt(625)];
-            plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
+            [self.graph1 reloadData];
+            [self.graph2 reloadData];
+            [self.graph3 reloadData];
+            [self.graph4 reloadData];
+            
+            CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph1.defaultPlotSpace;
+            if(currentIndex > 625)
+            {
+                plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromInt(625)];
+                plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
+            }
+            
+            CPTXYPlotSpace *plotSpace2 = (CPTXYPlotSpace *)self.graph2.defaultPlotSpace;
+            if(currentIndex > 625)
+            {
+                plotSpace2.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
+                plotSpace2.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
+            }
+            
+            
+            CPTXYPlotSpace *plotSpace3 = (CPTXYPlotSpace *)self.graph3.defaultPlotSpace;
+            if(currentIndex > 625)
+            {
+                plotSpace3.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
+                plotSpace3.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
+            }
+            
+            
+            CPTXYPlotSpace *plotSpace4 = (CPTXYPlotSpace *)self.graph4.defaultPlotSpace;
+            if(currentIndex > 625)
+            {
+                plotSpace4.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
+                plotSpace4.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
+            }
+            
         }
-        
-        CPTXYPlotSpace *plotSpace2 = (CPTXYPlotSpace *)self.graph2.defaultPlotSpace;
-        if(currentIndex > 625)
-        {
-            plotSpace2.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
-            plotSpace2.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
-        }
-        
-        
-        CPTXYPlotSpace *plotSpace3 = (CPTXYPlotSpace *)self.graph3.defaultPlotSpace;
-        if(currentIndex > 625)
-        {
-            plotSpace3.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
-            plotSpace3.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
-        }
-        
-        
-        CPTXYPlotSpace *plotSpace4 = (CPTXYPlotSpace *)self.graph4.defaultPlotSpace;
-        if(currentIndex > 625)
-        {
-            plotSpace4.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
-            plotSpace4.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
-        }
-        
     }
+    
+    
     
     
     currentIndex++;
@@ -210,63 +273,67 @@
 {
 
     
+    
+    
     NSDictionary *data = notification.userInfo;
     
     
-    [dataFFT1 addObject:@{@"index": @(currentIndex), @"data" : data[@"fft_channel_1"]}];
+    [dataFFT1 addObject:@{@"index": @(currentFFTIndex), @"data" : data[@"fft_channel_1"]}];
     
-    [dataFFT1 addObject:@{@"index": @(currentIndex), @"data" : data[@"fft_channel_2"]}];
+    [dataFFT2 addObject:@{@"index": @(currentFFTIndex), @"data" : data[@"fft_channel_2"]}];
     
-    [dataFFT1 addObject:@{@"index": @(currentIndex), @"data" : data[@"fft_channel_3"]}];
+    [dataFFT3 addObject:@{@"index": @(currentFFTIndex), @"data" : data[@"fft_channel_3"]}];
     
-    [dataFFT1 addObject:@{@"index": @(currentIndex), @"data" : data[@"fft_channel_4"]}];
+    [dataFFT4 addObject:@{@"index": @(currentFFTIndex), @"data" : data[@"fft_channel_4"]}];
     
     
     
-    if(currentFFTIndex > 50)
+    if(currentFFTIndex > 119)
     {
         [dataFFT1 removeObjectAtIndex:0];
-        [dataFFT1 removeObjectAtIndex:0];
-        [dataFFT1 removeObjectAtIndex:0];
-        [dataFFT1 removeObjectAtIndex:0];
+        [dataFFT2 removeObjectAtIndex:0];
+        [dataFFT3 removeObjectAtIndex:0];
+        [dataFFT4 removeObjectAtIndex:0];
 
-    }
-
-    [self.graph1 reloadData];
-    [self.graph2 reloadData];
-    [self.graph3 reloadData];
-    [self.graph4 reloadData];
-
-    CPTXYPlotSpace *plotSpace1 = (CPTXYPlotSpace *)self.graph1.defaultPlotSpace;
-    if(currentFFTIndex > 49)
-    {
-        plotSpace1.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 50) length:CPTDecimalFromInt(50)];
-        plotSpace1.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-3) length:CPTDecimalFromInt(23)];
-    }
-    
-    CPTXYPlotSpace *plotSpace2 = (CPTXYPlotSpace *)self.graph2.defaultPlotSpace;
-    if(currentFFTIndex > 49)
-    {
-        plotSpace2.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 50) length:CPTDecimalFromDouble(50)];
-        plotSpace2.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-3) length:CPTDecimalFromInt(23)];
     }
 
     
-    CPTXYPlotSpace *plotSpace3 = (CPTXYPlotSpace *)self.graph3.defaultPlotSpace;
-    if(currentFFTIndex > 49)
+    if(currentView == 2)
     {
-        plotSpace3.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 50) length:CPTDecimalFromDouble(50)];
-        plotSpace3.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-3) length:CPTDecimalFromInt(23)];
-    }
+        [self.graph1 reloadData];
+        [self.graph2 reloadData];
+        [self.graph3 reloadData];
+        [self.graph4 reloadData];
+        
+        CPTXYPlotSpace *plotSpace1 = (CPTXYPlotSpace *)self.graph1.defaultPlotSpace;
+        if(currentFFTIndex > 119)
+        {
+            plotSpace1.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 120) length:CPTDecimalFromInt(130)];
+        }
+        
+        CPTXYPlotSpace *plotSpace2 = (CPTXYPlotSpace *)self.graph2.defaultPlotSpace;
+        if(currentFFTIndex > 119)
+        {
+            plotSpace2.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 120) length:CPTDecimalFromDouble(130)];
+        }
+        
+        
+        CPTXYPlotSpace *plotSpace3 = (CPTXYPlotSpace *)self.graph3.defaultPlotSpace;
+        if(currentFFTIndex > 119)
+        {
+            plotSpace3.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 120) length:CPTDecimalFromDouble(130)];
+        }
+        
+        
+        CPTXYPlotSpace *plotSpace4 = (CPTXYPlotSpace *)self.graph4.defaultPlotSpace;
+        if(currentFFTIndex > 119)
+        {
+            plotSpace4.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 120) length:CPTDecimalFromDouble(130)];
+        }
 
+    }
     
-    CPTXYPlotSpace *plotSpace4 = (CPTXYPlotSpace *)self.graph4.defaultPlotSpace;
-    if(currentFFTIndex > 49)
-    {
-        plotSpace4.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 50) length:CPTDecimalFromDouble(50)];
-        plotSpace4.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-3) length:CPTDecimalFromInt(23)];
-    }
-
+    
 
     currentFFTIndex++;
 
@@ -377,13 +444,13 @@
     // Setup plot space
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)newGraph.defaultPlotSpace;
     plotSpace.allowsUserInteraction = YES;
-    plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(0.0) length:CPTDecimalFromDouble(50)];
+    plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(0.0) length:CPTDecimalFromDouble(130)];
     plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(-3.0) length:CPTDecimalFromDouble(23.0)];
     
     // Axes
     CPTXYAxisSet *axisSet = (CPTXYAxisSet *)newGraph.axisSet;
     CPTXYAxis *x          = axisSet.xAxis;
-    x.majorIntervalLength         = CPTDecimalFromDouble(125);
+    x.majorIntervalLength         = CPTDecimalFromDouble(10);
     //x.orthogonalCoordinateDecimal = CPTDecimalFromDouble(10.0);
     x.minorTicksPerInterval       = 0;
     x.labelingPolicy = CPTAxisLabelingPolicyNone;
@@ -391,8 +458,6 @@
     [[newGraph plotAreaFrame] setPaddingLeft:30.0f];
 
     CPTXYAxis *y = axisSet.yAxis;
-    
-  
     
     y.delegate             = self;
     

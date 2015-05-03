@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CorePlot-CocoaTouch.h"
+#import "CBManager.h"
 
 @interface ViewController : UIViewController <CPTPlotDataSource, CPTAxisDelegate>
 @property (strong, nonatomic) IBOutlet UILabel *ampl1;
@@ -18,5 +19,7 @@
 @property (strong, nonatomic) IBOutlet CPTGraphHostingView *view1;
 @property (strong, nonatomic) IBOutlet CPTGraphHostingView *view2;
 
+
+@property (strong, nonatomic) CBManager *manager;
 @end
 

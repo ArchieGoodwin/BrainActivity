@@ -7,8 +7,9 @@
 //
 
 #import "MainVC.h"
-
+#import "ViewController.h"
 @interface MainVC ()
+@property (strong, nonatomic) IBOutlet UIButton *btnStart;
 
 @end
 
@@ -22,6 +23,10 @@
     
     cbManager = [[CBManager alloc] init];
     cbManager.delegate = self;
+    
+    
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+
     // Do any additional setup after loading the view.
 }
 
@@ -70,7 +75,19 @@
 
 - (IBAction)connectToDevice:(id)sender {
     
-    [cbManager start];
+    if(cbManager.hasStarted)
+    {
+        [cbManager stop];
+        [_btnStart setTitle:@"Connect to device" forState:UIControlStateNormal];
+    }
+    else
+    {
+        [cbManager start];
+        [_btnStart setTitle:@"Stop" forState:UIControlStateNormal];
+        
+    }
+    
+    
     
 }
 
@@ -84,17 +101,35 @@
 - (IBAction)unwindBack:(UIStoryboardSegue *)unwindSegue
 {
     
-    [cbManager stop];
+    if(!cbManager.hasStarted)
+    {
+        [_btnStart setTitle:@"Connect to device" forState:UIControlStateNormal];
+    }
+    else
+    {
+        [_btnStart setTitle:@"Stop" forState:UIControlStateNormal];
+        
+    }
+
+    //[cbManager stop];
     
 }
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    if([segue.identifier isEqualToString:@"showPlot"])
+    {
+        
+        ViewController *vc = (ViewController *)segue.destinationViewController;
+        vc.manager = cbManager;
+        
+    }
+    
 }
-*/
+
 
 @end

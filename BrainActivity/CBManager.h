@@ -23,9 +23,12 @@
 @property (strong, nonatomic) NSMutableArray *yellow;
 @property (strong, nonatomic) NSMutableArray *red1;
 @property (strong, nonatomic) NSMutableArray *red2;
-
+@property (nonatomic, assign) BOOL hasStarted;
 -(void)start;
 -(void)stop;
+
+
+-(BOOL)processGreenForChannel:(NSInteger)channel;
 
 @end
 

@@ -14,31 +14,41 @@
 #import "SERVICES.h"
 
 const double VRef = 2.4 / 6 / 32;
-const double K = 1000000000 * VRef / 0x7FFF;
+const double K = 1;//1000000000 * VRef / 0x7FFF;
 
 @interface CBManager() < CBCentralManagerDelegate, CBPeripheralDelegate>
 
 
 @property (strong, nonatomic) CBCentralManager *centralManager;
 @property (strong, nonatomic) CBPeripheral *discoveredPeripheral;
+
+//raw data counter
 @property (nonatomic, assign) NSInteger counter;
+
+//fft data counter
 @property (nonatomic, assign) NSInteger fftCounter;
 
 @end
 
 @implementation CBManager
 
+
+#pragma mark -
+#pragma mark Core Bluetooth methods
+
 -(id)init
 {
     if ((self = [super init])) {
         _counter = 0;
         _fftCounter = 0;
+        _hasStarted = NO;
     }
     
     return self;
 
 }
 
+//start connect and proceccing data from device
 -(void)start
 {
     _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
@@ -47,11 +57,13 @@ const double K = 1000000000 * VRef / 0x7FFF;
     _fftData = [NSMutableArray new];
     _counter = 0;
     _fftCounter = 0;
+    _hasStarted = YES;
 }
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
     // You should test all scenarios
     if (central.state != CBCentralManagerStatePoweredOn) {
+        [self stop];
         return;
     }
     
@@ -91,13 +103,8 @@ const double K = 1000000000 * VRef / 0x7FFF;
             }
         }
         
-        
         [_centralManager connectPeripheral:peripheral options:nil];
-        
-        
-        
-        
-        
+
     }
 }
 
@@ -112,7 +119,7 @@ const double K = 1000000000 * VRef / 0x7FFF;
             [_delegate CB_changedStatus:[NSString stringWithFormat:@"Failed to connect: %@", error.localizedDescription]];
         }
     }
-    
+    [self stop];
     [self cleanup];
 }
 
@@ -133,8 +140,11 @@ const double K = 1000000000 * VRef / 0x7FFF;
             }
         }
     }
-    
-    [_centralManager cancelPeripheralConnection:_discoveredPeripheral];
+    if( _discoveredPeripheral)
+    {
+        [_centralManager cancelPeripheralConnection:_discoveredPeripheral];
+
+    }
 }
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
@@ -164,7 +174,7 @@ const double K = 1000000000 * VRef / 0x7FFF;
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
     if (error) {
-        [self cleanup];
+        [self stop];
         if(_delegate)
         {
             if([_delegate respondsToSelector:@selector(CB_changedStatus:)])
@@ -183,7 +193,7 @@ const double K = 1000000000 * VRef / 0x7FFF;
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error {
     if (error) {
-        [self cleanup];
+        [self stop];
         
         if(_delegate)
         {
@@ -254,13 +264,7 @@ const double K = 1000000000 * VRef / 0x7FFF;
             int orderNumber = 0;
             [subdata getBytes:&orderNumber length:2];
             orderNumber = CFSwapInt16LittleToHost(orderNumber);
-            
-            
-            /* NSData *orderNumaberData2 = [data subdataWithRange:NSMakeRange(2, 2)];
-             int orderNumber2 = 0;
-             [orderNumaberData2 getBytes:&orderNumber2 length:2];
-             orderNumber2 = CFSwapInt16LittleToHost(orderNumber2);
-             */
+
             //first 4 channels
             subdata = [data subdataWithRange:NSMakeRange(3, 2)];
             short channel1 = 0;
@@ -324,9 +328,9 @@ const double K = 1000000000 * VRef / 0x7FFF;
             [subdata getBytes:&channel4_ length:2];
             channel4_ = CFSwapInt16LittleToHost(channel4_);
             
-#warning Remove later!
-            double d = channel2_ * K;
-            NSLog(@"%f", d);
+//#warning Remove later!
+//            double d = channel2_ * K;
+//            NSLog(@"%f", d);
             
             NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"time_marker" : [NSNumber numberWithFloat:([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithInt:orderNumber + 1], @"channel_1" : [NSNumber numberWithDouble:(channel1_ * K)], @"channel_2" : [NSNumber numberWithDouble:(channel2_ * K)], @"channel_3" : [NSNumber numberWithDouble:(channel3_ * K)], @"channel_4" : [NSNumber numberWithDouble:(channel4_ * K)]};
             
@@ -352,7 +356,8 @@ const double K = 1000000000 * VRef / 0x7FFF;
                 [_delegate CB_changedStatus:[NSString stringWithFormat:@"Error: %@", error.localizedDescription]];
             }
         }
-
+        
+        [self stop];
         
         return;
     }
@@ -373,7 +378,6 @@ const double K = 1000000000 * VRef / 0x7FFF;
     
     if(_delegate)
     {
-        
         
         if([_delegate respondsToSelector:@selector(CB_dataUpdatedWithDictionary:)])
         {
@@ -397,7 +401,6 @@ const double K = 1000000000 * VRef / 0x7FFF;
                 
             }
         }
-        
        
     }
     
@@ -423,7 +426,24 @@ const double K = 1000000000 * VRef / 0x7FFF;
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
     _discoveredPeripheral = nil;
     
-    [_centralManager scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:TRANSFER_SERVICE_UUID]] options:@{ CBCentralManagerScanOptionAllowDuplicatesKey : @YES }];
+    if(_delegate)
+    {
+        if([_delegate respondsToSelector:@selector(CB_changedStatus:)])
+        {
+            [_delegate CB_changedStatus:@"Device disconnected!"];
+        }
+    }
+    
+    
+    
+    
+    [self stop];
+    
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning!" message:@"App lost connection to device!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alert show];
+    
+   // [_centralManager scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:TRANSFER_SERVICE_UUID]] options:@{ CBCentralManagerScanOptionAllowDuplicatesKey : @YES }];
 }
 
 -(void)stop
@@ -431,7 +451,7 @@ const double K = 1000000000 * VRef / 0x7FFF;
 
     [_centralManager stopScan];
     [_rawdata setLength:0];
-
+    _hasStarted = NO;
     [self cleanup];
     
     _centralManager = nil;
@@ -485,15 +505,15 @@ const double K = 1000000000 * VRef / 0x7FFF;
     }
     
     int val1 = [self findMaxIndex:output range:NSMakeRange(8, 8)];
-    printf("max in 3-6: %8g  %f  max index: %d \n", frequences[val1], output[val1], val1);
+    //printf("max in 3-6: %8g  %f  max index: %d \n", frequences[val1], output[val1], val1);
     
     
     int val2 = [self findMaxIndex:output range:NSMakeRange(18, 16)];
-    printf("max in 7-13: %8g  %f  max index: %d \n", frequences[val2], output[val2], val2);
+    //printf("max in 7-13: %8g  %f  max index: %d \n", frequences[val2], output[val2], val2);
     
     
     int val3 = [self findMaxIndex:output range:NSMakeRange(36, 11)];
-    printf("max in 14-18: %8g  %f  max index: %d \n", frequences[val3], output[val3], val3);
+    //printf("max in 14-18: %8g  %f  max index: %d \n", frequences[val3], output[val3], val3);
    
     
     return @{@"data1" : [NSNumber numberWithDouble:frequences[val1]], @"data2" : [NSNumber numberWithDouble:frequences[val2]], @"data3" : [NSNumber numberWithDouble:frequences[val3]]};
@@ -601,8 +621,77 @@ const double K = 1000000000 * VRef / 0x7FFF;
 #pragma mark -
 #pragma mark Indicators
 
--(void)processGreen
+-(BOOL)processGreenForChannel:(NSInteger)channel
 {
+    NSInteger len = _fftData.count;
+    
+    
+    NSMutableArray *greens = [NSMutableArray new];
+    
+    for(NSInteger i = 0; i < len; i++)
+    {
+        NSString *key = [NSString stringWithFormat:@"fft_channel_%li", ((long)channel)];
+        NSDictionary *dict = _fftData[i][key];
+        [greens addObject:dict[@"data2"]];
+    }
+    
+    NSExpression *expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:greens]]];
+    double average = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+
+
+    for(NSInteger i = 0; i < len; i++)
+    {
+        NSString *key = [NSString stringWithFormat:@"fft_channel_%li", ((long)channel)];
+        NSDictionary *dict = _fftData[i][key];
+        
+        double val = [dict[@"data2"] doubleValue];
+        
+        if(fabs(average - val) > average * 0.2)
+        {
+            return NO;
+        }
+    }
+    NSLog(@"%f", average);
+
+    return YES;
+    
+    
+}
+
+
+
+-(BOOL)processYellowForChannel:(NSInteger)channel
+{
+    NSInteger len = _fftData.count;
+    
+    NSMutableArray *greens = [NSMutableArray new];
+    
+    for(NSInteger i = 0; i < len; i++)
+    {
+        NSString *key = [NSString stringWithFormat:@"fft_channel_%li", ((long)channel)];
+        NSDictionary *dict = _fftData[i][key];
+        [greens addObject:dict[@"data2"]];
+    }
+    
+    NSExpression *expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:greens]]];
+    double average = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+    
+    for(NSInteger i = 0; i < len; i++)
+    {
+        NSString *key = [NSString stringWithFormat:@"fft_channel_%li", ((long)channel)];
+        NSDictionary *dict = _fftData[i][key];
+        
+        double val = [dict[@"data2"] doubleValue];
+        
+        if(fabs(average - val) > average * 0.2)
+        {
+            return NO;
+        }
+    }
+    NSLog(@"%f", average);
+    
+    return YES;
+    
     
 }
 
