@@ -17,6 +17,8 @@
 @property (nonatomic,strong) id <CBManagerDelegate> delegate;
 
 @property (strong, nonatomic) NSMutableData *rawdata;
+@property (strong, nonatomic) NSMutableArray *rawvalues;
+@property (strong, nonatomic) NSMutableArray *fftData;
 
 
 
@@ -26,9 +28,12 @@
 @end
 
 @protocol CBManagerDelegate <NSObject>
+
+-(void)CB_dataUpdatedWithDictionary:(NSDictionary *)data;
+
 @optional
 
+-(void)CB_fftDataUpdatedWithDictionary:(NSDictionary *)data;
 -(void)CB_changedStatus:(NSString *)statusMessage;
--(void)CB_dataUpdatedWithDictionary:(NSDictionary *)data;
 
 @end
