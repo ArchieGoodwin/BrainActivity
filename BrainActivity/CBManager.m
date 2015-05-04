@@ -31,7 +31,10 @@ const double K = 1;//1000000000 * VRef / 0x7FFF;
 @end
 
 @implementation CBManager
-
+{
+    NSInteger lastGreenValue;
+    double lastGreenAverage;
+}
 
 #pragma mark -
 #pragma mark Core Bluetooth methods
@@ -42,6 +45,8 @@ const double K = 1;//1000000000 * VRef / 0x7FFF;
         _counter = 0;
         _fftCounter = 0;
         _hasStarted = NO;
+        lastGreenValue = 0;
+        lastGreenAverage = 0.0;
     }
     
     return self;
@@ -628,7 +633,7 @@ const double K = 1;//1000000000 * VRef / 0x7FFF;
     
     NSMutableArray *greens = [NSMutableArray new];
     
-    for(NSInteger i = 0; i < len; i++)
+    for(NSInteger i = lastGreenValue; i < len; i++)
     {
         NSString *key = [NSString stringWithFormat:@"fft_channel_%li", ((long)channel)];
         NSDictionary *dict = _fftData[i][key];
@@ -639,19 +644,25 @@ const double K = 1;//1000000000 * VRef / 0x7FFF;
     double average = [[expression expressionValueWithObject:nil context:nil] doubleValue];
 
 
-    for(NSInteger i = 0; i < len; i++)
+    for(NSInteger i = 0; i < (len - lastGreenValue); i++)
     {
-        NSString *key = [NSString stringWithFormat:@"fft_channel_%li", ((long)channel)];
-        NSDictionary *dict = _fftData[i][key];
+        double val = [greens[i] doubleValue];
         
-        double val = [dict[@"data2"] doubleValue];
-        
-        if(fabs(average - val) > average * 0.2)
+        if(fabs(lastGreenAverage - val) > (lastGreenAverage * 0.2))
         {
+            lastGreenAverage = (lastGreenAverage + average)/2.0;
+            lastGreenValue = len;
+            
+            NSLog(@"%f  %f   %li", average, lastGreenAverage, lastGreenValue);
+
             return NO;
         }
     }
-    NSLog(@"%f", average);
+    
+    lastGreenAverage = (lastGreenAverage + average)/2.0;
+    lastGreenValue = len;
+    
+    NSLog(@"%f  %f   %li", average, lastGreenAverage, lastGreenValue);
 
     return YES;
     
@@ -664,33 +675,46 @@ const double K = 1;//1000000000 * VRef / 0x7FFF;
 {
     NSInteger len = _fftData.count;
     
-    NSMutableArray *greens = [NSMutableArray new];
+    NSMutableArray *yellows = [NSMutableArray new];
     
     for(NSInteger i = 0; i < len; i++)
     {
         NSString *key = [NSString stringWithFormat:@"fft_channel_%li", ((long)channel)];
         NSDictionary *dict = _fftData[i][key];
-        [greens addObject:dict[@"data2"]];
+        [yellows addObject:dict[@"data2"]];
     }
     
-    NSExpression *expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:greens]]];
-    double average = [[expression expressionValueWithObject:nil context:nil] doubleValue];
-    
-    for(NSInteger i = 0; i < len; i++)
+    if(len > 10)
     {
-        NSString *key = [NSString stringWithFormat:@"fft_channel_%li", ((long)channel)];
-        NSDictionary *dict = _fftData[i][key];
-        
-        double val = [dict[@"data2"] doubleValue];
-        
-        if(fabs(average - val) > average * 0.2)
+        for(NSInteger i = 10; i < len; i++)
         {
-            return NO;
+            if(i % 10 == 0)
+            {
+                double val1 = [yellows[i-10] doubleValue];
+                double val2 = [yellows[i] doubleValue];
+                if((val2 - val1) > 0)
+                {
+                    if(((val2 - val1)/val1) > 0.2 && ((val2 - val1)/val1) < 0.3)
+                    {
+                        return YES;
+                    }
+                    else
+                    {
+                        return NO;
+                    }
+
+                }
+                else
+                {
+                    return NO;
+                }
+                
+            }
+            
         }
     }
-    NSLog(@"%f", average);
-    
-    return YES;
+   
+    return NO;
     
     
 }

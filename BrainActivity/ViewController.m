@@ -35,6 +35,7 @@
     
     
 }
+@property (strong, nonatomic) IBOutlet UIButton *btnBack;
 
 @property (nonatomic, strong) NSTimer *samplingTimer;
 
@@ -61,6 +62,43 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _btnBack.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _btnBack.layer.borderWidth = 2.0;
+    _btnBack.layer.cornerRadius = 15.0;
+
+    _lblGreen.clipsToBounds = YES;
+    _lblGreen.layer.borderWidth = 2.0;
+    _lblGreen.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _lblGreen.layer.cornerRadius = 15.0;
+    
+    _lblYellow.layer.borderWidth = 2.0;
+    _lblYellow.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _lblYellow.layer.cornerRadius = 15.0;
+
+    _lblRed1.layer.borderWidth = 2.0;
+    _lblRed1.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _lblRed1.layer.cornerRadius = 15.0;
+    
+    _lblRed2.layer.borderWidth = 2.0;
+    _lblRed2.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _lblRed2.layer.cornerRadius = 15.0;
+    
+    _greenView.layer.borderWidth = 2.0;
+    _greenView.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _greenView.layer.cornerRadius = 15.0;
+    
+    _yellowView.layer.borderWidth = 2.0;
+    _yellowView.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _yellowView.layer.cornerRadius = 15.0;
+    
+    _red1View.layer.borderWidth = 2.0;
+    _red1View.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _red1View.layer.cornerRadius = 15.0;
+    
+    _red2View.layer.borderWidth = 2.0;
+    _red2View.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _red2View.layer.cornerRadius = 15.0;
     
     currentView = 1;
    
@@ -106,18 +144,32 @@
     {
         NSLog(@"timer fired");
 
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            if([_manager processGreenForChannel:1])
-            {
-                _greenView.backgroundColor = [UIColor colorWithRed:0.0/255.0 green:128.0/255.0 blue:0.0/255.0 alpha:1.0];
-            }
-            else
-            {
-                _greenView.backgroundColor = [UIColor lightGrayColor];
-            }
-
-        });
+        if(_manager.hasStarted)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if([_manager processGreenForChannel:1])
+                {
+                    _greenView.backgroundColor = [UIColor colorWithRed:0.0/255.0 green:128.0/255.0 blue:0.0/255.0 alpha:1.0];
+                }
+                else
+                {
+                    _greenView.backgroundColor = [UIColor lightGrayColor];
+                }
+                
+                if([_manager processYellowForChannel:1])
+                {
+                    _yellowView.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:239.0/255.0 blue:54.0/255.0 alpha:1.0];
+                }
+                else
+                {
+                    _yellowView.backgroundColor = [UIColor lightGrayColor];
+                }
+                
+            });
+        }
+        
+       
     }
    
     
@@ -147,10 +199,10 @@
 {
     if(currentView == 1)
     {
-        [self createCorePlot:_view1 withColor:[UIColor blueColor]];
-        [self createCorePlot:_view2 withColor:[UIColor redColor]];
-        [self createCorePlot:_view3 withColor:[UIColor orangeColor]];
-        [self createCorePlot:_view4 withColor:[UIColor blackColor]];
+        [self createCorePlot:_view1 withColor:[UIColor lightGrayColor]];
+        [self createCorePlot:_view2 withColor:[UIColor lightGrayColor]];
+        [self createCorePlot:_view3 withColor:[UIColor lightGrayColor]];
+        [self createCorePlot:_view4 withColor:[UIColor lightGrayColor]];
     }
     if(currentView == 2)
     {
@@ -383,6 +435,8 @@
     x.minorTicksPerInterval       = 0;
     x.labelingPolicy = CPTAxisLabelingPolicyNone;
     
+    [[newGraph plotAreaFrame] setPaddingLeft:30.0f];
+
     
     CPTXYAxis *y = axisSet.yAxis;
 
@@ -400,7 +454,12 @@
     boundLinePlot.dataLineStyle = lineStyle;
     boundLinePlot.identifier    = @"Blue Plot";
     boundLinePlot.dataSource    = self;
+    
+    newGraph.plotAreaFrame.borderLineStyle = nil;
+    
     [newGraph addPlot:boundLinePlot];
+    
+    
     
     newGraph.paddingLeft = 0.0;
     newGraph.paddingTop = 0.0;
@@ -468,7 +527,7 @@
     
     CPTMutableTextStyle *textStyle = [CPTMutableTextStyle textStyle];
     [textStyle setFontSize:12.0f];
-    
+    textStyle.color = [CPTColor lightGrayColor];
     [y setMajorIntervalLength:CPTDecimalFromInt(5)];
     [y setMinorTickLineStyle:nil];
     [y setLabelingPolicy:CPTAxisLabelingPolicyFixedInterval];
@@ -514,6 +573,9 @@
     boundLinePlot3.delegate = self;
     [newGraph addPlot:boundLinePlot3];
  
+    newGraph.plotAreaFrame.borderLineStyle = nil;
+
+    
     newGraph.paddingLeft = 0.0;
     newGraph.paddingTop = 2.0;
     newGraph.paddingRight = 0.0;
@@ -700,34 +762,37 @@
     
     for ( NSDecimalNumber *tickLocation in locations ) {
         CPTTextStyle *theLabelTextStyle;
-        
-        if ( [tickLocation isGreaterThanOrEqualTo:zero] ) {
-            dispatch_once(&positiveOnce, ^{
-                CPTMutableTextStyle *newStyle = [axis.labelTextStyle mutableCopy];
-                newStyle.color = [CPTColor greenColor];
-                positiveStyle = newStyle;
-            });
+        if( currentView == 2)
+        {
+            if ( [tickLocation isGreaterThanOrEqualTo:zero] ) {
+                dispatch_once(&positiveOnce, ^{
+                    CPTMutableTextStyle *newStyle = [axis.labelTextStyle mutableCopy];
+                    newStyle.color = [CPTColor lightGrayColor];
+                    positiveStyle = newStyle;
+                });
+                
+                theLabelTextStyle = positiveStyle;
+            }
+            else {
+                dispatch_once(&negativeOnce, ^{
+                    CPTMutableTextStyle *newStyle = [axis.labelTextStyle mutableCopy];
+                    newStyle.color = [CPTColor lightGrayColor];
+                    negativeStyle = newStyle;
+                });
+                
+                theLabelTextStyle = negativeStyle;
+            }
             
-            theLabelTextStyle = positiveStyle;
-        }
-        else {
-            dispatch_once(&negativeOnce, ^{
-                CPTMutableTextStyle *newStyle = [axis.labelTextStyle mutableCopy];
-                newStyle.color = [CPTColor redColor];
-                negativeStyle = newStyle;
-            });
+            NSString *labelString       = [formatter stringForObjectValue:tickLocation];
+            CPTTextLayer *newLabelLayer = [[CPTTextLayer alloc] initWithText:labelString style:theLabelTextStyle];
             
-            theLabelTextStyle = negativeStyle;
+            CPTAxisLabel *newLabel = [[CPTAxisLabel alloc] initWithContentLayer:newLabelLayer];
+            newLabel.tickLocation = tickLocation.decimalValue;
+            newLabel.offset       = labelOffset;
+            
+            [newLabels addObject:newLabel];
         }
-        
-        NSString *labelString       = [formatter stringForObjectValue:tickLocation];
-        CPTTextLayer *newLabelLayer = [[CPTTextLayer alloc] initWithText:labelString style:theLabelTextStyle];
-        
-        CPTAxisLabel *newLabel = [[CPTAxisLabel alloc] initWithContentLayer:newLabelLayer];
-        newLabel.tickLocation = tickLocation.decimalValue;
-        newLabel.offset       = labelOffset;
-        
-        [newLabels addObject:newLabel];
+       
     }
     
     axis.axisLabels = newLabels;

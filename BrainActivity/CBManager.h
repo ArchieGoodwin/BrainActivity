@@ -29,7 +29,7 @@
 
 
 -(BOOL)processGreenForChannel:(NSInteger)channel;
-
+-(BOOL)processYellowForChannel:(NSInteger)channel;
 @end
 
 @protocol CBManagerDelegate <NSObject>

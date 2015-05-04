@@ -10,5 +10,6 @@
 #import "CBManager.h"
 @interface MainVC : UIViewController <CBManagerDelegate>
 @property (strong, nonatomic) IBOutlet UILabel *lblStatus;
+@property (strong, nonatomic) IBOutlet UIButton *btnShowPlot;
 
 @end

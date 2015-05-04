@@ -19,6 +19,10 @@
 @property (strong, nonatomic) IBOutlet CPTGraphHostingView *view1;
 @property (strong, nonatomic) IBOutlet CPTGraphHostingView *view2;
 
+@property (strong, nonatomic) IBOutlet UILabel *lblGreen;
+@property (strong, nonatomic) IBOutlet UILabel *lblYellow;
+@property (strong, nonatomic) IBOutlet UILabel *lblRed1;
+@property (strong, nonatomic) IBOutlet UILabel *lblRed2;
 
 @property (strong, nonatomic) CBManager *manager;
 @end

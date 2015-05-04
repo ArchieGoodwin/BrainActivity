@@ -25,6 +25,13 @@
     cbManager.delegate = self;
     
     
+    _btnShowPlot.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _btnShowPlot.layer.borderWidth = 2.0;
+    _btnStart.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _btnStart.layer.borderWidth = 2.0;
+    _btnShowPlot.layer.cornerRadius = 15.0;
+    _btnStart.layer.cornerRadius = 15.0;
+    
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     // Do any additional setup after loading the view.
