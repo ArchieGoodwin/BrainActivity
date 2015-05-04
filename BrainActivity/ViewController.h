@@ -23,6 +23,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *lblYellow;
 @property (strong, nonatomic) IBOutlet UILabel *lblRed1;
 @property (strong, nonatomic) IBOutlet UILabel *lblRed2;
+@property (strong, nonatomic) IBOutlet UIStepper *zoom;
 
 @property (strong, nonatomic) CBManager *manager;
 @end

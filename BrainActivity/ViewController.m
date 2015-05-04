@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <Accelerate/Accelerate.h>
 
+#define RAW_SCOPE 66000
+
 @interface ViewController ()
 {
     NSTimer *timer;
@@ -33,7 +35,8 @@
     
     NSInteger currentView;
     
-    
+    NSInteger scopeRaw;
+    NSInteger scopeSpectrum;
 }
 @property (strong, nonatomic) IBOutlet UIButton *btnBack;
 
@@ -62,6 +65,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    scopeRaw = RAW_SCOPE;
     
     _btnBack.layer.borderColor = [UIColor darkGrayColor].CGColor;
     _btnBack.layer.borderWidth = 2.0;
@@ -136,6 +141,8 @@
     
     _samplingTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(masterTimer) userInfo:nil repeats:YES];
 
+    _zoom.value = 1;
+    
 }
 
 -(void)masterTimer {
@@ -176,6 +183,15 @@
     
 }
 
+- (IBAction)zoomChange:(id)sender {
+    
+    UIStepper *stepp = (UIStepper *)sender;
+    
+    scopeRaw = RAW_SCOPE * stepp.value;
+    
+    NSLog(@"%f  %ld", stepp.value, (long)scopeRaw);
+}
+
 - (IBAction)changedView:(id)sender {
     
     UISegmentedControl *seg = (UISegmentedControl *)sender;
@@ -186,12 +202,16 @@
         _leftSpace.constant = self.view.frame.size.width;
         _rightSpace.constant = -self.view.frame.size.width;
         [self createGraphs];
+        
+        _zoom.hidden  =NO;
 
     }
     else
     {
         _leftSpace.constant = -16.0;
         _rightSpace.constant = -16.0;
+        
+        _zoom.hidden = YES;
     }
 }
 
@@ -219,7 +239,7 @@
     [super viewDidLayoutSubviews];
     
 
-    self.plotH.constant = ([UIScreen mainScreen].bounds.size.height - 130) / 4;
+    self.plotH.constant = ([UIScreen mainScreen].bounds.size.height - 160) / 4;
     [self.view layoutSubviews];
     
 }
@@ -283,14 +303,14 @@
             if(currentIndex > 625)
             {
                 plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromInt(625)];
-                plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
+                plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
             }
             
             CPTXYPlotSpace *plotSpace2 = (CPTXYPlotSpace *)self.graph2.defaultPlotSpace;
             if(currentIndex > 625)
             {
                 plotSpace2.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
-                plotSpace2.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
+                plotSpace2.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
             }
             
             
@@ -298,7 +318,7 @@
             if(currentIndex > 625)
             {
                 plotSpace3.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
-                plotSpace3.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
+                plotSpace3.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
             }
             
             
@@ -306,7 +326,7 @@
             if(currentIndex > 625)
             {
                 plotSpace4.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
-                plotSpace4.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(-33000) length:CPTDecimalFromInt(66000)];
+                plotSpace4.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
             }
             
         }
@@ -425,7 +445,7 @@
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)newGraph.defaultPlotSpace;
     plotSpace.allowsUserInteraction = YES;
     plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(0.0) length:CPTDecimalFromDouble(625.0)];
-    plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(-33000) length:CPTDecimalFromDouble(66000)];
+    plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
     
     // Axes
     CPTXYAxisSet *axisSet = (CPTXYAxisSet *)newGraph.axisSet;
