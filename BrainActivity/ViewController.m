@@ -12,7 +12,7 @@
 #include <Accelerate/Accelerate.h>
 #import <AFNetworking/AFNetworking.h>
 
-#define RAW_SCOPE 200000
+#define RAW_SCOPE 200
 
 @interface ViewController ()
 {
@@ -39,8 +39,13 @@
     
     NSInteger scopeRaw;
     NSInteger scopeSpectrum;
+    
+    NSArray *zoomValues;
+    NSArray *scopeValues;
 }
 @property (strong, nonatomic) IBOutlet UIButton *btnBack;
+@property (strong, nonatomic) IBOutlet UILabel *scopeLabel;
+@property (strong, nonatomic) IBOutlet UILabel *zoomLabel;
 
 @property (nonatomic, strong) NSTimer *samplingTimer;
 @property (nonatomic, strong) NSTimer *yellowTimer;
@@ -70,12 +75,30 @@
 -(void)defaultValues
 {
     scopeRaw = RAW_SCOPE;
+    
+    scopeValues = @[@250, @500, @1000, @1250, @1500, @2000];
+
+    zoomValues = @[@12.5, @25, @50, @100, @200, @300];
+    
     currentView = 1;
     
     currentRange = 5 * 250;
     
     currentIndex = 0;
     currentFFTIndex = 0;
+    
+    [self fillLabels];
+
+}
+
+-(void)fillLabels
+{
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _zoomLabel.text = [NSString stringWithFormat:@"%li nV", scopeRaw];
+        _scopeLabel.text = [NSString stringWithFormat:@"%li sec", currentRange / 250];
+
+    });
 }
 
 - (void)viewDidLoad {
@@ -151,9 +174,8 @@
     _samplingTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(masterTimer) userInfo:nil repeats:YES];
     _yellowTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(yellowTimerFire) userInfo:nil repeats:YES];
 
-    _zoom.value = 1;
+
     
-    _scopeStepper.value = 1250;
     
 }
 
@@ -228,11 +250,13 @@
     
     UIStepper *stepp = (UIStepper *)sender;
     
-    currentRange = (NSInteger)stepp.value;
+    currentRange = [scopeValues[(NSInteger)stepp.value] integerValue];
     
     NSLog(@"%f  %li", stepp.value, currentRange);
     
     [self createGraphs];
+    
+    [self fillLabels];
 }
 
 
@@ -240,9 +264,11 @@
     
     UIStepper *stepp = (UIStepper *)sender;
     
-    scopeRaw = RAW_SCOPE * stepp.value;
-    
+    scopeRaw = [zoomValues[(NSInteger)stepp.value] integerValue];
+
     NSLog(@"%f  %ld", stepp.value, (long)scopeRaw);
+    
+        [self fillLabels];
 }
 
 - (IBAction)changedView:(id)sender {
@@ -288,9 +314,7 @@
         [self createCorePlot:_view3 withColor:[UIColor lightGrayColor]];
         [self createCorePlot:_view4 withColor:[UIColor lightGrayColor]];
         
-       
-        
-        
+
         if([self.view viewWithTag:101])
         {
             [[self.view viewWithTag:101] removeFromSuperview];
@@ -342,18 +366,25 @@
         [self create3CorePlot:_view4 withColor:[UIColor darkGrayColor]];
 
     }
+    if( currentView == 3)
+    {
+        if([self.view viewWithTag:101])
+        {
+            [[self.view viewWithTag:101] removeFromSuperview];
+            [[self.view viewWithTag:102] removeFromSuperview];
+            [[self.view viewWithTag:103] removeFromSuperview];
+            [[self.view viewWithTag:104] removeFromSuperview];
+            
+        }
+    }
 }
 
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
     
-   
-
     self.plotH.constant = ([UIScreen mainScreen].bounds.size.height - 160) / 4;
     [self.view layoutSubviews];
-    
-   
     
 }
 
@@ -381,10 +412,7 @@
 -(void)dataReceived:(NSNotification *)notification
 {
     
-    
     NSDictionary *data = notification.userInfo;
-    
-    
     
     
     [data1 addObject:@{@"index": @(currentIndex), @"data" : data[@"ch1"]}];
@@ -394,7 +422,6 @@
     [data3 addObject:@{@"index": @(currentIndex), @"data" : data[@"ch3"]}];
     
     [data4 addObject:@{@"index": @(currentIndex), @"data" : data[@"ch4"]}];
-    
     
     
     if(currentIndex > currentRange)
@@ -958,11 +985,8 @@
     
     NSString *URLString = [NSString stringWithFormat:@"http://potbot.elasticbeanstalk.com/api/eegSamples"];
     NSDictionary *params = @{@"deviceId": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
-                             @"eegIndexes": _manager.rawvalues, @"eegSpectrums" : @[_manager.fftData]};
+                             @"eegIndexes": _manager.rawvalues, @"eegSpectrums" : @[]};
     
-    
-    NSLog(@"%@", params);
-
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil];
 

@@ -14,7 +14,7 @@
 #import "SERVICES.h"
 
 const double VRef = 2.4 / 6.0 / 32.0;
-const double K = 1000000000 * VRef / 0x7FFF;
+const double K = 1000000 * VRef / 0x7FFF;
 
 @interface CBManager() < CBCentralManagerDelegate, CBPeripheralDelegate>
 
@@ -270,10 +270,7 @@ const double K = 1000000000 * VRef / 0x7FFF;
             [subdata getBytes:&orderNumber length:2];
             orderNumber = CFSwapInt16LittleToHost(orderNumber);
 
-            
             //double d = 100000*sin(2*M_PI*10*_counter/250);
-            
-            
             
             //first 4 channels
             subdata = [data subdataWithRange:NSMakeRange(3, 2)];
@@ -298,7 +295,7 @@ const double K = 1000000000 * VRef / 0x7FFF;
             
             
             
-            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter],@"timeframe" : [NSNumber numberWithFloat:([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithFloat:orderNumber], @"ch1" : [NSNumber numberWithDouble:(channel1 * K)], @"ch2" : [NSNumber numberWithDouble:(channel2 * K)], @"ch3" : [NSNumber numberWithDouble:(channel3 * K)], @"ch4" : [NSNumber numberWithDouble:(channel4 * K)]};
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter],@"timeframe" : [NSString stringWithFormat:@"%li", (long)([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithFloat:orderNumber], @"ch1" : [NSNumber numberWithDouble:(channel1 * K)], @"ch2" : [NSNumber numberWithDouble:(channel2 * K)], @"ch3" : [NSNumber numberWithDouble:(channel3 * K)], @"ch4" : [NSNumber numberWithDouble:(channel4 * K)]};
             
             
             //NSLog(@"%@", ret);
@@ -319,7 +316,6 @@ const double K = 1000000000 * VRef / 0x7FFF;
             orderNumber = CFSwapInt16LittleToHost(orderNumber);
             
             //double d = 100000*sin(2*M_PI*10*(_counter + 1)/250);
-
             
             //another 4 channels
             subdata = [data subdataWithRange:NSMakeRange(12, 2)];
@@ -341,12 +337,9 @@ const double K = 1000000000 * VRef / 0x7FFF;
             short channel4_ = 0;
             [subdata getBytes:&channel4_ length:2];
             channel4_ = CFSwapInt16BigToHost(channel4_);
+
             
-//#warning Remove later!
-//            double d = channel2_ * K;
-//            NSLog(@"%f", d);
-            
-            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"timeframe" : [NSNumber numberWithFloat:([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithInt:orderNumber + 1], @"ch1" : [NSNumber numberWithDouble:(channel1_ * K)], @"ch2" : [NSNumber numberWithDouble:(channel2_ * K)], @"ch3" : [NSNumber numberWithDouble:(channel3_ * K)], @"ch4" : [NSNumber numberWithDouble:(channel4_ * K)]};
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"timeframe" : [NSString stringWithFormat:@"%li", (long)([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithInt:orderNumber + 1], @"ch1" : [NSNumber numberWithDouble:(channel1_ * K)], @"ch2" : [NSNumber numberWithDouble:(channel2_ * K)], @"ch3" : [NSNumber numberWithDouble:(channel3_ * K)], @"ch4" : [NSNumber numberWithDouble:(channel4_ * K)]};
             
             //NSLog(@"%@", ret);
 
@@ -402,13 +395,9 @@ const double K = 1000000000 * VRef / 0x7FFF;
             
             _counter++;
 
-            
-           
-
             [_delegate CB_dataUpdatedWithDictionary:[self makeReturnDictionary:characteristic.value channel:2]];
 
             _counter++;
-            
             
             if(_counter % 250 == 0)
             {
@@ -469,6 +458,9 @@ const double K = 1000000000 * VRef / 0x7FFF;
     [_centralManager stopScan];
     [_rawdata setLength:0];
     _hasStarted = NO;
+    _rawvalues = [NSMutableArray new];
+    _fftData = [NSMutableArray new];
+    _counter = 0;
     [self cleanup];
     
     _centralManager = nil;
@@ -491,7 +483,7 @@ const double K = 1000000000 * VRef / 0x7FFF;
     //[self testFFT];
     
     const int log2n = log2f(256);
-    const int n = 1 << log2n;
+    //const int n = 1 << log2n;
     const int nOver2 = 128;
     
     FFTSetupD fftSetup = vDSP_create_fftsetupD (log2n, kFFTRadix2);
@@ -575,7 +567,6 @@ const double K = 1000000000 * VRef / 0x7FFF;
             farray4[i] = 0.0;
         }
         
-      
     }
     
     NSDictionary *fftData1 = [self fft:farray1];
@@ -584,7 +575,7 @@ const double K = 1000000000 * VRef / 0x7FFF;
     NSDictionary *fftData4 = [self fft:farray4];
 
     
-    NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_fftCounter], @"ch1" : fftData1, @"ch2" : fftData2, @"ch3" : fftData3, @"ch4" : fftData4, @"timeframe" : [NSNumber numberWithFloat:([NSDate timeIntervalSinceReferenceDate] * 1000000)]};
+    NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_fftCounter], @"ch1" : fftData1, @"ch2" : fftData2, @"ch3" : fftData3, @"ch4" : fftData4, @"timeframe" : [NSString stringWithFormat:@"%li", (long)([NSDate timeIntervalSinceReferenceDate] * 1000000)]};
     
     [_fftData addObject:ret];
     
