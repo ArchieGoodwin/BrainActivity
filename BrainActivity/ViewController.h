@@ -26,5 +26,8 @@
 @property (strong, nonatomic) IBOutlet UIStepper *zoom;
 
 @property (strong, nonatomic) CBManager *manager;
+
+-(void)defaultValues;
+- (void)sendData ;
 @end
 

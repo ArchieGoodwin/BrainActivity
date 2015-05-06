@@ -19,6 +19,7 @@
 @property (strong, nonatomic) NSMutableData *rawdata;
 @property (strong, nonatomic) NSMutableArray *rawvalues;
 @property (strong, nonatomic) NSMutableArray *fftData;
+@property (strong, nonatomic) NSMutableArray *fftrawvalues;
 @property (strong, nonatomic) NSMutableArray *green;
 @property (strong, nonatomic) NSMutableArray *yellow;
 @property (strong, nonatomic) NSMutableArray *red1;

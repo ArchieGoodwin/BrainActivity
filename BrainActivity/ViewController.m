@@ -10,8 +10,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <Accelerate/Accelerate.h>
+#import <AFNetworking/AFNetworking.h>
 
-#define RAW_SCOPE 66000
+#define RAW_SCOPE 200000
 
 @interface ViewController ()
 {
@@ -27,6 +28,7 @@
     NSMutableArray *dataFFT3;
     NSMutableArray *dataFFT4;
 
+    NSMutableArray *dataFFT;
 
     NSInteger currentIndex;
     NSInteger currentFFTIndex;
@@ -41,6 +43,8 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnBack;
 
 @property (nonatomic, strong) NSTimer *samplingTimer;
+@property (nonatomic, strong) NSTimer *yellowTimer;
+@property (strong, nonatomic) IBOutlet UIStepper *scopeStepper;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *plotH;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *leftSpace;
@@ -63,10 +67,21 @@
 
 @implementation ViewController
 
+-(void)defaultValues
+{
+    scopeRaw = RAW_SCOPE;
+    currentView = 1;
+    
+    currentRange = 5 * 250;
+    
+    currentIndex = 0;
+    currentFFTIndex = 0;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    scopeRaw = RAW_SCOPE;
+    [self defaultValues];
     
     _btnBack.layer.borderColor = [UIColor darkGrayColor].CGColor;
     _btnBack.layer.borderWidth = 2.0;
@@ -105,12 +120,6 @@
     _red2View.layer.borderColor = [UIColor darkGrayColor].CGColor;
     _red2View.layer.cornerRadius = 15.0;
     
-    currentView = 1;
-   
-    currentRange = 600;
-    
-    currentIndex = 0;
-    currentFFTIndex = 0;
     
     data1 = [NSMutableArray new];
     data2 = [NSMutableArray new];
@@ -140,8 +149,11 @@
 
     
     _samplingTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(masterTimer) userInfo:nil repeats:YES];
+    _yellowTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(yellowTimerFire) userInfo:nil repeats:YES];
 
     _zoom.value = 1;
+    
+    _scopeStepper.value = 1250;
     
 }
 
@@ -183,6 +195,47 @@
     
 }
 
+-(void)yellowTimerFire {
+    
+    if(currentView == 3)
+    {
+        NSLog(@"yellow timer fired");
+        
+        if(_manager.hasStarted)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if([_manager processYellowForChannel:1])
+                {
+                    _yellowView.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:239.0/255.0 blue:54.0/255.0 alpha:1.0];
+                }
+                else
+                {
+                    _yellowView.backgroundColor = [UIColor lightGrayColor];
+                }
+                
+            });
+        }
+        
+        
+    }
+    
+    
+    
+}
+
+- (IBAction)scopeChange:(id)sender {
+    
+    UIStepper *stepp = (UIStepper *)sender;
+    
+    currentRange = (NSInteger)stepp.value;
+    
+    NSLog(@"%f  %li", stepp.value, currentRange);
+    
+    [self createGraphs];
+}
+
+
 - (IBAction)zoomChange:(id)sender {
     
     UIStepper *stepp = (UIStepper *)sender;
@@ -197,13 +250,25 @@
     UISegmentedControl *seg = (UISegmentedControl *)sender;
     
     currentView = seg.selectedSegmentIndex + 1;
+    
+    if(currentView == 1)
+    {
+        _zoom.hidden = NO;
+        _scopeStepper.hidden = NO;
+
+    }
+    else
+    {
+        _zoom.hidden = YES;
+        _scopeStepper.hidden = YES;
+    }
+    
     if(currentView < 3)
     {
         _leftSpace.constant = self.view.frame.size.width;
         _rightSpace.constant = -self.view.frame.size.width;
         [self createGraphs];
         
-        _zoom.hidden  =NO;
 
     }
     else
@@ -211,7 +276,6 @@
         _leftSpace.constant = -16.0;
         _rightSpace.constant = -16.0;
         
-        _zoom.hidden = YES;
     }
 }
 
@@ -223,9 +287,55 @@
         [self createCorePlot:_view2 withColor:[UIColor lightGrayColor]];
         [self createCorePlot:_view3 withColor:[UIColor lightGrayColor]];
         [self createCorePlot:_view4 withColor:[UIColor lightGrayColor]];
+        
+       
+        
+        
+        if([self.view viewWithTag:101])
+        {
+            [[self.view viewWithTag:101] removeFromSuperview];
+            [[self.view viewWithTag:102] removeFromSuperview];
+            [[self.view viewWithTag:103] removeFromSuperview];
+            [[self.view viewWithTag:104] removeFromSuperview];
+            
+        }
+        else
+        {
+            UIView *viewLine1 = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 5, 90, 1, self.view.frame.size.height - 130)];
+            viewLine1.backgroundColor = [UIColor lightGrayColor];
+            viewLine1.tag = 101;
+            
+            UIView *viewLine2 = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 5 * 2, 90, 1, self.view.frame.size.height - 130)];
+            viewLine2.backgroundColor = [UIColor lightGrayColor];
+            viewLine2.tag = 102;
+            
+            UIView *viewLine3 = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 5 * 3, 90 , 1, self.view.frame.size.height - 130)];
+            viewLine3.backgroundColor = [UIColor lightGrayColor];
+            viewLine3.tag = 103;
+            
+            UIView *viewLine4 = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 5 * 4, 90, 1, self.view.frame.size.height - 130)];
+            viewLine4.backgroundColor = [UIColor lightGrayColor];
+            viewLine4.tag = 104;
+            
+            [self.view addSubview:viewLine1];
+            [self.view addSubview:viewLine2];
+            [self.view addSubview:viewLine3];
+            [self.view addSubview:viewLine4];
+
+        }
+        
     }
     if(currentView == 2)
     {
+        if([self.view viewWithTag:101])
+        {
+            [[self.view viewWithTag:101] removeFromSuperview];
+            [[self.view viewWithTag:102] removeFromSuperview];
+            [[self.view viewWithTag:103] removeFromSuperview];
+            [[self.view viewWithTag:104] removeFromSuperview];
+            
+        }
+        
         [self create3CorePlot:_view1 withColor:[UIColor darkGrayColor]];
         [self create3CorePlot:_view2 withColor:[UIColor darkGrayColor]];
         [self create3CorePlot:_view3 withColor:[UIColor darkGrayColor]];
@@ -238,16 +348,20 @@
 {
     [super viewDidLayoutSubviews];
     
+   
 
     self.plotH.constant = ([UIScreen mainScreen].bounds.size.height - 160) / 4;
     [self.view layoutSubviews];
+    
+   
     
 }
 
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    
+    [_yellowTimer invalidate];
+    _yellowTimer = nil;
     
     [_samplingTimer invalidate];
     _samplingTimer = nil;
@@ -271,17 +385,19 @@
     NSDictionary *data = notification.userInfo;
     
     
-    [data1 addObject:@{@"index": @(currentIndex), @"data" : data[@"channel_1"]}];
-    
-    [data2 addObject:@{@"index": @(currentIndex), @"data" : data[@"channel_2"]}];
-    
-    [data3 addObject:@{@"index": @(currentIndex), @"data" : data[@"channel_3"]}];
-    
-    [data4 addObject:@{@"index": @(currentIndex), @"data" : data[@"channel_4"]}];
     
     
+    [data1 addObject:@{@"index": @(currentIndex), @"data" : data[@"ch1"]}];
     
-    if(currentIndex > 625)
+    [data2 addObject:@{@"index": @(currentIndex), @"data" : data[@"ch2"]}];
+    
+    [data3 addObject:@{@"index": @(currentIndex), @"data" : data[@"ch3"]}];
+    
+    [data4 addObject:@{@"index": @(currentIndex), @"data" : data[@"ch4"]}];
+    
+    
+    
+    if(currentIndex > currentRange)
     {
         [data1 removeObjectAtIndex:0];
         [data2 removeObjectAtIndex:0];
@@ -294,41 +410,42 @@
     {
         if(currentIndex % 8 == 0)
         {
-            [self.graph1 reloadData];
-            [self.graph2 reloadData];
-            [self.graph3 reloadData];
-            [self.graph4 reloadData];
+           
             
             CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph1.defaultPlotSpace;
-            if(currentIndex > 625)
+            if(currentIndex > currentRange)
             {
-                plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromInt(625)];
+                plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(currentIndex - currentRange) length:CPTDecimalFromInteger(currentRange)];
                 plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
             }
             
             CPTXYPlotSpace *plotSpace2 = (CPTXYPlotSpace *)self.graph2.defaultPlotSpace;
-            if(currentIndex > 625)
+            if(currentIndex > currentRange)
             {
-                plotSpace2.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
+                plotSpace2.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(currentIndex - currentRange) length:CPTDecimalFromInteger(currentRange)];
                 plotSpace2.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
             }
             
             
             CPTXYPlotSpace *plotSpace3 = (CPTXYPlotSpace *)self.graph3.defaultPlotSpace;
-            if(currentIndex > 625)
+            if(currentIndex > currentRange)
             {
-                plotSpace3.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
+                plotSpace3.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(currentIndex - currentRange) length:CPTDecimalFromInteger(currentRange)];
                 plotSpace3.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
             }
             
             
             CPTXYPlotSpace *plotSpace4 = (CPTXYPlotSpace *)self.graph4.defaultPlotSpace;
-            if(currentIndex > 625)
+            if(currentIndex > currentRange)
             {
-                plotSpace4.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentIndex - 625) length:CPTDecimalFromDouble(625)];
+                plotSpace4.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(currentIndex - currentRange) length:CPTDecimalFromInteger(currentRange)];
                 plotSpace4.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
             }
             
+            [self.graph1 reloadData];
+            [self.graph2 reloadData];
+            [self.graph3 reloadData];
+            [self.graph4 reloadData];
         }
     }
     
@@ -350,13 +467,13 @@
     NSDictionary *data = notification.userInfo;
     
     
-    [dataFFT1 addObject:@{@"index": @(currentFFTIndex), @"data" : data[@"fft_channel_1"]}];
+    [dataFFT1 addObject:@{@"index": @(currentFFTIndex), @"data" : data[@"ch1"]}];
     
-    [dataFFT2 addObject:@{@"index": @(currentFFTIndex), @"data" : data[@"fft_channel_2"]}];
+    [dataFFT2 addObject:@{@"index": @(currentFFTIndex), @"data" : data[@"ch2"]}];
     
-    [dataFFT3 addObject:@{@"index": @(currentFFTIndex), @"data" : data[@"fft_channel_3"]}];
+    [dataFFT3 addObject:@{@"index": @(currentFFTIndex), @"data" : data[@"ch3"]}];
     
-    [dataFFT4 addObject:@{@"index": @(currentFFTIndex), @"data" : data[@"fft_channel_4"]}];
+    [dataFFT4 addObject:@{@"index": @(currentFFTIndex), @"data" : data[@"ch4"]}];
     
     
     
@@ -444,7 +561,7 @@
     // Setup plot space
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)newGraph.defaultPlotSpace;
     plotSpace.allowsUserInteraction = YES;
-    plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(0.0) length:CPTDecimalFromDouble(625.0)];
+    plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(0.0) length:CPTDecimalFromDouble(currentRange)];
     plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
     
     // Axes
@@ -455,7 +572,7 @@
     x.minorTicksPerInterval       = 0;
     x.labelingPolicy = CPTAxisLabelingPolicyNone;
     
-    [[newGraph plotAreaFrame] setPaddingLeft:30.0f];
+    //[[newGraph plotAreaFrame] setPaddingLeft:30.0f];
 
     
     CPTXYAxis *y = axisSet.yAxis;
@@ -825,5 +942,43 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark -
+#pragma mark Networking
+
+- (void)sendData {
+    
+    AFHTTPRequestOperationManager *nManager = [AFHTTPRequestOperationManager manager];
+    nManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    nManager.requestSerializer = [AFJSONRequestSerializer serializer];
+    
+    [nManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    //nManager.securityPolicy.allowInvalidCertificates = YES;
+
+    
+    NSString *URLString = [NSString stringWithFormat:@"http://potbot.elasticbeanstalk.com/api/eegSamples"];
+    NSDictionary *params = @{@"deviceId": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
+                             @"eegIndexes": _manager.rawvalues, @"eegSpectrums" : @[_manager.fftData]};
+    
+    
+    NSLog(@"%@", params);
+
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil];
+
+    NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    
+    NSLog(@"%@", jsonString);
+    
+    
+    [nManager POST:URLString parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"JSON: %@", responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
+    
+}
+
 
 @end

@@ -11,12 +11,13 @@
 @interface MainVC ()
 @property (strong, nonatomic) IBOutlet UIButton *btnStart;
 
+
 @end
 
 @implementation MainVC
 {
     CBManager *cbManager;
-    
+    ViewController *vc;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -40,6 +41,8 @@
 -(void)CB_changedStatus:(NSString *)statusMessage
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+                
         self.lblStatus.text = statusMessage;
     });
 }
@@ -80,12 +83,32 @@
     
 }
 
+- (IBAction)sendDataAction:(id)sender {
+    
+    if(vc && cbManager.hasStarted)
+    {
+        [vc sendData];
+    }
+}
+
 - (IBAction)connectToDevice:(id)sender {
+    
+
     
     if(cbManager.hasStarted)
     {
+        if(vc)
+        {
+            [vc defaultValues];
+        }
+        
         [cbManager stop];
+        
+        cbManager = [[CBManager alloc] init];
+        cbManager.delegate = self;
+        
         [_btnStart setTitle:@"Connect to device" forState:UIControlStateNormal];
+        
     }
     else
     {
@@ -131,7 +154,7 @@
     if([segue.identifier isEqualToString:@"showPlot"])
     {
         
-        ViewController *vc = (ViewController *)segue.destinationViewController;
+        vc = (ViewController *)segue.destinationViewController;
         vc.manager = cbManager;
         
     }
