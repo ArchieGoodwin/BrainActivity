@@ -12,7 +12,7 @@
 #include <Accelerate/Accelerate.h>
 #import <AFNetworking/AFNetworking.h>
 #import "SDiPhoneVersion.h"
-#define RAW_SCOPE 200
+#define RAW_SCOPE 200000
 
 @interface ViewController ()
 {
@@ -42,6 +42,7 @@
     
     NSArray *zoomValues;
     NSArray *scopeValues;
+    NSInteger limit;
 }
 @property (strong, nonatomic) IBOutlet UIButton *btnBack;
 @property (strong, nonatomic) IBOutlet UILabel *scopeLabel;
@@ -76,9 +77,9 @@
 {
     scopeRaw = RAW_SCOPE;
     
-    scopeValues = @[@250, @500, @1000, @1250, @2000];
+    scopeValues = @[@250, @500, @1000, @1250];
 
-    zoomValues = @[@20, @40, @100, @200, @400];
+    zoomValues = @[@20000, @40000, @100000, @200000, @400000];
     
     currentView = 1;
     
@@ -95,14 +96,27 @@
 {
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        _zoomLabel.text = [NSString stringWithFormat:@"%li nV", scopeRaw];
+        _zoomLabel.text = [NSString stringWithFormat:@"%li mV", scopeRaw / 1000];
         _scopeLabel.text = [NSString stringWithFormat:@"%li sec", currentRange / 250];
 
     });
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    //currentIndex = 0;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    limit = 100;
+    
+    if ([SDiPhoneVersion deviceVersion] == iPhone6 || [SDiPhoneVersion deviceVersion] == iPhone6Plus)
+    {
+        limit = 8;
+    }
     
     [self defaultValues];
     
@@ -250,11 +264,25 @@
     
     UIStepper *stepp = (UIStepper *)sender;
     
+    /*if([scopeValues[(NSInteger)stepp.value] integerValue] > 1250)
+    {
+        currentIndex = 0;
+        
+        [self createGraphs];
+        
+        [data1 removeAllObjects];
+        [data2 removeAllObjects];
+        [data3 removeAllObjects];
+        [data4 removeAllObjects];
+        
+    }*/
+    
     currentRange = [scopeValues[(NSInteger)stepp.value] integerValue];
     
     NSLog(@"%f  %li", stepp.value, currentRange);
     
-    [self createGraphs];
+    //[self createGraphs];
+    
     
     [self fillLabels];
 }
@@ -268,7 +296,7 @@
 
     NSLog(@"%f  %ld", stepp.value, (long)scopeRaw);
     
-        [self fillLabels];
+    [self fillLabels];
 }
 
 - (IBAction)changedView:(id)sender {
@@ -414,6 +442,7 @@
     
     NSDictionary *data = notification.userInfo;
     
+    //currentIndex = [data[@"counter"] integerValue];
     
     [data1 addObject:@{@"index": @(currentIndex), @"data" : data[@"ch1"]}];
     
@@ -435,12 +464,7 @@
     
     if(currentView == 1)
     {
-        NSInteger limit = 100;
-        
-        if ([SDiPhoneVersion deviceVersion] == iPhone6 || [SDiPhoneVersion deviceVersion] == iPhone6Plus)
-        {
-            limit = 8;
-        }
+       
         
         if(currentIndex % limit == 0)
         {
@@ -451,6 +475,7 @@
                 plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(currentIndex - currentRange) length:CPTDecimalFromInteger(currentRange)];
                 plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
             }
+            
             
             CPTXYPlotSpace *plotSpace2 = (CPTXYPlotSpace *)self.graph2.defaultPlotSpace;
             if(currentIndex > currentRange)
@@ -481,10 +506,7 @@
             [self.graph4 reloadData];
         }
     }
-    
-    
-    
-    
+
     currentIndex++;
     
 }
@@ -600,9 +622,9 @@
     // Axes
     CPTXYAxisSet *axisSet = (CPTXYAxisSet *)newGraph.axisSet;
     CPTXYAxis *x          = axisSet.xAxis;
-    x.majorIntervalLength         = CPTDecimalFromDouble(125);
+    //x.majorIntervalLength         = CPTDecimalFromDouble(125);
     //x.orthogonalCoordinateDecimal = CPTDecimalFromDouble(10.0);
-    x.minorTicksPerInterval       = 0;
+    //x.minorTicksPerInterval       = 0;
     x.labelingPolicy = CPTAxisLabelingPolicyNone;
     
     //[[newGraph plotAreaFrame] setPaddingLeft:30.0f];
@@ -994,12 +1016,12 @@
                              @"eegIndexes": _manager.rawvalues, @"eegSpectrums" : @[]};
     
     
-    NSData *data = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil];
+    //NSData *data = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil];
 
-    NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    //NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
     
-    NSLog(@"%@", jsonString);
+    //NSLog(@"%@", jsonString);
     
     
     [nManager POST:URLString parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {

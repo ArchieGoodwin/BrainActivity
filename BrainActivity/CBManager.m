@@ -14,7 +14,7 @@
 #import "SERVICES.h"
 
 const double VRef = 2.4 / 6.0 / 32.0;
-const double K = 1000000 * VRef / 0x7FFF;
+const double K = 1000000000 * VRef / 0x7FFF;
 
 @interface CBManager() < CBCentralManagerDelegate, CBPeripheralDelegate>
 
@@ -295,7 +295,7 @@ const double K = 1000000 * VRef / 0x7FFF;
             
             
             
-            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter],@"timeframe" : [NSString stringWithFormat:@"%li", (long)([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithFloat:orderNumber], @"ch1" : [NSNumber numberWithDouble:(channel1 * K)], @"ch2" : [NSNumber numberWithDouble:(channel2 * K)], @"ch3" : [NSNumber numberWithDouble:(channel3 * K)], @"ch4" : [NSNumber numberWithDouble:(channel4 * K)]};
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter],@"timeframe" : [NSString stringWithFormat:@"%li", (long)([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber], @"ch1" : [NSNumber numberWithDouble:floor(channel1 * K)], @"ch2" : [NSNumber numberWithDouble:floor(channel2 * K)], @"ch3" : [NSNumber numberWithDouble:floor(channel3 * K)], @"ch4" : [NSNumber numberWithDouble:floor(channel4 * K)]};
             
             
             //NSLog(@"%@", ret);
@@ -339,7 +339,7 @@ const double K = 1000000 * VRef / 0x7FFF;
             channel4_ = CFSwapInt16BigToHost(channel4_);
 
             
-            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"timeframe" : [NSString stringWithFormat:@"%li", (long)([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithInt:orderNumber + 1], @"ch1" : [NSNumber numberWithDouble:(channel1_ * K)], @"ch2" : [NSNumber numberWithDouble:(channel2_ * K)], @"ch3" : [NSNumber numberWithDouble:(channel3_ * K)], @"ch4" : [NSNumber numberWithDouble:(channel4_ * K)]};
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"timeframe" : [NSString stringWithFormat:@"%li", (long)([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber + 1], @"ch1" : [NSNumber numberWithDouble:floor(channel1_ * K)], @"ch2" : [NSNumber numberWithDouble:floor(channel2_ * K)], @"ch3" : [NSNumber numberWithDouble:floor(channel3_ * K)], @"ch4" : [NSNumber numberWithDouble:floor(channel4_ * K)]};
             
             //NSLog(@"%@", ret);
 
