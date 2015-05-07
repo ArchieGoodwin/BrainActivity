@@ -194,6 +194,7 @@
 				TargetAttributes = {
 					DCDE50C91A878B0000F54539 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = A2KE4XLMNK;
 					};
 				};
 			};
@@ -396,7 +397,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Sergey Dikarev (M4J98HRQR2)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Sergey Dikarev (A2KE4XLMNK)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Sergey Dikarev (A2KE4XLMNK)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BrainActivity",
@@ -406,7 +408,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2d60595f-ee46-42db-9ae4-450aa29584e2";
+				PROVISIONING_PROFILE = "11e45708-c4ff-411d-a9f6-7e26f6aed9f8";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -417,7 +419,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Sergey Dikarev (M4J98HRQR2)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Sergey Dikarev (A2KE4XLMNK)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Sergey Dikarev (A2KE4XLMNK)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BrainActivity",
@@ -427,7 +430,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2d60595f-ee46-42db-9ae4-450aa29584e2";
+				PROVISIONING_PROFILE = "11e45708-c4ff-411d-a9f6-7e26f6aed9f8";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

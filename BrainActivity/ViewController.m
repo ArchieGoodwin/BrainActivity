@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <Accelerate/Accelerate.h>
 #import <AFNetworking/AFNetworking.h>
-
+#import "SDiPhoneVersion.h"
 #define RAW_SCOPE 200
 
 @interface ViewController ()
@@ -76,9 +76,9 @@
 {
     scopeRaw = RAW_SCOPE;
     
-    scopeValues = @[@250, @500, @1000, @1250, @1500, @2000];
+    scopeValues = @[@250, @500, @1000, @1250, @2000];
 
-    zoomValues = @[@12.5, @25, @50, @100, @200, @300];
+    zoomValues = @[@20, @40, @100, @200, @400];
     
     currentView = 1;
     
@@ -435,10 +435,16 @@
     
     if(currentView == 1)
     {
-        if(currentIndex % 8 == 0)
+        NSInteger limit = 100;
+        
+        if ([SDiPhoneVersion deviceVersion] == iPhone6 || [SDiPhoneVersion deviceVersion] == iPhone6Plus)
+        {
+            limit = 8;
+        }
+        
+        if(currentIndex % limit == 0)
         {
            
-            
             CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph1.defaultPlotSpace;
             if(currentIndex > currentRange)
             {

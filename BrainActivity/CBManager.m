@@ -518,15 +518,15 @@ const double K = 1000000 * VRef / 0x7FFF;
         
     }*/
     
-    int val1 = [self findMaxIndex:output range:NSMakeRange(4, 4)];
+    int val1 = [self findMaxIndex:output range:NSMakeRange(3, 4)];
     //printf("max in 3-6: %8g  %f  max index: %d \n", frequences[val1], output[val1], val1);
     
     
-    int val2 = [self findMaxIndex:output range:NSMakeRange(8, 7)];
+    int val2 = [self findMaxIndex:output range:NSMakeRange(7, 7)];
     //printf("max in 7-13: %8g  %f  max index: %d \n", frequences[val2], output[val2], val2);
     
     
-    int val3 = [self findMaxIndex:output range:NSMakeRange(15, 12)];
+    int val3 = [self findMaxIndex:output range:NSMakeRange(14, 11)];
     //printf("max in 14-18: %8g  %f  max index: %d \n", frequences[val3], output[val3], val3);
    
     
