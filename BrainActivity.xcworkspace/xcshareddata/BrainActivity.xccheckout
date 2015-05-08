@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>1096AD6C-E449-438F-A2CD-2C1A74789719</string>
+	<key>IDESourceControlProjectName</key>
+	<string>BrainActivity</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>B139EA68F2934969A8A8C30DB97B28729373828F</key>
+		<string>https://github.com/ArchieGoodwin/BrainActivity.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>BrainActivity.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>B139EA68F2934969A8A8C30DB97B28729373828F</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/ArchieGoodwin/BrainActivity.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>B139EA68F2934969A8A8C30DB97B28729373828F</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B139EA68F2934969A8A8C30DB97B28729373828F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>BrainActivity</string>
+		</dict>
+	</array>
+</dict>
+</plist>

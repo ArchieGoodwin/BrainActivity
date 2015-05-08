@@ -1,0 +1,12 @@
+D:\work\NeuroBLE\SoftWare\HRS\HRS\bin\Debug\NeuroBLE.exe.config
+D:\work\NeuroBLE\SoftWare\HRS\HRS\bin\Debug\NeuroBLE.exe
+D:\work\NeuroBLE\SoftWare\HRS\HRS\bin\Debug\NeuroBLE.pdb
+D:\work\NeuroBLE\SoftWare\HRS\HRS\bin\Debug\SignalChart.dll
+D:\work\NeuroBLE\SoftWare\HRS\HRS\bin\Debug\System.Runtime.WindowsRuntime.dll
+D:\work\NeuroBLE\SoftWare\HRS\HRS\bin\Debug\SignalChart.pdb
+D:\work\NeuroBLE\SoftWare\HRS\HRS\obj\Debug\NeuroBLE.MainForm.resources
+D:\work\NeuroBLE\SoftWare\HRS\HRS\obj\Debug\NeuroBLE.Properties.Resources.resources
+D:\work\NeuroBLE\SoftWare\HRS\HRS\obj\Debug\NeuroBLE.csproj.GenerateResource.Cache
+D:\work\NeuroBLE\SoftWare\HRS\HRS\obj\Debug\NeuroBLE.exe
+D:\work\NeuroBLE\SoftWare\HRS\HRS\obj\Debug\NeuroBLE.pdb
+D:\work\NeuroBLE\SoftWare\HRS\HRS\obj\Debug\NeuroBLE.csprojResolveAssemblyReference.cache

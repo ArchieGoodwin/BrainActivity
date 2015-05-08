@@ -89,6 +89,22 @@
     currentFFTIndex = 0;
     
     [self fillLabels];
+    
+    _chnlTitle1.layer.borderWidth  = 2;
+    _chnlTitle1.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _chnlTitle1.layer.cornerRadius = 9;
+    
+    _chnlTitle2.layer.borderWidth  = 2;
+    _chnlTitle2.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _chnlTitle2.layer.cornerRadius = 9;
+    
+    _chnlTitle3.layer.borderWidth  = 2;
+    _chnlTitle3.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _chnlTitle3.layer.cornerRadius = 9;
+    
+    _chnlTitle4.layer.borderWidth  = 2;
+    _chnlTitle4.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _chnlTitle4.layer.cornerRadius = 9;
 
 }
 
@@ -96,7 +112,7 @@
 {
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        _zoomLabel.text = [NSString stringWithFormat:@"%li mV", scopeRaw / 1000];
+        _zoomLabel.text = [NSString stringWithFormat:@"%li µV", scopeRaw / 1000];
         _scopeLabel.text = [NSString stringWithFormat:@"%li sec", currentRange / 250];
 
     });
@@ -323,12 +339,29 @@
         _rightSpace.constant = -self.view.frame.size.width;
         [self createGraphs];
         
-
+        
+        _chnlTitle1.hidden = NO;
+        _chnlTitle2.hidden = NO;
+        _chnlTitle3.hidden = NO;
+        _chnlTitle4.hidden = NO;
     }
     else
     {
         _leftSpace.constant = -16.0;
         _rightSpace.constant = -16.0;
+        _chnlTitle1.hidden = YES;
+        _chnlTitle2.hidden = YES;
+        _chnlTitle3.hidden = YES;
+        _chnlTitle4.hidden = YES;
+        
+        if([self.view viewWithTag:101])
+        {
+            [[self.view viewWithTag:101] removeFromSuperview];
+            [[self.view viewWithTag:102] removeFromSuperview];
+            [[self.view viewWithTag:103] removeFromSuperview];
+            [[self.view viewWithTag:104] removeFromSuperview];
+            
+        }
         
     }
 }

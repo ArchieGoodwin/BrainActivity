@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>Pods-BrainActivity-AFNetworking.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-BrainActivity-CorePlot.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-BrainActivity-SDiPhoneVersion.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-BrainActivity.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>19D5F97B881376639AC6677A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6D4F57111EEA01784B2DC388</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7E174FA9AB124AD73B8B508A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D686EB575AF0BA588D23D594</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>

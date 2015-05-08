@@ -34,6 +34,8 @@ const double K = 1000000000 * VRef / 0x7FFF;
 {
     NSInteger lastGreenValue;
     double lastGreenAverage;
+    
+    CBCharacteristic *currentCharacteristic;
 }
 
 #pragma mark -
@@ -208,6 +210,7 @@ const double K = 1000000000 * VRef / 0x7FFF;
             }
         }
         
+        
         return;
     }
     
@@ -225,6 +228,8 @@ const double K = 1000000000 * VRef / 0x7FFF;
                     [_delegate CB_changedStatus:[NSString stringWithFormat:@"Data transfer started"]];
                 }
             }
+            
+            currentCharacteristic = characteristic;
             
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
         }
@@ -455,13 +460,26 @@ const double K = 1000000000 * VRef / 0x7FFF;
 -(void)stop
 {
 
-    [_centralManager stopScan];
     [_rawdata setLength:0];
     _hasStarted = NO;
     _rawvalues = [NSMutableArray new];
     _fftData = [NSMutableArray new];
     _counter = 0;
+    
+    if(_discoveredPeripheral != nil && currentCharacteristic != nil)
+    {
+        
+         [_discoveredPeripheral setNotifyValue:NO forCharacteristic:currentCharacteristic];
+        
+        [_centralManager cancelPeripheralConnection:_discoveredPeripheral];
+
+    }
+    [_centralManager stopScan];
+    
+    
     [self cleanup];
+    
+    
     
     _centralManager = nil;
     

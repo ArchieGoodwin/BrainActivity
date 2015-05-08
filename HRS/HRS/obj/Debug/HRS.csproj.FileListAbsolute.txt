@@ -1,0 +1,10 @@
+D:\work\NeuroBLE\SoftWare\HRS\HRS\bin\Debug\HRS.exe.config
+D:\work\NeuroBLE\SoftWare\HRS\HRS\obj\Debug\HRS.csprojResolveAssemblyReference.cache
+D:\work\NeuroBLE\SoftWare\HRS\HRS\obj\Debug\HRS.Form1.resources
+D:\work\NeuroBLE\SoftWare\HRS\HRS\obj\Debug\HRS.Properties.Resources.resources
+D:\work\NeuroBLE\SoftWare\HRS\HRS\obj\Debug\HRS.csproj.GenerateResource.Cache
+D:\work\NeuroBLE\SoftWare\HRS\HRS\bin\Debug\HRS.exe
+D:\work\NeuroBLE\SoftWare\HRS\HRS\bin\Debug\HRS.pdb
+D:\work\NeuroBLE\SoftWare\HRS\HRS\bin\Debug\System.Runtime.WindowsRuntime.dll
+D:\work\NeuroBLE\SoftWare\HRS\HRS\obj\Debug\HRS.exe
+D:\work\NeuroBLE\SoftWare\HRS\HRS\obj\Debug\HRS.pdb
