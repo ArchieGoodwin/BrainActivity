@@ -28,6 +28,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *lblRed1;
 @property (strong, nonatomic) IBOutlet UILabel *lblRed2;
 @property (strong, nonatomic) IBOutlet UIStepper *zoom;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *chooseCannelSegment;
 
 @property (strong, nonatomic) CBManager *manager;
 

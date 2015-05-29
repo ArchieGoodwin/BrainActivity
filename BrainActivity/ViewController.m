@@ -43,6 +43,7 @@
     NSArray *zoomValues;
     NSArray *scopeValues;
     NSInteger limit;
+    NSInteger currentChannel;
 }
 @property (strong, nonatomic) IBOutlet UIButton *btnBack;
 @property (strong, nonatomic) IBOutlet UILabel *scopeLabel;
@@ -87,6 +88,10 @@
     
     currentIndex = 0;
     currentFFTIndex = 0;
+    
+    currentChannel = 1;
+    
+    _chooseCannelSegment.selectedSegmentIndex = currentChannel - 1;
     
     [self fillLabels];
     
@@ -209,6 +214,11 @@
     
 }
 
+- (IBAction)chooseChannel:(id)sender {
+    UISegmentedControl *segment = (UISegmentedControl *)sender;
+    currentChannel = segment.selectedSegmentIndex + 1;
+}
+
 -(void)masterTimer {
     
     if(currentView == 3)
@@ -219,7 +229,7 @@
         {
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                if([_manager processGreenForChannel:1])
+                if([_manager processGreenForChannel:currentChannel])
                 {
                     _greenView.backgroundColor = [UIColor colorWithRed:0.0/255.0 green:128.0/255.0 blue:0.0/255.0 alpha:1.0];
                 }
@@ -228,14 +238,6 @@
                     _greenView.backgroundColor = [UIColor lightGrayColor];
                 }
                 
-                if([_manager processYellowForChannel:1])
-                {
-                    _yellowView.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:239.0/255.0 blue:54.0/255.0 alpha:1.0];
-                }
-                else
-                {
-                    _yellowView.backgroundColor = [UIColor lightGrayColor];
-                }
                 
             });
         }
@@ -257,13 +259,37 @@
         {
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                if([_manager processYellowForChannel:1])
+                if([_manager processYellowForChannel:currentChannel])
                 {
                     _yellowView.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:239.0/255.0 blue:54.0/255.0 alpha:1.0];
+                    NSLog(@"yellow YES");
                 }
                 else
                 {
                     _yellowView.backgroundColor = [UIColor lightGrayColor];
+                    NSLog(@"yellow NO");
+                }
+                
+                if([_manager processRed1ForChannel:currentChannel])
+                {
+                    _red1View.backgroundColor = [UIColor redColor];
+                    NSLog(@"Red 1 YES");
+                }
+                else
+                {
+                    _yellowView.backgroundColor = [UIColor lightGrayColor];
+                    NSLog(@"Red 1 NO");
+                }
+                
+                if([_manager processRed2ForChannel:currentChannel])
+                {
+                    _red2View.backgroundColor = [UIColor redColor];
+                    NSLog(@"Red 2 YES");
+                }
+                else
+                {
+                    _yellowView.backgroundColor = [UIColor lightGrayColor];
+                    NSLog(@"Red 2 NO");
                 }
                 
             });
@@ -325,12 +351,18 @@
     {
         _zoom.hidden = NO;
         _scopeStepper.hidden = NO;
+        
+        _zoomLabel.hidden = NO;
+        _scopeLabel.hidden = NO;
+
 
     }
     else
     {
         _zoom.hidden = YES;
         _scopeStepper.hidden = YES;
+        _zoomLabel.hidden = YES;
+        _scopeLabel.hidden = YES;
     }
     
     if(currentView < 3)

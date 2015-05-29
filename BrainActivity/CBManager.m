@@ -16,6 +16,11 @@
 const double VRef = 2.4 / 6.0 / 32.0;
 const double K = 1000000000 * VRef / 0x7FFF;
 
+const double timeSpan = 180.0;
+const NSInteger step = 10;
+
+
+
 @interface CBManager() < CBCentralManagerDelegate, CBPeripheralDelegate>
 
 
@@ -34,7 +39,11 @@ const double K = 1000000000 * VRef / 0x7FFF;
 {
     NSInteger lastGreenValue;
     double lastGreenAverage;
-    
+    double yellowDiffLow;
+    double yellowDiffHigh;
+    double red1DiffHigh;
+    double red2DiffHigh;
+
     CBCharacteristic *currentCharacteristic;
 }
 
@@ -49,6 +58,11 @@ const double K = 1000000000 * VRef / 0x7FFF;
         _hasStarted = NO;
         lastGreenValue = 0;
         lastGreenAverage = 0.0;
+        _fixCounter = 0;
+        _yellowFlagLow = 0.2;
+        _yellowFlagHigh = 0.3;
+        _red1Flag = 0.2;
+        _red2Flag = 0.3;
     }
     
     return self;
@@ -58,6 +72,12 @@ const double K = 1000000000 * VRef / 0x7FFF;
 //start connect and proceccing data from device
 -(void)start
 {
+    yellowDiffLow = _yellowFlagLow / (timeSpan / step);
+    yellowDiffHigh = _yellowFlagHigh / (timeSpan / step);
+    red1DiffHigh = _red1Flag / (timeSpan / step);
+    red2DiffHigh = _red2Flag / (timeSpan / step);
+
+    
     _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     _rawdata = [[NSMutableData alloc] init];
     _rawvalues = [NSMutableArray new];
@@ -666,6 +686,7 @@ const double K = 1000000000 * VRef / 0x7FFF;
 #pragma mark -
 #pragma mark Indicators
 
+
 -(BOOL)processGreenForChannel:(NSInteger)channel
 {
     NSInteger len = _fftData.count;
@@ -715,53 +736,216 @@ const double K = 1000000000 * VRef / 0x7FFF;
 {
     NSInteger len = _fftData.count;
     
-    NSMutableArray *yellows = [NSMutableArray new];
-    
-    for(NSInteger i = 0; i < len; i++)
+    if(len >= step)
     {
-        NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
-        NSDictionary *dict = _fftData[i][key];
-        [yellows addObject:dict[@"data2"]];
-    }
-    
-    BOOL result = NO;
-    
-    if(len >= 10)
-    {
-        for(NSInteger i = 4; i < len; i++)
+        NSMutableArray *yellows = [NSMutableArray new];
+        
+        for(NSInteger i = len - step; i < len; i++)
         {
-            if(i % 4 == 0)
-            {
-                double val1 = [yellows[i-4] doubleValue];
-                double val2 = [yellows[i] doubleValue];
-                if((val2 - val1) > 0)
-                {
-                    if(((val2 - val1)/val1) > 0.2 && ((val2 - val1)/val1) < 0.3)
-                    {
-                        result = YES;
-                    }
-                    else
-                    {
-                        result = NO;
-                    }
-
-                }
-                else
-                {
-                    result = NO;
-                }
-                
-            }
-            
+            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+            NSDictionary *dict = _fftData[i][key];
+            [yellows addObject:dict[@"data2"]];
         }
+        
+        NSMutableArray *yellowsUpper = [NSMutableArray new];
+        for(NSInteger i = len - step; i < len; i++)
+        {
+            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+            NSDictionary *dict = _fftData[i][key];
+            [yellowsUpper addObject:dict[@"data3"]];
+        }
+        
+        
+        NSMutableArray *yellowsLower = [NSMutableArray new];
+        for(NSInteger i = len - step; i < len; i++)
+        {
+            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+            NSDictionary *dict = _fftData[i][key];
+            [yellowsLower addObject:dict[@"data1"]];
+        }
+        
+        
+        double val1 = [yellows[0] doubleValue];
+        double val2 = [yellows[(step - 1)] doubleValue];
+        
+        double val1lower = [yellowsLower[0] doubleValue];
+        double val2lower = [yellowsLower[(step - 1)] doubleValue];
+        
+        double val1upper = [yellowsUpper[0] doubleValue];
+        double val2upper = [yellowsUpper[(step - 1)] doubleValue];
+        
+        if (val2 > val1)
+        {
+            BOOL mainCondition = (val2 - val1) > yellowDiffLow && (val2 - val1) < yellowDiffHigh;
+            BOOL lowCondition = val2lower > val1lower && (val2lower - val1lower) > (0.1 / (timeSpan / step));
+            BOOL highCondition = val2upper < val1upper && (val1upper - val2upper) > (0.05 / (timeSpan / step));
+
+            
+            if(mainCondition && lowCondition && highCondition)
+            {
+                return YES;
+            }
+            else
+            {
+                return NO;
+            }
+        }
+        else
+        {
+            return NO;
+        }
+        
     }
-   
-    return result;
+    
+    return NO;
+    
     
     
 }
 
 
+-(BOOL)processRed1ForChannel:(NSInteger)channel
+{
+    NSInteger len = _fftData.count;
+    
+    if(len >= step)
+    {
+        NSMutableArray *reds = [NSMutableArray new];
+        
+        for(NSInteger i = len - step; i < len; i++)
+        {
+            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+            NSDictionary *dict = _fftData[i][key];
+            [reds addObject:dict[@"data2"]];
+        }
+        
+        NSMutableArray *redsUpper = [NSMutableArray new];
+        for(NSInteger i = len - step; i < len; i++)
+        {
+            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+            NSDictionary *dict = _fftData[i][key];
+            [redsUpper addObject:dict[@"data3"]];
+        }
+        
+        
+        NSMutableArray *redsLower = [NSMutableArray new];
+        for(NSInteger i = len - step; i < len; i++)
+        {
+            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+            NSDictionary *dict = _fftData[i][key];
+            [redsLower addObject:dict[@"data1"]];
+        }
+        
+        
+        double val1 = [reds[0] doubleValue];
+        double val2 = [reds[(step - 1)] doubleValue];
+        
+        double val1lower = [redsLower[0] doubleValue];
+        double val2lower = [redsLower[(step - 1)] doubleValue];
+        
+        double val1upper = [redsUpper[0] doubleValue];
+        double val2upper = [redsUpper[(step - 1)] doubleValue];
+        
+        if (val2 < val1)
+        {
+            BOOL mainCondition = (val1 - val2) > red1DiffHigh;
+            BOOL lowCondition = val2lower < val1lower && (val1lower - val2lower) > (0.1 / (timeSpan / step));
+            BOOL highCondition = val2upper > val1upper && (val2upper - val1upper) > (0.05 / (timeSpan / step));
+            
+            
+            if(mainCondition && lowCondition && highCondition)
+            {
+                return YES;
+            }
+            else
+            {
+                return NO;
+            }
+        }
+        else
+        {
+            return NO;
+        }
+        
+    }
+    
+    return NO;
+    
+    
+    
+}
+
+
+-(BOOL)processRed2ForChannel:(NSInteger)channel
+{
+    NSInteger len = _fftData.count;
+    
+    if(len >= step)
+    {
+        NSMutableArray *reds = [NSMutableArray new];
+        
+        for(NSInteger i = len - step; i < len; i++)
+        {
+            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+            NSDictionary *dict = _fftData[i][key];
+            [reds addObject:dict[@"data2"]];
+        }
+        
+        NSMutableArray *redsUpper = [NSMutableArray new];
+        for(NSInteger i = len - step; i < len; i++)
+        {
+            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+            NSDictionary *dict = _fftData[i][key];
+            [redsUpper addObject:dict[@"data3"]];
+        }
+        
+        
+        NSMutableArray *redsLower = [NSMutableArray new];
+        for(NSInteger i = len - step; i < len; i++)
+        {
+            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+            NSDictionary *dict = _fftData[i][key];
+            [redsLower addObject:dict[@"data1"]];
+        }
+        
+        
+        double val1 = [reds[0] doubleValue];
+        double val2 = [reds[(step - 1)] doubleValue];
+        
+        double val1lower = [redsLower[0] doubleValue];
+        double val2lower = [redsLower[(step - 1)] doubleValue];
+        
+        double val1upper = [redsUpper[0] doubleValue];
+        double val2upper = [redsUpper[(step - 1)] doubleValue];
+        
+        if (val2 > val1)
+        {
+            BOOL mainCondition = (val2 - val1) > red2DiffHigh;
+            BOOL lowCondition = val2lower > val1lower && (val2lower - val1lower) > (0.15 / (timeSpan / step));
+            BOOL highCondition = val2upper < val1upper && (val1upper - val2upper) > (0.15 / (timeSpan / step));
+            
+            
+            if(mainCondition && lowCondition && highCondition)
+            {
+                return YES;
+            }
+            else
+            {
+                return NO;
+            }
+        }
+        else
+        {
+            return NO;
+        }
+        
+    }
+    
+    return NO;
+    
+    
+    
+}
 
 
 

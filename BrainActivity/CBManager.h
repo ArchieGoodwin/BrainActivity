@@ -25,12 +25,21 @@
 @property (strong, nonatomic) NSMutableArray *red1;
 @property (strong, nonatomic) NSMutableArray *red2;
 @property (nonatomic, assign) BOOL hasStarted;
+@property (nonatomic, assign) NSInteger fixCounter;
+@property (nonatomic, assign) double yellowFlagLow;
+@property (nonatomic, assign) double yellowFlagHigh;
+@property (nonatomic, assign) double red1Flag;
+@property (nonatomic, assign) double red2Flag;
+
+
 -(void)start;
 -(void)stop;
 
 
 -(BOOL)processGreenForChannel:(NSInteger)channel;
 -(BOOL)processYellowForChannel:(NSInteger)channel;
+-(BOOL)processRed1ForChannel:(NSInteger)channel;
+-(BOOL)processRed2ForChannel:(NSInteger)channel;
 @end
 
 @protocol CBManagerDelegate <NSObject>
