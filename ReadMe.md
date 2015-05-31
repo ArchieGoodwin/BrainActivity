@@ -11,16 +11,20 @@ The CBManager class handles connections and data transfer between Braniac (alpha
 * yellowFlagHigh (float)
 * red1Flag (float)
 * red2Flag (float)
+
 #### Starting and Stopping Connection and Data Stream
 * start
 * stop
+
 #### Getting Information about CBManager state
 * hasStarted *property*
 * rawdata (NSMutableData *)
 * raw values (NSMutableArray *)
 * fftData (NSMutableArray *)
+
 #### Accessing the Delegate
 * delegate *property*
+
 ## Properties
 **hasStarted**
 A BOOL value indicating if the current CBManager instance object working: connected to hardware Braniac accessory and receiving data. Read-only
@@ -49,6 +53,7 @@ Bool property used to set the minimum limit of dominant frequency signal changin
 **red2Flag**
 Bool property used to set the minimum limit of dominant frequency signal changing to detect damping of brain activity. The default value is 0.3
 		@property (nonatomic, assign) double red2Flag;
+
 ## Initialisation and Creating CBManager object
 **init**
 Returns CBManager object which is ready to start connecting. Should always be used to start working with hardware Braniac accessory. 
