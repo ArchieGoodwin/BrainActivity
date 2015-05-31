@@ -58,7 +58,6 @@ const NSInteger step = 10;
         _hasStarted = NO;
         lastGreenValue = 0;
         lastGreenAverage = 0.0;
-        _fixCounter = 0;
         _yellowFlagLow = 0.2;
         _yellowFlagHigh = 0.3;
         _red1Flag = 0.2;
@@ -714,7 +713,7 @@ const NSInteger step = 10;
             lastGreenAverage = (lastGreenAverage + average)/2.0;
             lastGreenValue = len;
             
-            NSLog(@"%f  %f   %li", average, lastGreenAverage, lastGreenValue);
+            //NSLog(@"%f  %f   %li", average, lastGreenAverage, lastGreenValue);
 
             return NO;
         }
@@ -723,7 +722,7 @@ const NSInteger step = 10;
     lastGreenAverage = (lastGreenAverage + average)/2.0;
     lastGreenValue = len;
     
-    NSLog(@"%f  %f   %li", average, lastGreenAverage, lastGreenValue);
+    //NSLog(@"%f  %f   %li", average, lastGreenAverage, lastGreenValue);
 
     return YES;
     

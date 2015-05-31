@@ -16,16 +16,11 @@
 
 @property (nonatomic,strong) id <CBManagerDelegate> delegate;
 
-@property (strong, nonatomic) NSMutableData *rawdata;
-@property (strong, nonatomic) NSMutableArray *rawvalues;
-@property (strong, nonatomic) NSMutableArray *fftData;
-@property (strong, nonatomic) NSMutableArray *fftrawvalues;
-@property (strong, nonatomic) NSMutableArray *green;
-@property (strong, nonatomic) NSMutableArray *yellow;
-@property (strong, nonatomic) NSMutableArray *red1;
-@property (strong, nonatomic) NSMutableArray *red2;
-@property (nonatomic, assign) BOOL hasStarted;
-@property (nonatomic, assign) NSInteger fixCounter;
+@property (strong, nonatomic, readonly) NSMutableData *rawdata;
+@property (strong, nonatomic, readonly) NSMutableArray *rawvalues;
+@property (strong, nonatomic, readonly) NSMutableArray *fftData;
+
+@property (nonatomic, assign, readonly) BOOL hasStarted;
 @property (nonatomic, assign) double yellowFlagLow;
 @property (nonatomic, assign) double yellowFlagHigh;
 @property (nonatomic, assign) double red1Flag;
