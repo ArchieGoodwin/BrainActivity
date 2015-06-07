@@ -159,6 +159,11 @@ const NSInteger step = 10;
                     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_UUID]]) {
                         if (characteristic.isNotifying) {
                             [_discoveredPeripheral setNotifyValue:NO forCharacteristic:characteristic];
+                            if( _discoveredPeripheral)
+                            {
+                                [_centralManager cancelPeripheralConnection:_discoveredPeripheral];
+                                
+                            }
                             return;
                         }
                     }
@@ -166,11 +171,7 @@ const NSInteger step = 10;
             }
         }
     }
-    if( _discoveredPeripheral)
-    {
-        [_centralManager cancelPeripheralConnection:_discoveredPeripheral];
-
-    }
+   
 }
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
@@ -485,14 +486,16 @@ const NSInteger step = 10;
     _fftData = [NSMutableArray new];
     _counter = 0;
     
-    if(_discoveredPeripheral != nil && currentCharacteristic != nil)
+    if( _discoveredPeripheral && currentCharacteristic)
     {
         
-         [_discoveredPeripheral setNotifyValue:NO forCharacteristic:currentCharacteristic];
-        
-        [_centralManager cancelPeripheralConnection:_discoveredPeripheral];
+        [_discoveredPeripheral setNotifyValue:NO forCharacteristic:currentCharacteristic];
 
+        [_centralManager cancelPeripheralConnection:_discoveredPeripheral];
+        
     }
+    
+    
     [_centralManager stopScan];
     
     
