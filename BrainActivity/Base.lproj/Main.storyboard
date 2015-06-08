@@ -488,10 +488,10 @@
                                             </constraint>
                                         </constraints>
                                         <segments>
-                                            <segment title="1"/>
-                                            <segment title="2"/>
-                                            <segment title="3"/>
-                                            <segment title="4"/>
+                                            <segment title="T3"/>
+                                            <segment title="O1"/>
+                                            <segment title="T4"/>
+                                            <segment title="O2"/>
                                         </segments>
                                         <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <variation key="default">
