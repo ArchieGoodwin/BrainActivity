@@ -3,6 +3,59 @@
 ## Overview
 The CBManager class handles connections and data transfer between Braniac (alpha title) accessory and iOS device.
 ## Tasks
+#### How to use CBManager Accessory Manager
+First, copy to your project files CBManager.h, CBManager.m, SERVICES.h. Add next frameworks libraries to project: 
+
+* CoreBluetooth
+* Accelerate
+
+Make your view controller which you want to use to receive data from CBManager inherited from CBManagerDelegate. Create instance variable of CBManager class and assign delegate property to self.
+ 
+		CBManager *cbManager = [[CBManager alloc] init];
+		cbManager.delegate = self;
+
+Next you should implement required CB_dataUpdatedWithDictionary method to receive data from Brainiac accessory device. Example: 
+
+		-(void)CB_dataUpdatedWithDictionary:(NSDictionary *)data
+		{
+
+				if([data[@“error”]] != nil)
+				{
+						//show errors texts if any
+						dispatch_async(dispatch_get_main_queue(), ^{
+								self.lblStatus.text = [data objectForKey:@“error”];
+						});
+				}
+				else
+				{
+		    		//process data
+        
+				}
+		}
+
+Also you may implement two optional methods (to receive FFT data and status messages from device) 
+
+		-(void)CB_fftDataUpdatedWithDictionary:(NSDictionary *)data
+		{
+    		if([data objectForKey:@“error”] != nil)
+    		{
+        		dispatch_async(dispatch_get_main_queue(), ^{
+          		  self.lblStatus.text = [data objectForKey:@“error”];
+        		});
+    		}
+    
+		}
+
+
+		-(void)CB_changedStatus:(NSString *)statusMessage
+		{
+    		dispatch_async(dispatch_get_main_queue(), ^{
+        
+        		self.lblStatus.text = statusMessage;
+    		});
+		}
+
+
 #### Getting the CBManager Accessory Manager
     CBManager *cbManager = [[CBManager alloc] init];
     cbManager.delegate = self;
