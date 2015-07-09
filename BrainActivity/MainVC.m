@@ -38,7 +38,8 @@
     // Do any additional setup after loading the view.
 }
 
--(void)CB_changedStatus:(NSString *)statusMessage
+
+-(void)CB_changedStatus:(CBManagerMessage)status message:(NSString *)statusMessage
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -47,16 +48,11 @@
 }
 
 
+
 -(void)CB_fftDataUpdatedWithDictionary:(NSDictionary *)data
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"fft_data_received" object:nil userInfo:data];
     
-    if([data objectForKey:@"error"] != nil)
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.lblStatus.text = [data objectForKey:@"error"];
-        });
-    }
     
 }
 
@@ -67,18 +63,6 @@
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"data_received" object:nil userInfo:data];
     
-    if([data objectForKey:@"error"] != nil)
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.lblStatus.text = [data objectForKey:@"error"];
-        });
-    }
-    else
-    {
-        //process data
-        
-        
-    }
     
 }
 

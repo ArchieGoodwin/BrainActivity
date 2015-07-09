@@ -100,9 +100,9 @@ const NSInteger step = 10;
         
         if(_delegate)
         {
-            if([_delegate respondsToSelector:@selector(CB_changedStatus:)])
+            if([_delegate respondsToSelector:@selector(CB_changedStatus:message:)])
             {
-                [_delegate CB_changedStatus:@"Scanning started"];
+                [_delegate CB_changedStatus:CBManagerMessage_ScanningStarted message:@"Scanning started"];
             }
         }
     }
@@ -123,9 +123,9 @@ const NSInteger step = 10;
         
         if(_delegate)
         {
-            if([_delegate respondsToSelector:@selector(CB_changedStatus:)])
+            if([_delegate respondsToSelector:@selector(CB_changedStatus:message:)])
             {
-                [_delegate CB_changedStatus:[NSString stringWithFormat:@"Connecting to peripheral %@", peripheral]];
+                [_delegate CB_changedStatus:CBManagerMessage_ConnectingToPeripheral message:[NSString stringWithFormat:@"Connecting to peripheral %@", peripheral]];
             }
         }
         
@@ -140,9 +140,9 @@ const NSInteger step = 10;
     
     if(_delegate)
     {
-        if([_delegate respondsToSelector:@selector(CB_changedStatus:)])
+        if([_delegate respondsToSelector:@selector(CB_changedStatus:message:)])
         {
-            [_delegate CB_changedStatus:[NSString stringWithFormat:@"Failed to connect: %@", error.localizedDescription]];
+            [_delegate CB_changedStatus:CBManagerMessage_CharacteristicDiscoveringFailed message:[NSString stringWithFormat:@"Failed to connect: %@", error.localizedDescription]];
         }
     }
     [self stop];
@@ -179,9 +179,9 @@ const NSInteger step = 10;
     
     if(_delegate)
     {
-        if([_delegate respondsToSelector:@selector(CB_changedStatus:)])
+        if([_delegate respondsToSelector:@selector(CB_changedStatus:message:)])
         {
-            [_delegate CB_changedStatus:[NSString stringWithFormat:@"Peripheral connected"]];
+            [_delegate CB_changedStatus:CBManagerMessage_ConnectToPeripheralSuccessful message:[NSString stringWithFormat:@"Peripheral connected"]];
         }
     }
     
@@ -204,9 +204,9 @@ const NSInteger step = 10;
         [self stop];
         if(_delegate)
         {
-            if([_delegate respondsToSelector:@selector(CB_changedStatus:)])
+            if([_delegate respondsToSelector:@selector(CB_changedStatus:message:)])
             {
-                [_delegate CB_changedStatus:[NSString stringWithFormat:@"Error: %@", error.localizedDescription]];
+                [_delegate CB_changedStatus:CBManagerMessage_ConnectToServiceFailed message:[NSString stringWithFormat:@"Error: %@", error.localizedDescription]];
             }
         }
         return;
@@ -224,9 +224,9 @@ const NSInteger step = 10;
         
         if(_delegate)
         {
-            if([_delegate respondsToSelector:@selector(CB_changedStatus:)])
+            if([_delegate respondsToSelector:@selector(CB_changedStatus:message:)])
             {
-                [_delegate CB_changedStatus:[NSString stringWithFormat:@"Error: %@", error.localizedDescription]];
+                [_delegate CB_changedStatus:CBManagerMessage_CharacteristicDiscoveringFailed message:[NSString stringWithFormat:@"Error: %@", error.localizedDescription]];
             }
         }
         
@@ -243,9 +243,9 @@ const NSInteger step = 10;
             
             if(_delegate)
             {
-                if([_delegate respondsToSelector:@selector(CB_changedStatus:)])
+                if([_delegate respondsToSelector:@selector(CB_changedStatus:message:)])
                 {
-                    [_delegate CB_changedStatus:[NSString stringWithFormat:@"Data transfer started"]];
+                    [_delegate CB_changedStatus:CBManagerMessage_DataTransferStarted message:[NSString stringWithFormat:@"Data transfer started"]];
                 }
             }
             
@@ -385,9 +385,9 @@ const NSInteger step = 10;
         
         if(_delegate)
         {
-            if([_delegate respondsToSelector:@selector(CB_changedStatus:)])
+            if([_delegate respondsToSelector:@selector(CB_changedStatus:message:)])
             {
-                [_delegate CB_changedStatus:[NSString stringWithFormat:@"Error: %@", error.localizedDescription]];
+                [_delegate CB_changedStatus:CBManagerMessage_DataTransferError message:[NSString stringWithFormat:@"Error: %@", error.localizedDescription]];
             }
         }
         
@@ -463,16 +463,16 @@ const NSInteger step = 10;
     
     if(_delegate)
     {
-        if([_delegate respondsToSelector:@selector(CB_changedStatus:)])
+        if([_delegate respondsToSelector:@selector(CB_changedStatus:message:)])
         {
-            [_delegate CB_changedStatus:@"Device disconnected!"];
+            [_delegate CB_changedStatus:CBManagerMessage_PeripheralDisconnected message:@"Device disconnected!"];
         }
     }
 
     [self stop];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning!" message:@"App lost connection to device!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-    [alert show];
+    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning!" message:@"App lost connection to device!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    //[alert show];
     
    // [_centralManager scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:TRANSFER_SERVICE_UUID]] options:@{ CBCentralManagerScanOptionAllowDuplicatesKey : @YES }];
 }
@@ -507,9 +507,9 @@ const NSInteger step = 10;
     
     if(_delegate)
     {
-        if([_delegate respondsToSelector:@selector(CB_changedStatus:)])
+        if([_delegate respondsToSelector:@selector(CB_changedStatus:message:)])
         {
-            [_delegate CB_changedStatus:@"Ready to scan"];
+            [_delegate CB_changedStatus:CBManagerMessage_Ready message:@"Ready to scan"];
         }
     }
 

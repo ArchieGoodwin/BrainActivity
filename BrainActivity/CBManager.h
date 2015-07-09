@@ -10,7 +10,26 @@
 
 @protocol CBManagerDelegate;
 
+typedef enum CBManagerMessage {
+    CBManagerMessage_ScanningStarted = 0,
+    CBManagerMessage_ScanningStopped = 1,
+    CBManagerMessage_ConnectingToPeripheral = 2,
+    CBManagerMessage_ConnectToPeripheralFailed = 3,
+    CBManagerMessage_ConnectToPeripheralSuccessful = 4,
+    CBManagerMessage_ConnectingToService = 5,
+    CBManagerMessage_ConnectToServiceFailed = 6,
+    CBManagerMessage_ConnectToServiceSuccessful = 7,
+    CBManagerMessage_DataTransferStarted = 8,
+    CBManagerMessage_DataTransferAborted = 9,
+    CBManagerMessage_DataTransferError = 10,
+    CBManagerMessage_CharacteristicDiscovered = 11,
+    CBManagerMessage_CharacteristicDiscoveringFailed = 12,
+    CBManagerMessage_Ready = 13,
+    CBManagerMessage_UnknownError = 14,
+    CBManagerMessage_PeripheralDisconnected = 15,
 
+}
+CBManagerMessage;
 
 @interface CBManager : NSObject
 
@@ -45,6 +64,6 @@
 @optional
 
 -(void)CB_fftDataUpdatedWithDictionary:(NSDictionary *)data;
--(void)CB_changedStatus:(NSString *)statusMessage;
+-(void)CB_changedStatus:(CBManagerMessage)status message:(NSString *)statusMessage;
 
 @end

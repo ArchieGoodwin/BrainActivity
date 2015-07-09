@@ -1,7 +1,7 @@
 # CBManager Class Reference 
-###### (version 0.5 draft)
+###### (version 0.7 - 06/15/15)
 ## Overview
-The CBManager class handles connections and data transfer between Braniac (alpha title) accessory and iOS device.
+The CBManager class handles connections and data transfer between Braniac accessory and iOS device.
 ## Tasks
 #### How to use CBManager Accessory Manager
 First, copy to your project files CBManager.h, CBManager.m, SERVICES.h. Add next frameworks libraries to project: 
@@ -277,3 +277,7 @@ Optional method returning status messages from CBManager object instance
 *Parameters*
 
 * **statusMessage** - NSString object with text message describing current state of CBManager object instance. 
+
+
+
+
