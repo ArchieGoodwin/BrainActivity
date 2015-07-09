@@ -1063,39 +1063,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark -
-#pragma mark Networking
-
-- (void)sendData {
-    
-    AFHTTPRequestOperationManager *nManager = [AFHTTPRequestOperationManager manager];
-    nManager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    nManager.requestSerializer = [AFJSONRequestSerializer serializer];
-    
-    [nManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    //nManager.securityPolicy.allowInvalidCertificates = YES;
-
-    
-    NSString *URLString = [NSString stringWithFormat:@"http://potbot.elasticbeanstalk.com/api/eegSamples"];
-    NSDictionary *params = @{@"deviceId": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
-                             @"eegIndexes": _manager.rawvalues, @"eegSpectrums" : @[]};
-    
-    
-    //NSData *data = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil];
-
-    //NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    
-    
-    //NSLog(@"%@", jsonString);
-    
-    
-    [nManager POST:URLString parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"JSON: %@", responseObject);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
-    }];
-    
-}
 
 
 @end

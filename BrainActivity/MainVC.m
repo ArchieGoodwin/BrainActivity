@@ -8,6 +8,8 @@
 
 #import "MainVC.h"
 #import "ViewController.h"
+#import <AFNetworking/AFNetworking.h>
+
 @interface MainVC ()
 @property (strong, nonatomic) IBOutlet UIButton *btnStart;
 
@@ -18,6 +20,7 @@
 {
     CBManager *cbManager;
     ViewController *vc;
+    float selectedFreq;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -25,13 +28,18 @@
     cbManager = [[CBManager alloc] init];
     cbManager.delegate = self;
     
-    
+    selectedFreq = 3;
     _btnShowPlot.layer.borderColor = [UIColor darkGrayColor].CGColor;
     _btnShowPlot.layer.borderWidth = 2.0;
     _btnStart.layer.borderColor = [UIColor darkGrayColor].CGColor;
     _btnStart.layer.borderWidth = 2.0;
     _btnShowPlot.layer.cornerRadius = 15.0;
     _btnStart.layer.cornerRadius = 15.0;
+    
+    _btnTest.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _btnTest.layer.borderWidth = 2.0;
+    _btnTest.layer.cornerRadius = 15.0;
+    
     
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
@@ -68,9 +76,42 @@
 
 - (IBAction)sendDataAction:(id)sender {
     
-    if(vc && cbManager.hasStarted)
+    if(cbManager.hasStarted)
     {
-        [vc sendData];
+        [self sendData];
+    }
+}
+
+- (IBAction)stepperChanged:(id)sender {
+    
+    UIStepper *step = (UIStepper *)sender;
+    
+    selectedFreq = step.value;
+    
+    _lblFreq.text = [NSString stringWithFormat:@"%li", (long)selectedFreq];
+}
+
+- (IBAction)startTest:(id)sender {
+    if(cbManager.hasStarted)
+    {
+        if(vc)
+        {
+            [vc defaultValues];
+        }
+        
+        [cbManager stop];
+        
+        cbManager = [[CBManager alloc] init];
+        cbManager.delegate = self;
+        
+        [_btnTest setTitle:@"Start test" forState:UIControlStateNormal];
+        
+    }
+    else
+    {
+        [cbManager startTestSequenceWithDominantFrequence:selectedFreq];
+        [_btnTest setTitle:@"Stop" forState:UIControlStateNormal];
+        
     }
 }
 
@@ -117,12 +158,16 @@
     if(!cbManager.hasStarted)
     {
         [_btnStart setTitle:@"Connect to device" forState:UIControlStateNormal];
+        [_btnTest setTitle:@"Start test" forState:UIControlStateNormal];
+
     }
     else
     {
         [_btnStart setTitle:@"Stop" forState:UIControlStateNormal];
-        
+        [_btnTest setTitle:@"Stop" forState:UIControlStateNormal];
+
     }
+  
 
     //[cbManager stop];
     
@@ -143,6 +188,41 @@
     }
     
 }
+
+#pragma mark -
+#pragma mark Networking
+
+- (void)sendData {
+    
+    AFHTTPRequestOperationManager *nManager = [AFHTTPRequestOperationManager manager];
+    nManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    nManager.requestSerializer = [AFJSONRequestSerializer serializer];
+    
+    [nManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    //nManager.securityPolicy.allowInvalidCertificates = YES;
+    
+    
+    NSString *URLString = [NSString stringWithFormat:@"http://potbot.elasticbeanstalk.com/api/eegSamples"];
+    NSDictionary *params = @{@"deviceId": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
+                             @"eegIndexes": cbManager.rawvalues, @"eegSpectrums" : cbManager.fftData};
+    
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil];
+    
+    NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    
+    NSLog(@"%@", jsonString);
+    
+    
+    [nManager POST:URLString parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"JSON: %@", responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
+    
+}
+
 
 
 @end

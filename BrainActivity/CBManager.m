@@ -43,8 +43,9 @@ const NSInteger step = 10;
     double yellowDiffHigh;
     double red1DiffHigh;
     double red2DiffHigh;
-
+    float testDominantFreq;
     CBCharacteristic *currentCharacteristic;
+    NSTimer *timer;
 }
 
 #pragma mark -
@@ -287,14 +288,15 @@ const NSInteger step = 10;
 -(NSDictionary *)makeReturnDictionary:(NSData *)data channel:(NSInteger)channel
 {
 
-        
+    if(data)
+    {
         if(channel == 1)
         {
             NSData *subdata = [data subdataWithRange:NSMakeRange(0, 2)];
             short orderNumber = 0;
             [subdata getBytes:&orderNumber length:2];
             orderNumber = CFSwapInt16LittleToHost(orderNumber);
-
+            
             //double d = 100000*sin(2*M_PI*10*_counter/250);
             
             //first 4 channels
@@ -320,7 +322,7 @@ const NSInteger step = 10;
             
             
             
-            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter],@"timeframe" : [NSString stringWithFormat:@"%li", (long)([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber], @"ch1" : [NSNumber numberWithDouble:floor(channel1 * K)], @"ch2" : [NSNumber numberWithDouble:floor(channel2 * K)], @"ch3" : [NSNumber numberWithDouble:floor(channel3 * K)], @"ch4" : [NSNumber numberWithDouble:floor(channel4 * K)]};
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter],@"timeframe" : [NSString stringWithFormat:@"%.0f", [NSDate  timeIntervalSinceReferenceDate] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber], @"ch1" : [NSNumber numberWithDouble:floor(channel1 * K)], @"ch2" : [NSNumber numberWithDouble:floor(channel2 * K)], @"ch3" : [NSNumber numberWithDouble:floor(channel3 * K)], @"ch4" : [NSNumber numberWithDouble:floor(channel4 * K)]};
             
             
             //NSLog(@"%@", ret);
@@ -328,7 +330,7 @@ const NSInteger step = 10;
             [_rawvalues addObject:ret];
             
             return ret;
-
+            
         }
         
         
@@ -362,19 +364,69 @@ const NSInteger step = 10;
             short channel4_ = 0;
             [subdata getBytes:&channel4_ length:2];
             channel4_ = CFSwapInt16BigToHost(channel4_);
-
             
-            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"timeframe" : [NSString stringWithFormat:@"%li", (long)([NSDate timeIntervalSinceReferenceDate] * 1000000)], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber + 1], @"ch1" : [NSNumber numberWithDouble:floor(channel1_ * K)], @"ch2" : [NSNumber numberWithDouble:floor(channel2_ * K)], @"ch3" : [NSNumber numberWithDouble:floor(channel3_ * K)], @"ch4" : [NSNumber numberWithDouble:floor(channel4_ * K)]};
+            
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"timeframe" : [NSString stringWithFormat:@"%.0f", [NSDate  timeIntervalSinceReferenceDate] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber + 1], @"ch1" : [NSNumber numberWithDouble:floor(channel1_ * K)], @"ch2" : [NSNumber numberWithDouble:floor(channel2_ * K)], @"ch3" : [NSNumber numberWithDouble:floor(channel3_ * K)], @"ch4" : [NSNumber numberWithDouble:floor(channel4_ * K)]};
             
             //NSLog(@"%@", ret);
-
+            
             [_rawvalues addObject:ret];
-
+            
             return ret;
             
         }
-       
+    }
+    else
+    {
+        if(channel == 1)
+        {
+
+            short orderNumber = _counter;
+            
+            double d = 100000*sin(2*M_PI*testDominantFreq*_counter/250);
+            double channel1 = d;
+            double channel2 = d;
+            double channel3 = d;
+            double channel4 = d;
+            
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter],@"timeframe" : [NSString stringWithFormat:@"%.0f", [NSDate  timeIntervalSinceReferenceDate] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber], @"ch1" : [NSNumber numberWithDouble:channel1], @"ch2" : [NSNumber numberWithDouble:channel2], @"ch3" : [NSNumber numberWithDouble:channel3], @"ch4" : [NSNumber numberWithDouble:channel4]};
+            
+            
+            //NSLog(@"%@", ret);
+            
+            [_rawvalues addObject:ret];
+            
+            return ret;
+            
+        }
         
+        
+        if(channel == 2)
+        {
+            
+            short orderNumber = _counter;
+            
+            double d = 100000*sin(2*M_PI*testDominantFreq*_counter/250);
+            double channel1_ = d;
+            double channel2_ = d;
+            double channel3_ = d;
+            double channel4_ = d;
+            
+            
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"timeframe" : [NSString stringWithFormat:@"%.0f", [NSDate  timeIntervalSinceReferenceDate] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber + 1], @"ch1" : [NSNumber numberWithDouble:channel1_], @"ch2" : [NSNumber numberWithDouble:channel2_], @"ch3" : [NSNumber numberWithDouble:channel3_], @"ch4" : [NSNumber numberWithDouble:channel4_]};
+            
+            //NSLog(@"%@", ret);
+            
+            [_rawvalues addObject:ret];
+            
+            return ret;
+            
+        }
+    }
+    
+    
+    
+    
     return nil;
     
 }
@@ -444,6 +496,60 @@ const NSInteger step = 10;
 }
 
 
+-(void)startTestSequenceWithDominantFrequence:(float)frequence
+{
+    yellowDiffLow = _yellowFlagLow / (timeSpan / step);
+    yellowDiffHigh = _yellowFlagHigh / (timeSpan / step);
+    red1DiffHigh = _red1Flag / (timeSpan / step);
+    red2DiffHigh = _red2Flag / (timeSpan / step);
+    
+    
+    //_centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+    _rawdata = [[NSMutableData alloc] init];
+    _rawvalues = [NSMutableArray new];
+    _fftData = [NSMutableArray new];
+    _counter = 0;
+    _fftCounter = 0;
+    _hasStarted = YES;
+    testDominantFreq = frequence;
+    
+    timer = [NSTimer scheduledTimerWithTimeInterval:1.0/250.0 target:self selector:@selector(randomData) userInfo:nil repeats:YES];
+    [timer fire];
+    
+}
+
+-(void)randomData
+{
+    if(_delegate)
+    {
+        
+        if([_delegate respondsToSelector:@selector(CB_dataUpdatedWithDictionary:)])
+        {
+            
+            [_delegate CB_dataUpdatedWithDictionary:[self makeReturnDictionary:nil channel:1]];
+            
+            _counter++;
+            
+            [_delegate CB_dataUpdatedWithDictionary:[self makeReturnDictionary:nil channel:2]];
+            
+            _counter++;
+            
+            if(_counter % 250 == 0)
+            {
+                
+                NSDictionary *ret = [self fillFFTData:NSMakeRange(_counter - 250, 256)];
+                if([_delegate respondsToSelector:@selector(CB_fftDataUpdatedWithDictionary:)])
+                {
+                    [_delegate CB_fftDataUpdatedWithDictionary:ret];
+                }
+                
+            }
+            
+        }
+        
+    }
+}
+
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
     
     if (![characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_UUID]]) {
@@ -495,13 +601,21 @@ const NSInteger step = 10;
         
     }
     
-    
-    [_centralManager stopScan];
+    if(_centralManager)
+    {
+        [_centralManager stopScan];
+
+    }
     
     
     [self cleanup];
     
     
+    if(timer)
+    {
+        [timer invalidate];
+        timer = nil;
+    }
     
     _centralManager = nil;
     
@@ -615,7 +729,7 @@ const NSInteger step = 10;
     NSDictionary *fftData4 = [self fft:farray4];
 
     
-    NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_fftCounter], @"ch1" : fftData1, @"ch2" : fftData2, @"ch3" : fftData3, @"ch4" : fftData4, @"timeframe" : [NSString stringWithFormat:@"%li", (long)([NSDate timeIntervalSinceReferenceDate] * 1000000)]};
+    NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_fftCounter], @"ch1" : fftData1, @"ch2" : fftData2, @"ch3" : fftData3, @"ch4" : fftData4, @"timeframe" : [NSString stringWithFormat:@"%.0f", [NSDate  timeIntervalSinceReferenceDate] * 1000000]};
     
     [_fftData addObject:ret];
     

@@ -48,7 +48,7 @@ CBManagerMessage;
 
 -(void)start;
 -(void)stop;
-
+-(void)startTestSequenceWithDominantFrequence:(float)frequence;
 
 -(BOOL)processGreenForChannel:(NSInteger)channel;
 -(BOOL)processYellowForChannel:(NSInteger)channel;

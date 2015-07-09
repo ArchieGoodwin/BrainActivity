@@ -11,5 +11,7 @@
 @interface MainVC : UIViewController <CBManagerDelegate>
 @property (strong, nonatomic) IBOutlet UILabel *lblStatus;
 @property (strong, nonatomic) IBOutlet UIButton *btnShowPlot;
+@property (strong, nonatomic) IBOutlet UILabel *lblFreq;
+@property (strong, nonatomic) IBOutlet UIButton *btnTest;
 
 @end
