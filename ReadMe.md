@@ -13,41 +13,31 @@ Make your view controller which you want to use to receive data from CBManager i
  
 		CBManager *cbManager = [[CBManager alloc] init];
 		cbManager.delegate = self;
+		[cbManager start]; // 
+
+or 
+
+		[cbManager startTestSequenceWithDominantFrequence:selectedFreq]; where selectedFreq - float variable with test dominant frequency. 
 
 Next you should implement required CB_dataUpdatedWithDictionary method to receive data from Brainiac accessory device. Example: 
 
 		-(void)CB_dataUpdatedWithDictionary:(NSDictionary *)data
 		{
 
-				if([data[@“error”]] != nil)
-				{
-						//show errors texts if any
-						dispatch_async(dispatch_get_main_queue(), ^{
-								self.lblStatus.text = [data objectForKey:@“error”];
-						});
-				}
-				else
-				{
 		    		//process data
-        
-				}
+       
 		}
 
 Also you may implement two optional methods (to receive FFT data and status messages from device) 
 
 		-(void)CB_fftDataUpdatedWithDictionary:(NSDictionary *)data
 		{
-    		if([data objectForKey:@“error”] != nil)
-    		{
-        		dispatch_async(dispatch_get_main_queue(), ^{
-          		  self.lblStatus.text = [data objectForKey:@“error”];
-        		});
-    		}
+    		//process fft data
     
 		}
 
 
-		-(void)CB_changedStatus:(NSString *)statusMessage
+		-(void)CB_changedStatus:(CBManagerMessage)status message:(NSString *)statusMessage
 		{
     		dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -69,6 +59,7 @@ Also you may implement two optional methods (to receive FFT data and status mess
 #### Starting and Stopping Connection and Data Stream
 * start
 * stop
+* startTestSequenceWithDominantFrequence:
 
 #### Getting Information about CBManager state
 * hasStarted *property*
@@ -161,6 +152,12 @@ Starts connecting to hardware Braniac accessory and receiving data and processin
 Stops sending data via delegate methods, disconnecting from hardware Braniac accessory. Set hasStarted property to false.
 
 		-(void)stop;
+
+**startTestSequenceWithDominantFrequence:**
+
+Starts sending test data values via delegate methods (without using hardware accessory). Starts dispatching data via delegate methods immediately. Use this method to test correct data receiving sequences and draw sample data plots. Set hasStarted property to true.
+
+		-(void)startTestSequenceWithDominantFrequence:(float)fréquence;
 
 ## Receiving periodical information about examinee 
 
@@ -270,14 +267,32 @@ Optional method returning FFT data processed each 1 sec (so for 250 data packets
 
 **CB_changedStatus**
 
-Optional method returning status messages from CBManager object instance
+Optional method returning status messages from CBManager object instance alongside with status code (see CBManagerMessage enum for possible values)
 
-		-(void)CB_changedStatus:(NSString *)statusMessage;
+		-(void)CB_changedStatus:(CBManagerMessage)status message:(NSString *)statusMessage;
 
 *Parameters*
 
 * **statusMessage** - NSString object with text message describing current state of CBManager object instance. 
+* **status** - CBManagerMessage NSInteger code describing the current status of CBManager object instance.
 
 
+#CBManagerMessage enum
 
+    CBManagerMessage_ScanningStarted = 0,
+    CBManagerMessage_ScanningStopped = 1,
+    CBManagerMessage_ConnectingToPeripheral = 2,
+    CBManagerMessage_ConnectToPeripheralFailed = 3,
+    CBManagerMessage_ConnectToPeripheralSuccessful = 4,
+    CBManagerMessage_ConnectingToService = 5,
+    CBManagerMessage_ConnectToServiceFailed = 6,
+    CBManagerMessage_ConnectToServiceSuccessful = 7,
+    CBManagerMessage_DataTransferStarted = 8,
+    CBManagerMessage_DataTransferAborted = 9,
+    CBManagerMessage_DataTransferError = 10,
+    CBManagerMessage_CharacteristicDiscovered = 11,
+    CBManagerMessage_CharacteristicDiscoveringFailed = 12,
+    CBManagerMessage_Ready = 13,
+    CBManagerMessage_UnknownError = 14,
+    CBManagerMessage_PeripheralDisconnected = 15,
 
