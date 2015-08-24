@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8152.3" systemVersion="15A216g" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="RpR-xa-Sh5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8173.3" systemVersion="15A263e" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="RpR-xa-Sh5">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8124.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8142"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -152,7 +152,7 @@
                                     <action selector="stepperChanged:" destination="RpR-xa-Sh5" eventType="valueChanged" id="dYK-N0-QIs"/>
                                 </connections>
                             </stepper>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kcG-sJ-neb">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kcG-sJ-neb">
                                 <rect key="frame" x="277" y="120" width="46" height="30"/>
                                 <animations/>
                                 <constraints>
@@ -170,6 +170,29 @@
                                     <action selector="startTest:" destination="RpR-xa-Sh5" eventType="touchUpInside" id="5IR-jJ-C2l"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Battery: 100%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HcT-ML-ZxT">
+                                <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="99" id="ZXc-9X-ykf"/>
+                                    <constraint firstAttribute="height" constant="21" id="hK3-Tw-8fW"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="ZXc-9X-ykf"/>
+                                        <exclude reference="hK3-Tw-8fW"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="ZXc-9X-ykf"/>
+                                        <include reference="hK3-Tw-8fW"/>
+                                    </mask>
+                                </variation>
+                            </label>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -186,6 +209,8 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="52"/>
                             </constraint>
                             <constraint firstItem="IiX-4F-q1A" firstAttribute="top" secondItem="ocj-3M-AYc" secondAttribute="bottom" constant="70" id="ewT-ew-w2I"/>
+                            <constraint firstItem="HcT-ML-ZxT" firstAttribute="leading" secondItem="Tpg-qH-eog" secondAttribute="leadingMargin" constant="273" id="fjo-Pa-0sW"/>
+                            <constraint firstItem="HcT-ML-ZxT" firstAttribute="top" secondItem="ocj-3M-AYc" secondAttribute="bottom" constant="8" id="iZe-lA-gf3"/>
                             <constraint firstItem="KZw-1p-2th" firstAttribute="top" secondItem="hTa-Rk-3ka" secondAttribute="bottom" constant="48" id="jzm-2j-ago"/>
                             <constraint firstItem="kcG-sJ-neb" firstAttribute="top" secondItem="IiX-4F-q1A" secondAttribute="bottom" constant="8" id="q5v-3p-szI">
                                 <variation key="heightClass=regular-widthClass=compact" constant="12"/>
@@ -194,6 +219,9 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="10"/>
                             </constraint>
                             <constraint firstAttribute="centerX" secondItem="8K7-xV-kSn" secondAttribute="centerX" id="uss-vK-QZv"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="HcT-ML-ZxT" secondAttribute="trailing" constant="-12" id="v5o-nb-cvD">
+                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                            </constraint>
                             <constraint firstItem="Cx2-o6-vJi" firstAttribute="centerY" secondItem="kcG-sJ-neb" secondAttribute="centerY" id="vIU-Vi-yT4"/>
                             <constraint firstItem="85s-er-b8a" firstAttribute="leading" secondItem="Cx2-o6-vJi" secondAttribute="trailing" constant="8" id="yQS-KY-eBe"/>
                         </constraints>
@@ -204,6 +232,7 @@
                                 <exclude reference="Cx2-o6-vJi"/>
                                 <exclude reference="85s-er-b8a"/>
                                 <exclude reference="kcG-sJ-neb"/>
+                                <exclude reference="HcT-ML-ZxT"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="15N-oO-ufK"/>
@@ -214,6 +243,9 @@
                                 <exclude reference="vIU-Vi-yT4"/>
                                 <exclude reference="IAu-X4-dgE"/>
                                 <exclude reference="yQS-KY-eBe"/>
+                                <exclude reference="fjo-Pa-0sW"/>
+                                <exclude reference="iZe-lA-gf3"/>
+                                <exclude reference="v5o-nb-cvD"/>
                                 <exclude reference="GyR-4E-ugp"/>
                                 <exclude reference="jzm-2j-ago"/>
                             </mask>
@@ -225,6 +257,7 @@
                                 <include reference="Cx2-o6-vJi"/>
                                 <include reference="85s-er-b8a"/>
                                 <include reference="kcG-sJ-neb"/>
+                                <include reference="HcT-ML-ZxT"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="15N-oO-ufK"/>
@@ -235,6 +268,9 @@
                                 <include reference="vIU-Vi-yT4"/>
                                 <include reference="IAu-X4-dgE"/>
                                 <include reference="yQS-KY-eBe"/>
+                                <exclude reference="fjo-Pa-0sW"/>
+                                <include reference="iZe-lA-gf3"/>
+                                <include reference="v5o-nb-cvD"/>
                                 <include reference="GyR-4E-ugp"/>
                                 <include reference="jzm-2j-ago"/>
                             </mask>
@@ -244,13 +280,14 @@
                         <outlet property="btnShowPlot" destination="e0L-jf-8NM" id="LEr-KP-PqC"/>
                         <outlet property="btnStart" destination="IiX-4F-q1A" id="SCu-3z-4gg"/>
                         <outlet property="btnTest" destination="kcG-sJ-neb" id="5hk-6y-7RY"/>
+                        <outlet property="lblBattery" destination="HcT-ML-ZxT" id="UH1-dZ-dit"/>
                         <outlet property="lblFreq" destination="Cx2-o6-vJi" id="wi8-Ke-OCT"/>
                         <outlet property="lblStatus" destination="8K7-xV-kSn" id="Xky-yT-igK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nCp-hw-DG1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-200" y="246"/>
+            <point key="canvasLocation" x="-201" y="246"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">

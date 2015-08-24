@@ -11,6 +11,9 @@
 #import <AFNetworking/AFNetworking.h>
 
 @interface MainVC ()
+{
+    NSTimer *batterTimer;
+}
 @property (strong, nonatomic) IBOutlet UIButton *btnStart;
 
 
@@ -121,6 +124,9 @@
     
     if(cbManager.hasStarted)
     {
+        [batterTimer invalidate];
+        batterTimer = nil;
+        
         if(vc)
         {
             [vc defaultValues];
@@ -138,11 +144,24 @@
     {
         [cbManager start];
         [_btnStart setTitle:@"Stop" forState:UIControlStateNormal];
+        [self batteryShow];
+        batterTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(batteryShow) userInfo:nil repeats:YES];
+
         
     }
     
     
     
+}
+
+
+-(void)batteryShow
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        _lblBattery.text = [NSString stringWithFormat:@"Battery: %li%", (long)cbManager.batteryLevel];
+        
+    });
 }
 
 - (void)didReceiveMemoryWarning {

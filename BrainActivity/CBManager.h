@@ -54,6 +54,7 @@ CBManagerMessage;
 -(BOOL)processYellowForChannel:(NSInteger)channel;
 -(BOOL)processRed1ForChannel:(NSInteger)channel;
 -(BOOL)processRed2ForChannel:(NSInteger)channel;
+-(NSInteger)batteryLevel;
 @end
 
 @protocol CBManagerDelegate <NSObject>

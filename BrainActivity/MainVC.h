@@ -13,5 +13,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnShowPlot;
 @property (strong, nonatomic) IBOutlet UILabel *lblFreq;
 @property (strong, nonatomic) IBOutlet UIButton *btnTest;
+@property (strong, nonatomic) IBOutlet UILabel *lblBattery;
 
 @end

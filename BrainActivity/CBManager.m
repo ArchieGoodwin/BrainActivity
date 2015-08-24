@@ -45,6 +45,8 @@ const NSInteger step = 10;
     double red2DiffHigh;
     float testDominantFreq;
     CBCharacteristic *currentCharacteristic;
+    CBCharacteristic *currentbatteryCharacteristic;
+
     NSTimer *timer;
 }
 
@@ -254,6 +256,16 @@ const NSInteger step = 10;
             
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
         }
+        if ([[NSString stringWithFormat:@"%@", characteristic.UUID] isEqualToString:@"Battery Level"]) {
+            
+            
+            currentbatteryCharacteristic = characteristic;
+            [peripheral readValueForCharacteristic:currentbatteryCharacteristic];
+            
+            [self batteryLevel];
+
+            [peripheral setNotifyValue:YES forCharacteristic:currentbatteryCharacteristic];
+        }
     }
 }
 
@@ -295,7 +307,7 @@ const NSInteger step = 10;
             NSData *subdata = [data subdataWithRange:NSMakeRange(0, 2)];
             short orderNumber = 0;
             [subdata getBytes:&orderNumber length:2];
-            orderNumber = CFSwapInt16LittleToHost(orderNumber);
+            orderNumber = CFSwapInt16BigToHost(orderNumber);
             
             //double d = 100000*sin(2*M_PI*10*_counter/250);
             
@@ -322,10 +334,10 @@ const NSInteger step = 10;
             
             
             
-            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter],@"timeframe" : [NSString stringWithFormat:@"%.0f", [NSDate  timeIntervalSinceReferenceDate] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber], @"ch1" : [NSNumber numberWithDouble:floor(channel1 * K)], @"ch2" : [NSNumber numberWithDouble:floor(channel2 * K)], @"ch3" : [NSNumber numberWithDouble:floor(channel3 * K)], @"ch4" : [NSNumber numberWithDouble:floor(channel4 * K)]};
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter],@"timeframe" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber], @"ch1" : [NSNumber numberWithDouble:floor(channel1 * K)], @"ch2" : [NSNumber numberWithDouble:floor(channel2 * K)], @"ch3" : [NSNumber numberWithDouble:floor(channel3 * K)], @"ch4" : [NSNumber numberWithDouble:floor(channel4 * K)]};
             
             
-            //NSLog(@"%@", ret);
+            NSLog(@"%@", ret);
             
             [_rawvalues addObject:ret];
             
@@ -340,7 +352,7 @@ const NSInteger step = 10;
             NSData *subdata = [data subdataWithRange:NSMakeRange(0, 2)];
             short orderNumber = 0;
             [subdata getBytes:&orderNumber length:2];
-            orderNumber = CFSwapInt16LittleToHost(orderNumber);
+            orderNumber = CFSwapInt16BigToHost(orderNumber);
             
             //double d = 100000*sin(2*M_PI*10*(_counter + 1)/250);
             
@@ -366,9 +378,9 @@ const NSInteger step = 10;
             channel4_ = CFSwapInt16BigToHost(channel4_);
             
             
-            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"timeframe" : [NSString stringWithFormat:@"%.0f", [NSDate  timeIntervalSinceReferenceDate] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber + 1], @"ch1" : [NSNumber numberWithDouble:floor(channel1_ * K)], @"ch2" : [NSNumber numberWithDouble:floor(channel2_ * K)], @"ch3" : [NSNumber numberWithDouble:floor(channel3_ * K)], @"ch4" : [NSNumber numberWithDouble:floor(channel4_ * K)]};
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"timeframe" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber + 1], @"ch1" : [NSNumber numberWithDouble:floor(channel1_ * K)], @"ch2" : [NSNumber numberWithDouble:floor(channel2_ * K)], @"ch3" : [NSNumber numberWithDouble:floor(channel3_ * K)], @"ch4" : [NSNumber numberWithDouble:floor(channel4_ * K)]};
             
-            //NSLog(@"%@", ret);
+            NSLog(@"%@", ret);
             
             [_rawvalues addObject:ret];
             
@@ -389,7 +401,7 @@ const NSInteger step = 10;
             double channel3 = d;
             double channel4 = d;
             
-            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter],@"timeframe" : [NSString stringWithFormat:@"%.0f", [NSDate  timeIntervalSinceReferenceDate] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber], @"ch1" : [NSNumber numberWithDouble:channel1], @"ch2" : [NSNumber numberWithDouble:channel2], @"ch3" : [NSNumber numberWithDouble:channel3], @"ch4" : [NSNumber numberWithDouble:channel4]};
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter],@"timeframe" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber], @"ch1" : [NSNumber numberWithDouble:channel1], @"ch2" : [NSNumber numberWithDouble:channel2], @"ch3" : [NSNumber numberWithDouble:channel3], @"ch4" : [NSNumber numberWithDouble:channel4]};
             
             
             //NSLog(@"%@", ret);
@@ -413,7 +425,7 @@ const NSInteger step = 10;
             double channel4_ = d;
             
             
-            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"timeframe" : [NSString stringWithFormat:@"%.0f", [NSDate  timeIntervalSinceReferenceDate] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber + 1], @"ch1" : [NSNumber numberWithDouble:channel1_], @"ch2" : [NSNumber numberWithDouble:channel2_], @"ch3" : [NSNumber numberWithDouble:channel3_], @"ch4" : [NSNumber numberWithDouble:channel4_]};
+            NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"timeframe" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber + 1], @"ch1" : [NSNumber numberWithDouble:channel1_], @"ch2" : [NSNumber numberWithDouble:channel2_], @"ch3" : [NSNumber numberWithDouble:channel3_], @"ch4" : [NSNumber numberWithDouble:channel4_]};
             
             //NSLog(@"%@", ret);
             
@@ -461,38 +473,49 @@ const NSInteger step = 10;
         
         [_centralManager cancelPeripheralConnection:peripheral];
     }*/
-    
-    if(_delegate)
+    if(characteristic == currentCharacteristic)
     {
-        
-        if([_delegate respondsToSelector:@selector(CB_dataUpdatedWithDictionary:)])
+        if(_delegate)
         {
             
-            [_delegate CB_dataUpdatedWithDictionary:[self makeReturnDictionary:characteristic.value channel:1]];
-            
-            _counter++;
-
-            [_delegate CB_dataUpdatedWithDictionary:[self makeReturnDictionary:characteristic.value channel:2]];
-
-            _counter++;
-            
-            if(_counter % 250 == 0)
+            if([_delegate respondsToSelector:@selector(CB_dataUpdatedWithDictionary:)])
             {
                 
-                NSDictionary *ret = [self fillFFTData:NSMakeRange(_counter - 250, 256)];
-                if([_delegate respondsToSelector:@selector(CB_fftDataUpdatedWithDictionary:)])
+                [_delegate CB_dataUpdatedWithDictionary:[self makeReturnDictionary:characteristic.value channel:1]];
+                
+                _counter++;
+                
+                [_delegate CB_dataUpdatedWithDictionary:[self makeReturnDictionary:characteristic.value channel:2]];
+                
+                _counter++;
+                
+                if(_counter % 250 == 0)
                 {
-                    [_delegate CB_fftDataUpdatedWithDictionary:ret];
+                    
+                    NSDictionary *ret = [self fillFFTData:NSMakeRange(_counter - 250, 256)];
+                    if([_delegate respondsToSelector:@selector(CB_fftDataUpdatedWithDictionary:)])
+                    {
+                        [_delegate CB_fftDataUpdatedWithDictionary:ret];
+                    }
+                    
                 }
                 
             }
-
+            
         }
-       
+        
+        
+        [_rawdata appendData:characteristic.value];
     }
-    
-    
-    [_rawdata appendData:characteristic.value];
+    else if(characteristic == currentbatteryCharacteristic)
+    {
+        
+        
+        UInt8 batteryLevel;
+        [currentbatteryCharacteristic.value getBytes:&batteryLevel length:1];
+        NSLog(@"battery level %i", batteryLevel);
+    }
+   
 }
 
 
@@ -729,7 +752,7 @@ const NSInteger step = 10;
     NSDictionary *fftData4 = [self fft:farray4];
 
     
-    NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_fftCounter], @"ch1" : fftData1, @"ch2" : fftData2, @"ch3" : fftData3, @"ch4" : fftData4, @"timeframe" : [NSString stringWithFormat:@"%.0f", [NSDate  timeIntervalSinceReferenceDate] * 1000000]};
+    NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_fftCounter], @"ch1" : fftData1, @"ch2" : fftData2, @"ch3" : fftData3, @"ch4" : fftData4, @"timeframe" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000000]};
     
     [_fftData addObject:ret];
     
@@ -1063,6 +1086,15 @@ const NSInteger step = 10;
     
 }
 
+
+-(NSInteger)batteryLevel
+{
+    UInt8 batteryLevel;
+    [currentbatteryCharacteristic.value getBytes:&batteryLevel length:1];
+    NSLog(@"battery level %i", batteryLevel);
+    
+    return batteryLevel;
+}
 
 
 @end
