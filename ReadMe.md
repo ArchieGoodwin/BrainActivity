@@ -1,9 +1,25 @@
 # CBManager Class Reference 
-###### (version 0.7 - 06/15/15)
+###### (version 1.0 - 08/25/15)
+
 ## Overview
-The CBManager class handles connections and data transfer between Braniac accessory and iOS device.
-## Tasks
-#### How to use CBManager Accessory Manager
+The CBManager class handles connections and data transfer between Braniac hardware accessory and iOS device (iPhone 4s and higher).
+
+## List of development tools and frameworks used
+#### Development tools and language: 
+* Xcode 6.1+ 
+* Objective-C
+Frameworks for SDK:
+* CoreBluetooth
+* Accelerate
+#### Frameworks for test project:
+* CoreText
+* Fabric
+* Security
+* OpenGLES
+* QuartzCore
+* Cocoapods
+
+## Instructions on how to build and install for development CBManager Accessory Manager
 First, copy to your project files CBManager.h, CBManager.m, SERVICES.h. Add next frameworks libraries to project: 
 
 * CoreBluetooth
@@ -45,6 +61,7 @@ Also you may implement two optional methods (to receive FFT data and status mess
     		});
 		}
 
+## Tasks
 
 #### Getting the CBManager Accessory Manager
     CBManager *cbManager = [[CBManager alloc] init];
@@ -66,6 +83,7 @@ Also you may implement two optional methods (to receive FFT data and status mess
 * rawdata (NSMutableData *)
 * raw values (NSMutableArray *)
 * fftData (NSMutableArray *)
+* batteryLevel (NSInteger)
 
 #### Receiving information about examinee
 * processGreenForChannel
@@ -101,6 +119,12 @@ A NSMutableArray object containing processed data values received from hardware 
 A NSMutableArray object containing processed fast-FFT values made form each 256 raw data values for each channel. Includes FFT double values for each channel, serial order number and time tick value. Read-only
 
 		@property (strong, nonatomic, readonly) NSMutableArray *fftData;
+
+**batteryLevel**
+
+A NSInteger value containing number from 0 to 100 indicating battery level of hardware accessory. Read-only
+
+		-(NSInteger)batteryLevel;
 
 **delegate**
 
@@ -296,3 +320,11 @@ Optional method returning status messages from CBManager object instance alongsi
     CBManagerMessage_UnknownError = 14,
     CBManagerMessage_PeripheralDisconnected = 15,
 
+## Test procedure for Acceptance
+
+Compile project using instructions in previous sections of this reference. Start project on your iPhone. Switch on Brainiac hardware accessory. Tap on Connect to device button on first screen to connect to accessory. After successful connect tap on Show plot with data button to see at plot data graphs. Switch between Raw data and Spectrum tabs to see if data is populated
+
+## Test procedure for Quality Assurance
+
+You may test SDK features using special test regime of SDK and test application. 
+Compile project using instructions in previous sections of this reference. Start project on your iPhone. Choose any value for dominant frequency using stepper right of the button Start test. Tap on Start test button on first screen to generate permanent test data sequences. Tap on Show plot with data button to see at plot data graphs. Switch between Raw data and Spectrum tabs to see if data is populated and plot draws correct pure sinusoid and green line at set dominant frequency. 
