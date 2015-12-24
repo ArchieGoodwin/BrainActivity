@@ -1,19 +1,17 @@
 #import "CPTFill.h"
 
-@interface _CPTFillColor : CPTFill<NSCopying, NSCoding> {
-    @private
-    CPTColor *fillColor;
-}
+@interface _CPTFillColor : CPTFill<NSCopying, NSCoding>
 
 /// @name Initialization
 /// @{
--(id)initWithColor:(CPTColor *)aColor;
+-(nonnull instancetype)initWithColor:(nullable CPTColor *)aColor NS_DESIGNATED_INITIALIZER;
+-(nonnull instancetype)initWithCoder:(nonnull NSCoder *)coder NS_DESIGNATED_INITIALIZER;
 /// @}
 
 /// @name Drawing
 /// @{
--(void)fillRect:(CGRect)rect inContext:(CGContextRef)context;
--(void)fillPathInContext:(CGContextRef)context;
+-(void)fillRect:(CGRect)rect inContext:(nonnull CGContextRef)context;
+-(void)fillPathInContext:(nonnull CGContextRef)context;
 /// @}
 
 @end

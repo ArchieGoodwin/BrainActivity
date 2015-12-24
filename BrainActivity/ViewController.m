@@ -537,32 +537,32 @@
             CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph1.defaultPlotSpace;
             if(currentIndex > currentRange)
             {
-                plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(currentIndex - currentRange) length:CPTDecimalFromInteger(currentRange)];
-                plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
+                plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:[NSNumber numberWithInteger:(currentIndex - currentRange)] length:[NSNumber numberWithInteger:currentRange]];
+                plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:[NSNumber numberWithInteger:(-(scopeRaw/2))] length:[NSNumber numberWithInteger:scopeRaw]];
             }
             
             
             CPTXYPlotSpace *plotSpace2 = (CPTXYPlotSpace *)self.graph2.defaultPlotSpace;
             if(currentIndex > currentRange)
             {
-                plotSpace2.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(currentIndex - currentRange) length:CPTDecimalFromInteger(currentRange)];
-                plotSpace2.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
+                plotSpace2.xRange                = [CPTPlotRange plotRangeWithLocation:[NSNumber numberWithInteger:(currentIndex - currentRange)] length:[NSNumber numberWithInteger:currentRange]];
+                plotSpace2.yRange                = [CPTPlotRange plotRangeWithLocation:[NSNumber numberWithInteger:(-(scopeRaw/2))] length:@(scopeRaw)];
             }
             
             
             CPTXYPlotSpace *plotSpace3 = (CPTXYPlotSpace *)self.graph3.defaultPlotSpace;
             if(currentIndex > currentRange)
             {
-                plotSpace3.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(currentIndex - currentRange) length:CPTDecimalFromInteger(currentRange)];
-                plotSpace3.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
+                plotSpace3.xRange                = [CPTPlotRange plotRangeWithLocation:[NSNumber numberWithInteger:(currentIndex - currentRange)] length:[NSNumber numberWithInteger:(currentRange)]];
+                plotSpace3.yRange                = [CPTPlotRange plotRangeWithLocation:[NSNumber numberWithInteger:(-(scopeRaw/2))] length:[NSNumber numberWithInteger:(scopeRaw)]];
             }
             
             
             CPTXYPlotSpace *plotSpace4 = (CPTXYPlotSpace *)self.graph4.defaultPlotSpace;
             if(currentIndex > currentRange)
             {
-                plotSpace4.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(currentIndex - currentRange) length:CPTDecimalFromInteger(currentRange)];
-                plotSpace4.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
+                plotSpace4.xRange                = [CPTPlotRange plotRangeWithLocation:[NSNumber numberWithInteger:(currentIndex - currentRange)] length:[NSNumber numberWithInteger:(currentRange)]];
+                plotSpace4.yRange                = [CPTPlotRange plotRangeWithLocation:[NSNumber numberWithInteger:(-(scopeRaw/2))] length:[NSNumber numberWithInteger:(scopeRaw)]];
             }
             
             [self.graph1 reloadData];
@@ -617,27 +617,27 @@
         CPTXYPlotSpace *plotSpace1 = (CPTXYPlotSpace *)self.graph1.defaultPlotSpace;
         if(currentFFTIndex > 119)
         {
-            plotSpace1.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 120) length:CPTDecimalFromInt(130)];
+            plotSpace1.xRange = [CPTPlotRange plotRangeWithLocation:[NSNumber numberWithDouble:(currentFFTIndex - 120)] length:[NSNumber numberWithInteger:(130)]];
         }
         
         CPTXYPlotSpace *plotSpace2 = (CPTXYPlotSpace *)self.graph2.defaultPlotSpace;
         if(currentFFTIndex > 119)
         {
-            plotSpace2.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 120) length:CPTDecimalFromDouble(130)];
+            plotSpace2.xRange = [CPTPlotRange plotRangeWithLocation:[NSNumber numberWithDouble:(currentFFTIndex - 120)] length:@(130)];
         }
         
         
         CPTXYPlotSpace *plotSpace3 = (CPTXYPlotSpace *)self.graph3.defaultPlotSpace;
         if(currentFFTIndex > 119)
         {
-            plotSpace3.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 120) length:CPTDecimalFromDouble(130)];
+            plotSpace3.xRange = [CPTPlotRange plotRangeWithLocation:@(currentFFTIndex - 120) length:@(130)];
         }
         
         
         CPTXYPlotSpace *plotSpace4 = (CPTXYPlotSpace *)self.graph4.defaultPlotSpace;
         if(currentFFTIndex > 119)
         {
-            plotSpace4.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(currentFFTIndex - 120) length:CPTDecimalFromDouble(130)];
+            plotSpace4.xRange = [CPTPlotRange plotRangeWithLocation:@(currentFFTIndex - 120) length:@(130)];
         }
 
     }
@@ -681,8 +681,8 @@
     // Setup plot space
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)newGraph.defaultPlotSpace;
     plotSpace.allowsUserInteraction = YES;
-    plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(0.0) length:CPTDecimalFromDouble(currentRange)];
-    plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInteger(-(scopeRaw/2)) length:CPTDecimalFromInteger(scopeRaw)];
+    plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:@(0.0) length:@(currentRange)];
+    plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:@(-(scopeRaw/2)) length:@(scopeRaw)];
     
     // Axes
     CPTXYAxisSet *axisSet = (CPTXYAxisSet *)newGraph.axisSet;
@@ -697,7 +697,7 @@
     
     CPTXYAxis *y = axisSet.yAxis;
 
-    y.majorIntervalLength         = CPTDecimalFromDouble(10000);
+    y.majorIntervalLength         = @(10000);
     y.minorTicksPerInterval       = 0;
 
     y.delegate             = self;
@@ -760,13 +760,13 @@
     // Setup plot space
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)newGraph.defaultPlotSpace;
     plotSpace.allowsUserInteraction = YES;
-    plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(0.0) length:CPTDecimalFromDouble(130)];
-    plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(-3.0) length:CPTDecimalFromDouble(23.0)];
+    plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:@(0.0) length:@(130)];
+    plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:@(-3.0) length:@(23.0)];
     
     // Axes
     CPTXYAxisSet *axisSet = (CPTXYAxisSet *)newGraph.axisSet;
     CPTXYAxis *x          = axisSet.xAxis;
-    x.majorIntervalLength         = CPTDecimalFromDouble(10);
+    x.majorIntervalLength         = @(10);
     //x.orthogonalCoordinateDecimal = CPTDecimalFromDouble(10.0);
     x.minorTicksPerInterval       = 0;
     x.labelingPolicy = CPTAxisLabelingPolicyNone;
@@ -785,7 +785,7 @@
     CPTMutableTextStyle *textStyle = [CPTMutableTextStyle textStyle];
     [textStyle setFontSize:12.0f];
     textStyle.color = [CPTColor lightGrayColor];
-    [y setMajorIntervalLength:CPTDecimalFromInt(5)];
+    [y setMajorIntervalLength:@(5)];
     [y setMinorTickLineStyle:nil];
     [y setLabelingPolicy:CPTAxisLabelingPolicyFixedInterval];
     [y setLabelTextStyle:textStyle];
@@ -1044,7 +1044,7 @@
             CPTTextLayer *newLabelLayer = [[CPTTextLayer alloc] initWithText:labelString style:theLabelTextStyle];
             
             CPTAxisLabel *newLabel = [[CPTAxisLabel alloc] initWithContentLayer:newLabelLayer];
-            newLabel.tickLocation = tickLocation.decimalValue;
+            newLabel.tickLocation = tickLocation;
             newLabel.offset       = labelOffset;
             
             [newLabels addObject:newLabel];

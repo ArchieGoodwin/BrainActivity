@@ -3,7 +3,7 @@ This application makes use of the following third party libraries:
 
 ## AFNetworking
 
-Copyright (c) 2013-2015 AFNetworking (http://afnetworking.com/)
+Copyright (c) 2011–2015 Alamofire Software Foundation (http://alamofire.org/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 ## CorePlot
 
-Copyright (c) 2012, Drew McCormack, Brad Larson, Eric Skroch, Barry Wark, Dirkjan Krijnders, Rick Maddy, Vijay Kalusani, Caleb Cannon, Jeff Buck, Thomas Elstner, Jeroen Leenarts, Craig Hockenberry, Hartwig Wiesmann, Koen van der Drift, Nino Ag, Mike Lischke, Trevor Harmon, and Travis Fischer.
+Copyright (c) 2015, Drew McCormack, Brad Larson, Eric Skroch, Barry Wark, Dirkjan Krijnders, Rick Maddy, Vijay Kalusani, Caleb Cannon, Jeff Buck, Thomas Elstner, Jeroen Leenarts, Craig Hockenberry, Hartwig Wiesmann, Koen van der Drift, Nino Ag, Mike Lischke, Trevor Harmon, Travis Fischer, Graham Mueller, Rafał Wójcik, Mike Rossetti, Michael Merickel, Lane Roathe, Ingmar Stein, Sean Holbert, Victor Martin Garcia, Jérôme Morissard, and Demitri Muna.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

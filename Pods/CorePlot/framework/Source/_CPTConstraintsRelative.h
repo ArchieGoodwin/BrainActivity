@@ -1,18 +1,16 @@
 #import "CPTConstraints.h"
 
-@interface _CPTConstraintsRelative : CPTConstraints {
-    @private
-    CGFloat offset;
-}
+@interface _CPTConstraintsRelative : CPTConstraints
 
 /// @name Initialization
 /// @{
--(id)initWithRelativeOffset:(CGFloat)newOffset;
+-(nonnull instancetype)initWithRelativeOffset:(CGFloat)newOffset NS_DESIGNATED_INITIALIZER;
+-(nonnull instancetype)initWithCoder:(nonnull NSCoder *)decoder NS_DESIGNATED_INITIALIZER;
 /// @}
 
 /// @name Comparison
 /// @{
--(BOOL)isEqualToConstraint:(CPTConstraints *)otherConstraint;
+-(BOOL)isEqualToConstraint:(nullable CPTConstraints *)otherConstraint;
 /// @}
 
 /// @name Position

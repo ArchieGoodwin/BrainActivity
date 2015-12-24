@@ -81,7 +81,7 @@
     
     if(cbManager.hasStarted)
     {
-        [self sendData];
+        //[self sendData];
     }
 }
 
@@ -211,7 +211,7 @@
 #pragma mark -
 #pragma mark Networking
 
-- (void)sendData {
+/*- (void)sendData {
     
     AFHTTPRequestOperationManager *nManager = [AFHTTPRequestOperationManager manager];
     nManager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -240,7 +240,7 @@
         NSLog(@"Error: %@", error);
     }];
     
-}
+}*/
 
 
 

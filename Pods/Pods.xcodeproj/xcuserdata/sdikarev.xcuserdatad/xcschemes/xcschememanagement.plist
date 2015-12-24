@@ -4,17 +4,12 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-BrainActivity-AFNetworking.xcscheme</key>
+		<key>AFNetworking.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-BrainActivity-CorePlot.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Pods-BrainActivity-SDiPhoneVersion.xcscheme</key>
+		<key>CorePlot.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -24,25 +19,30 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>SDiPhoneVersion.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>19D5F97B881376639AC6677A</key>
+		<key>1BD42D47CC80BBFEEE4B9FEFC1A4CCF3</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6D4F57111EEA01784B2DC388</key>
+		<key>74A452B1A1260D2399B3961A5A6A356D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7E174FA9AB124AD73B8B508A</key>
+		<key>928353533005A4198EBDA5B700D37B64</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D686EB575AF0BA588D23D594</key>
+		<key>AD248D9AA1CA645FB7C49078642CD3C1</key>
 		<dict>
 			<key>primary</key>
 			<true/>

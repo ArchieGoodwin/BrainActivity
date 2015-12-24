@@ -1,6 +1,5 @@
 #import "CPTAxisSet.h"
 
-#import "CPTAxis.h"
 #import "CPTGraph.h"
 #import "CPTLineStyle.h"
 #import "CPTPlotArea.h"
@@ -10,7 +9,7 @@
  **/
 @implementation CPTAxisSet
 
-/** @property NSArray *axes
+/** @property CPTAxisArray axes
  *  @brief The axes in the axis set.
  **/
 @synthesize axes;
@@ -37,10 +36,10 @@
  *  @param newFrame The frame rectangle.
  *  @return The initialized CPTAxisSet object.
  **/
--(id)initWithFrame:(CGRect)newFrame
+-(instancetype)initWithFrame:(CGRect)newFrame
 {
     if ( (self = [super initWithFrame:newFrame]) ) {
-        axes            = [[NSArray array] retain];
+        axes            = @[];
         borderLineStyle = nil;
 
         self.needsDisplayOnBoundsChange = YES;
@@ -52,22 +51,15 @@
 
 /// @cond
 
--(id)initWithLayer:(id)layer
+-(instancetype)initWithLayer:(id)layer
 {
     if ( (self = [super initWithLayer:layer]) ) {
         CPTAxisSet *theLayer = (CPTAxisSet *)layer;
 
-        axes            = [theLayer->axes retain];
-        borderLineStyle = [theLayer->borderLineStyle retain];
+        axes            = theLayer->axes;
+        borderLineStyle = theLayer->borderLineStyle;
     }
     return self;
-}
-
--(void)dealloc
-{
-    [axes release];
-    [borderLineStyle release];
-    [super dealloc];
 }
 
 /// @endcond
@@ -85,13 +77,27 @@
     [coder encodeObject:self.borderLineStyle forKey:@"CPTAxisSet.borderLineStyle"];
 }
 
--(id)initWithCoder:(NSCoder *)coder
+-(instancetype)initWithCoder:(NSCoder *)coder
 {
     if ( (self = [super initWithCoder:coder]) ) {
         axes            = [[coder decodeObjectForKey:@"CPTAxisSet.axes"] copy];
         borderLineStyle = [[coder decodeObjectForKey:@"CPTAxisSet.borderLineStyle"] copy];
     }
     return self;
+}
+
+/// @endcond
+
+#pragma mark -
+#pragma mark Drawing
+
+/// @cond
+
+-(void)display
+{
+    if ( self.borderLineStyle ) {
+        [super display];
+    }
 }
 
 /// @endcond
@@ -104,7 +110,7 @@
  **/
 -(void)relabelAxes
 {
-    NSArray *theAxes = self.axes;
+    CPTAxisArray theAxes = self.axes;
 
     [theAxes makeObjectsPerformSelector:@selector(setNeedsLayout)];
     [theAxes makeObjectsPerformSelector:@selector(setNeedsRelabel)];
@@ -152,7 +158,7 @@
 /**
  *  @brief Informs the receiver that the user has
  *  @if MacOnly pressed the mouse button. @endif
- *  @if iOSOnly touched the screen. @endif
+ *  @if iOSOnly started touching the screen. @endif
  *
  *
  *  The event will be passed to each axis belonging to the receiver in turn. This method
@@ -173,6 +179,30 @@
     return [super pointingDeviceDownEvent:event atPoint:interactionPoint];
 }
 
+/**
+ *  @brief Informs the receiver that the user has
+ *  @if MacOnly released the mouse button. @endif
+ *  @if iOSOnly ended touching the screen. @endif
+ *
+ *
+ *  The event will be passed to each axis belonging to the receiver in turn. This method
+ *  returns @YES if any of its axes handle the event.
+ *
+ *  @param event The OS event.
+ *  @param interactionPoint The coordinates of the interaction.
+ *  @return Whether the event was handled or not.
+ **/
+-(BOOL)pointingDeviceUpEvent:(CPTNativeEvent *)event atPoint:(CGPoint)interactionPoint
+{
+    for ( CPTAxis *axis in self.axes ) {
+        if ( [axis pointingDeviceUpEvent:event atPoint:interactionPoint] ) {
+            return YES;
+        }
+    }
+
+    return [super pointingDeviceUpEvent:event atPoint:interactionPoint];
+}
+
 /// @}
 
 #pragma mark -
@@ -180,7 +210,7 @@
 
 /// @cond
 
--(void)setAxes:(NSArray *)newAxes
+-(void)setAxes:(CPTAxisArray)newAxes
 {
     if ( newAxes != axes ) {
         for ( CPTAxis *axis in axes ) {
@@ -188,8 +218,6 @@
             axis.plotArea = nil;
             axis.graph    = nil;
         }
-        [newAxes retain];
-        [axes release];
         axes = newAxes;
         CPTPlotArea *plotArea = (CPTPlotArea *)self.superlayer;
         CPTGraph *theGraph    = plotArea.graph;
@@ -206,8 +234,8 @@
 -(void)setBorderLineStyle:(CPTLineStyle *)newLineStyle
 {
     if ( newLineStyle != borderLineStyle ) {
-        [borderLineStyle release];
         borderLineStyle = [newLineStyle copy];
+        [self setNeedsLayout];
         [self setNeedsDisplay];
     }
 }

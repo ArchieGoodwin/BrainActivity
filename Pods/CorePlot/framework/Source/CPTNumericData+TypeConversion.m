@@ -36,13 +36,11 @@
     NSData *newData           = nil;
     CFByteOrder hostByteOrder = CFByteOrderGetCurrent();
 
-    if ( (myDataType.dataTypeFormat == newDataType.dataTypeFormat) &&
-         (myDataType.sampleBytes == newDataType.sampleBytes) &&
-         (myDataType.byteOrder == newDataType.byteOrder) ) {
-        newData = [self.data retain];
+    if ( CPTDataTypeEqualToDataType(myDataType, newDataType) ) {
+        newData = self.data;
     }
     else if ( ( myDataType.sampleBytes == sizeof(int8_t) ) && ( newDataType.sampleBytes == sizeof(int8_t) ) ) {
-        newData = [self.data retain];
+        newData = self.data;
     }
     else {
         NSUInteger sampleCount = self.data.length / myDataType.sampleBytes;
@@ -55,12 +53,10 @@
             [self swapByteOrderForData:(NSMutableData *)sourceData sampleSize:myDataType.sampleBytes];
         }
         else {
-            sourceData = [self.data retain];
+            sourceData = self.data;
         }
 
         [self convertData:sourceData dataType:&myDataType toData:(NSMutableData *)newData dataType:&newDataType];
-
-        [sourceData release];
 
         if ( newDataType.byteOrder != hostByteOrder ) {
             [self swapByteOrderForData:(NSMutableData *)newData sampleSize:newDataType.sampleBytes];
@@ -70,7 +66,6 @@
     CPTNumericData *result = [CPTNumericData numericDataWithData:newData
                                                         dataType:newDataType
                                                            shape:self.shape];
-    [newData release];
     return result;
 }
 
@@ -116,7 +111,7 @@
 
                                 case sizeof(int16_t):
                                 { // int8_t -> int16_t
-                                    const int8_t *fromBytes  = (int8_t *)sourceData.bytes;
+                                    const int8_t *fromBytes  = (const int8_t *)sourceData.bytes;
                                     const int8_t *lastSample = fromBytes + sampleCount;
                                     int16_t *toBytes         = (int16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -127,7 +122,7 @@
 
                                 case sizeof(int32_t):
                                 { // int8_t -> int32_t
-                                    const int8_t *fromBytes  = (int8_t *)sourceData.bytes;
+                                    const int8_t *fromBytes  = (const int8_t *)sourceData.bytes;
                                     const int8_t *lastSample = fromBytes + sampleCount;
                                     int32_t *toBytes         = (int32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -138,7 +133,7 @@
 
                                 case sizeof(int64_t):
                                 { // int8_t -> int64_t
-                                    const int8_t *fromBytes  = (int8_t *)sourceData.bytes;
+                                    const int8_t *fromBytes  = (const int8_t *)sourceData.bytes;
                                     const int8_t *lastSample = fromBytes + sampleCount;
                                     int64_t *toBytes         = (int64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -153,7 +148,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(uint8_t):
                                 { // int8_t -> uint8_t
-                                    const int8_t *fromBytes  = (int8_t *)sourceData.bytes;
+                                    const int8_t *fromBytes  = (const int8_t *)sourceData.bytes;
                                     const int8_t *lastSample = fromBytes + sampleCount;
                                     uint8_t *toBytes         = (uint8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -164,7 +159,7 @@
 
                                 case sizeof(uint16_t):
                                 { // int8_t -> uint16_t
-                                    const int8_t *fromBytes  = (int8_t *)sourceData.bytes;
+                                    const int8_t *fromBytes  = (const int8_t *)sourceData.bytes;
                                     const int8_t *lastSample = fromBytes + sampleCount;
                                     uint16_t *toBytes        = (uint16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -175,7 +170,7 @@
 
                                 case sizeof(uint32_t):
                                 { // int8_t -> uint32_t
-                                    const int8_t *fromBytes  = (int8_t *)sourceData.bytes;
+                                    const int8_t *fromBytes  = (const int8_t *)sourceData.bytes;
                                     const int8_t *lastSample = fromBytes + sampleCount;
                                     uint32_t *toBytes        = (uint32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -186,7 +181,7 @@
 
                                 case sizeof(uint64_t):
                                 { // int8_t -> uint64_t
-                                    const int8_t *fromBytes  = (int8_t *)sourceData.bytes;
+                                    const int8_t *fromBytes  = (const int8_t *)sourceData.bytes;
                                     const int8_t *lastSample = fromBytes + sampleCount;
                                     uint64_t *toBytes        = (uint64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -201,7 +196,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float):
                                 { // int8_t -> float
-                                    const int8_t *fromBytes  = (int8_t *)sourceData.bytes;
+                                    const int8_t *fromBytes  = (const int8_t *)sourceData.bytes;
                                     const int8_t *lastSample = fromBytes + sampleCount;
                                     float *toBytes           = (float *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -212,7 +207,7 @@
 
                                 case sizeof(double):
                                 { // int8_t -> double
-                                    const int8_t *fromBytes  = (int8_t *)sourceData.bytes;
+                                    const int8_t *fromBytes  = (const int8_t *)sourceData.bytes;
                                     const int8_t *lastSample = fromBytes + sampleCount;
                                     double *toBytes          = (double *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -227,7 +222,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float complex):
                                 { // int8_t -> float complex
-                                    const int8_t *fromBytes  = (int8_t *)sourceData.bytes;
+                                    const int8_t *fromBytes  = (const int8_t *)sourceData.bytes;
                                     const int8_t *lastSample = fromBytes + sampleCount;
                                     float complex *toBytes   = (float complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -238,7 +233,7 @@
 
                                 case sizeof(double complex):
                                 { // int8_t -> double complex
-                                    const int8_t *fromBytes  = (int8_t *)sourceData.bytes;
+                                    const int8_t *fromBytes  = (const int8_t *)sourceData.bytes;
                                     const int8_t *lastSample = fromBytes + sampleCount;
                                     double complex *toBytes  = (double complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -253,7 +248,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(NSDecimal):
                                 { // int8_t -> NSDecimal
-                                    const int8_t *fromBytes  = (int8_t *)sourceData.bytes;
+                                    const int8_t *fromBytes  = (const int8_t *)sourceData.bytes;
                                     const int8_t *lastSample = fromBytes + sampleCount;
                                     NSDecimal *toBytes       = (NSDecimal *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -275,7 +270,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(int8_t):
                                 { // int16_t -> int8_t
-                                    const int16_t *fromBytes  = (int16_t *)sourceData.bytes;
+                                    const int16_t *fromBytes  = (const int16_t *)sourceData.bytes;
                                     const int16_t *lastSample = fromBytes + sampleCount;
                                     int8_t *toBytes           = (int8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -292,7 +287,7 @@
 
                                 case sizeof(int32_t):
                                 { // int16_t -> int32_t
-                                    const int16_t *fromBytes  = (int16_t *)sourceData.bytes;
+                                    const int16_t *fromBytes  = (const int16_t *)sourceData.bytes;
                                     const int16_t *lastSample = fromBytes + sampleCount;
                                     int32_t *toBytes          = (int32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -303,7 +298,7 @@
 
                                 case sizeof(int64_t):
                                 { // int16_t -> int64_t
-                                    const int16_t *fromBytes  = (int16_t *)sourceData.bytes;
+                                    const int16_t *fromBytes  = (const int16_t *)sourceData.bytes;
                                     const int16_t *lastSample = fromBytes + sampleCount;
                                     int64_t *toBytes          = (int64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -318,7 +313,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(uint8_t):
                                 { // int16_t -> uint8_t
-                                    const int16_t *fromBytes  = (int16_t *)sourceData.bytes;
+                                    const int16_t *fromBytes  = (const int16_t *)sourceData.bytes;
                                     const int16_t *lastSample = fromBytes + sampleCount;
                                     uint8_t *toBytes          = (uint8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -329,7 +324,7 @@
 
                                 case sizeof(uint16_t):
                                 { // int16_t -> uint16_t
-                                    const int16_t *fromBytes  = (int16_t *)sourceData.bytes;
+                                    const int16_t *fromBytes  = (const int16_t *)sourceData.bytes;
                                     const int16_t *lastSample = fromBytes + sampleCount;
                                     uint16_t *toBytes         = (uint16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -340,7 +335,7 @@
 
                                 case sizeof(uint32_t):
                                 { // int16_t -> uint32_t
-                                    const int16_t *fromBytes  = (int16_t *)sourceData.bytes;
+                                    const int16_t *fromBytes  = (const int16_t *)sourceData.bytes;
                                     const int16_t *lastSample = fromBytes + sampleCount;
                                     uint32_t *toBytes         = (uint32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -351,7 +346,7 @@
 
                                 case sizeof(uint64_t):
                                 { // int16_t -> uint64_t
-                                    const int16_t *fromBytes  = (int16_t *)sourceData.bytes;
+                                    const int16_t *fromBytes  = (const int16_t *)sourceData.bytes;
                                     const int16_t *lastSample = fromBytes + sampleCount;
                                     uint64_t *toBytes         = (uint64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -366,7 +361,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float):
                                 { // int16_t -> float
-                                    const int16_t *fromBytes  = (int16_t *)sourceData.bytes;
+                                    const int16_t *fromBytes  = (const int16_t *)sourceData.bytes;
                                     const int16_t *lastSample = fromBytes + sampleCount;
                                     float *toBytes            = (float *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -377,7 +372,7 @@
 
                                 case sizeof(double):
                                 { // int16_t -> double
-                                    const int16_t *fromBytes  = (int16_t *)sourceData.bytes;
+                                    const int16_t *fromBytes  = (const int16_t *)sourceData.bytes;
                                     const int16_t *lastSample = fromBytes + sampleCount;
                                     double *toBytes           = (double *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -392,7 +387,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float complex):
                                 { // int16_t -> float complex
-                                    const int16_t *fromBytes  = (int16_t *)sourceData.bytes;
+                                    const int16_t *fromBytes  = (const int16_t *)sourceData.bytes;
                                     const int16_t *lastSample = fromBytes + sampleCount;
                                     float complex *toBytes    = (float complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -403,7 +398,7 @@
 
                                 case sizeof(double complex):
                                 { // int16_t -> double complex
-                                    const int16_t *fromBytes  = (int16_t *)sourceData.bytes;
+                                    const int16_t *fromBytes  = (const int16_t *)sourceData.bytes;
                                     const int16_t *lastSample = fromBytes + sampleCount;
                                     double complex *toBytes   = (double complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -418,7 +413,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(NSDecimal):
                                 { // int16_t -> NSDecimal
-                                    const int16_t *fromBytes  = (int16_t *)sourceData.bytes;
+                                    const int16_t *fromBytes  = (const int16_t *)sourceData.bytes;
                                     const int16_t *lastSample = fromBytes + sampleCount;
                                     NSDecimal *toBytes        = (NSDecimal *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -440,7 +435,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(int8_t):
                                 { // int32_t -> int8_t
-                                    const int32_t *fromBytes  = (int32_t *)sourceData.bytes;
+                                    const int32_t *fromBytes  = (const int32_t *)sourceData.bytes;
                                     const int32_t *lastSample = fromBytes + sampleCount;
                                     int8_t *toBytes           = (int8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -451,7 +446,7 @@
 
                                 case sizeof(int16_t):
                                 { // int32_t -> int16_t
-                                    const int32_t *fromBytes  = (int32_t *)sourceData.bytes;
+                                    const int32_t *fromBytes  = (const int32_t *)sourceData.bytes;
                                     const int32_t *lastSample = fromBytes + sampleCount;
                                     int16_t *toBytes          = (int16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -468,7 +463,7 @@
 
                                 case sizeof(int64_t):
                                 { // int32_t -> int64_t
-                                    const int32_t *fromBytes  = (int32_t *)sourceData.bytes;
+                                    const int32_t *fromBytes  = (const int32_t *)sourceData.bytes;
                                     const int32_t *lastSample = fromBytes + sampleCount;
                                     int64_t *toBytes          = (int64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -483,7 +478,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(uint8_t):
                                 { // int32_t -> uint8_t
-                                    const int32_t *fromBytes  = (int32_t *)sourceData.bytes;
+                                    const int32_t *fromBytes  = (const int32_t *)sourceData.bytes;
                                     const int32_t *lastSample = fromBytes + sampleCount;
                                     uint8_t *toBytes          = (uint8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -494,7 +489,7 @@
 
                                 case sizeof(uint16_t):
                                 { // int32_t -> uint16_t
-                                    const int32_t *fromBytes  = (int32_t *)sourceData.bytes;
+                                    const int32_t *fromBytes  = (const int32_t *)sourceData.bytes;
                                     const int32_t *lastSample = fromBytes + sampleCount;
                                     uint16_t *toBytes         = (uint16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -505,7 +500,7 @@
 
                                 case sizeof(uint32_t):
                                 { // int32_t -> uint32_t
-                                    const int32_t *fromBytes  = (int32_t *)sourceData.bytes;
+                                    const int32_t *fromBytes  = (const int32_t *)sourceData.bytes;
                                     const int32_t *lastSample = fromBytes + sampleCount;
                                     uint32_t *toBytes         = (uint32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -516,7 +511,7 @@
 
                                 case sizeof(uint64_t):
                                 { // int32_t -> uint64_t
-                                    const int32_t *fromBytes  = (int32_t *)sourceData.bytes;
+                                    const int32_t *fromBytes  = (const int32_t *)sourceData.bytes;
                                     const int32_t *lastSample = fromBytes + sampleCount;
                                     uint64_t *toBytes         = (uint64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -531,7 +526,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float):
                                 { // int32_t -> float
-                                    const int32_t *fromBytes  = (int32_t *)sourceData.bytes;
+                                    const int32_t *fromBytes  = (const int32_t *)sourceData.bytes;
                                     const int32_t *lastSample = fromBytes + sampleCount;
                                     float *toBytes            = (float *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -542,7 +537,7 @@
 
                                 case sizeof(double):
                                 { // int32_t -> double
-                                    const int32_t *fromBytes  = (int32_t *)sourceData.bytes;
+                                    const int32_t *fromBytes  = (const int32_t *)sourceData.bytes;
                                     const int32_t *lastSample = fromBytes + sampleCount;
                                     double *toBytes           = (double *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -557,7 +552,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float complex):
                                 { // int32_t -> float complex
-                                    const int32_t *fromBytes  = (int32_t *)sourceData.bytes;
+                                    const int32_t *fromBytes  = (const int32_t *)sourceData.bytes;
                                     const int32_t *lastSample = fromBytes + sampleCount;
                                     float complex *toBytes    = (float complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -568,7 +563,7 @@
 
                                 case sizeof(double complex):
                                 { // int32_t -> double complex
-                                    const int32_t *fromBytes  = (int32_t *)sourceData.bytes;
+                                    const int32_t *fromBytes  = (const int32_t *)sourceData.bytes;
                                     const int32_t *lastSample = fromBytes + sampleCount;
                                     double complex *toBytes   = (double complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -583,7 +578,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(NSDecimal):
                                 { // int32_t -> NSDecimal
-                                    const int32_t *fromBytes  = (int32_t *)sourceData.bytes;
+                                    const int32_t *fromBytes  = (const int32_t *)sourceData.bytes;
                                     const int32_t *lastSample = fromBytes + sampleCount;
                                     NSDecimal *toBytes        = (NSDecimal *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -605,7 +600,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(int8_t):
                                 { // int64_t -> int8_t
-                                    const int64_t *fromBytes  = (int64_t *)sourceData.bytes;
+                                    const int64_t *fromBytes  = (const int64_t *)sourceData.bytes;
                                     const int64_t *lastSample = fromBytes + sampleCount;
                                     int8_t *toBytes           = (int8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -616,7 +611,7 @@
 
                                 case sizeof(int16_t):
                                 { // int64_t -> int16_t
-                                    const int64_t *fromBytes  = (int64_t *)sourceData.bytes;
+                                    const int64_t *fromBytes  = (const int64_t *)sourceData.bytes;
                                     const int64_t *lastSample = fromBytes + sampleCount;
                                     int16_t *toBytes          = (int16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -627,7 +622,7 @@
 
                                 case sizeof(int32_t):
                                 { // int64_t -> int32_t
-                                    const int64_t *fromBytes  = (int64_t *)sourceData.bytes;
+                                    const int64_t *fromBytes  = (const int64_t *)sourceData.bytes;
                                     const int64_t *lastSample = fromBytes + sampleCount;
                                     int32_t *toBytes          = (int32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -648,7 +643,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(uint8_t):
                                 { // int64_t -> uint8_t
-                                    const int64_t *fromBytes  = (int64_t *)sourceData.bytes;
+                                    const int64_t *fromBytes  = (const int64_t *)sourceData.bytes;
                                     const int64_t *lastSample = fromBytes + sampleCount;
                                     uint8_t *toBytes          = (uint8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -659,7 +654,7 @@
 
                                 case sizeof(uint16_t):
                                 { // int64_t -> uint16_t
-                                    const int64_t *fromBytes  = (int64_t *)sourceData.bytes;
+                                    const int64_t *fromBytes  = (const int64_t *)sourceData.bytes;
                                     const int64_t *lastSample = fromBytes + sampleCount;
                                     uint16_t *toBytes         = (uint16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -670,7 +665,7 @@
 
                                 case sizeof(uint32_t):
                                 { // int64_t -> uint32_t
-                                    const int64_t *fromBytes  = (int64_t *)sourceData.bytes;
+                                    const int64_t *fromBytes  = (const int64_t *)sourceData.bytes;
                                     const int64_t *lastSample = fromBytes + sampleCount;
                                     uint32_t *toBytes         = (uint32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -681,7 +676,7 @@
 
                                 case sizeof(uint64_t):
                                 { // int64_t -> uint64_t
-                                    const int64_t *fromBytes  = (int64_t *)sourceData.bytes;
+                                    const int64_t *fromBytes  = (const int64_t *)sourceData.bytes;
                                     const int64_t *lastSample = fromBytes + sampleCount;
                                     uint64_t *toBytes         = (uint64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -696,7 +691,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float):
                                 { // int64_t -> float
-                                    const int64_t *fromBytes  = (int64_t *)sourceData.bytes;
+                                    const int64_t *fromBytes  = (const int64_t *)sourceData.bytes;
                                     const int64_t *lastSample = fromBytes + sampleCount;
                                     float *toBytes            = (float *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -707,7 +702,7 @@
 
                                 case sizeof(double):
                                 { // int64_t -> double
-                                    const int64_t *fromBytes  = (int64_t *)sourceData.bytes;
+                                    const int64_t *fromBytes  = (const int64_t *)sourceData.bytes;
                                     const int64_t *lastSample = fromBytes + sampleCount;
                                     double *toBytes           = (double *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -722,7 +717,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float complex):
                                 { // int64_t -> float complex
-                                    const int64_t *fromBytes  = (int64_t *)sourceData.bytes;
+                                    const int64_t *fromBytes  = (const int64_t *)sourceData.bytes;
                                     const int64_t *lastSample = fromBytes + sampleCount;
                                     float complex *toBytes    = (float complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -733,7 +728,7 @@
 
                                 case sizeof(double complex):
                                 { // int64_t -> double complex
-                                    const int64_t *fromBytes  = (int64_t *)sourceData.bytes;
+                                    const int64_t *fromBytes  = (const int64_t *)sourceData.bytes;
                                     const int64_t *lastSample = fromBytes + sampleCount;
                                     double complex *toBytes   = (double complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -748,7 +743,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(NSDecimal):
                                 { // int64_t -> NSDecimal
-                                    const int64_t *fromBytes  = (int64_t *)sourceData.bytes;
+                                    const int64_t *fromBytes  = (const int64_t *)sourceData.bytes;
                                     const int64_t *lastSample = fromBytes + sampleCount;
                                     NSDecimal *toBytes        = (NSDecimal *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -774,7 +769,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(int8_t):
                                 { // uint8_t -> int8_t
-                                    const uint8_t *fromBytes  = (uint8_t *)sourceData.bytes;
+                                    const uint8_t *fromBytes  = (const uint8_t *)sourceData.bytes;
                                     const uint8_t *lastSample = fromBytes + sampleCount;
                                     int8_t *toBytes           = (int8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -785,7 +780,7 @@
 
                                 case sizeof(int16_t):
                                 { // uint8_t -> int16_t
-                                    const uint8_t *fromBytes  = (uint8_t *)sourceData.bytes;
+                                    const uint8_t *fromBytes  = (const uint8_t *)sourceData.bytes;
                                     const uint8_t *lastSample = fromBytes + sampleCount;
                                     int16_t *toBytes          = (int16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -796,7 +791,7 @@
 
                                 case sizeof(int32_t):
                                 { // uint8_t -> int32_t
-                                    const uint8_t *fromBytes  = (uint8_t *)sourceData.bytes;
+                                    const uint8_t *fromBytes  = (const uint8_t *)sourceData.bytes;
                                     const uint8_t *lastSample = fromBytes + sampleCount;
                                     int32_t *toBytes          = (int32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -807,7 +802,7 @@
 
                                 case sizeof(int64_t):
                                 { // uint8_t -> int64_t
-                                    const uint8_t *fromBytes  = (uint8_t *)sourceData.bytes;
+                                    const uint8_t *fromBytes  = (const uint8_t *)sourceData.bytes;
                                     const uint8_t *lastSample = fromBytes + sampleCount;
                                     int64_t *toBytes          = (int64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -828,7 +823,7 @@
 
                                 case sizeof(uint16_t):
                                 { // uint8_t -> uint16_t
-                                    const uint8_t *fromBytes  = (uint8_t *)sourceData.bytes;
+                                    const uint8_t *fromBytes  = (const uint8_t *)sourceData.bytes;
                                     const uint8_t *lastSample = fromBytes + sampleCount;
                                     uint16_t *toBytes         = (uint16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -839,7 +834,7 @@
 
                                 case sizeof(uint32_t):
                                 { // uint8_t -> uint32_t
-                                    const uint8_t *fromBytes  = (uint8_t *)sourceData.bytes;
+                                    const uint8_t *fromBytes  = (const uint8_t *)sourceData.bytes;
                                     const uint8_t *lastSample = fromBytes + sampleCount;
                                     uint32_t *toBytes         = (uint32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -850,7 +845,7 @@
 
                                 case sizeof(uint64_t):
                                 { // uint8_t -> uint64_t
-                                    const uint8_t *fromBytes  = (uint8_t *)sourceData.bytes;
+                                    const uint8_t *fromBytes  = (const uint8_t *)sourceData.bytes;
                                     const uint8_t *lastSample = fromBytes + sampleCount;
                                     uint64_t *toBytes         = (uint64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -865,7 +860,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float):
                                 { // uint8_t -> float
-                                    const uint8_t *fromBytes  = (uint8_t *)sourceData.bytes;
+                                    const uint8_t *fromBytes  = (const uint8_t *)sourceData.bytes;
                                     const uint8_t *lastSample = fromBytes + sampleCount;
                                     float *toBytes            = (float *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -876,7 +871,7 @@
 
                                 case sizeof(double):
                                 { // uint8_t -> double
-                                    const uint8_t *fromBytes  = (uint8_t *)sourceData.bytes;
+                                    const uint8_t *fromBytes  = (const uint8_t *)sourceData.bytes;
                                     const uint8_t *lastSample = fromBytes + sampleCount;
                                     double *toBytes           = (double *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -891,7 +886,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float complex):
                                 { // uint8_t -> float complex
-                                    const uint8_t *fromBytes  = (uint8_t *)sourceData.bytes;
+                                    const uint8_t *fromBytes  = (const uint8_t *)sourceData.bytes;
                                     const uint8_t *lastSample = fromBytes + sampleCount;
                                     float complex *toBytes    = (float complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -902,7 +897,7 @@
 
                                 case sizeof(double complex):
                                 { // uint8_t -> double complex
-                                    const uint8_t *fromBytes  = (uint8_t *)sourceData.bytes;
+                                    const uint8_t *fromBytes  = (const uint8_t *)sourceData.bytes;
                                     const uint8_t *lastSample = fromBytes + sampleCount;
                                     double complex *toBytes   = (double complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -917,7 +912,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(NSDecimal):
                                 { // uint8_t -> NSDecimal
-                                    const uint8_t *fromBytes  = (uint8_t *)sourceData.bytes;
+                                    const uint8_t *fromBytes  = (const uint8_t *)sourceData.bytes;
                                     const uint8_t *lastSample = fromBytes + sampleCount;
                                     NSDecimal *toBytes        = (NSDecimal *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -939,7 +934,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(int8_t):
                                 { // uint16_t -> int8_t
-                                    const uint16_t *fromBytes  = (uint16_t *)sourceData.bytes;
+                                    const uint16_t *fromBytes  = (const uint16_t *)sourceData.bytes;
                                     const uint16_t *lastSample = fromBytes + sampleCount;
                                     int8_t *toBytes            = (int8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -950,7 +945,7 @@
 
                                 case sizeof(int16_t):
                                 { // uint16_t -> int16_t
-                                    const uint16_t *fromBytes  = (uint16_t *)sourceData.bytes;
+                                    const uint16_t *fromBytes  = (const uint16_t *)sourceData.bytes;
                                     const uint16_t *lastSample = fromBytes + sampleCount;
                                     int16_t *toBytes           = (int16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -961,7 +956,7 @@
 
                                 case sizeof(int32_t):
                                 { // uint16_t -> int32_t
-                                    const uint16_t *fromBytes  = (uint16_t *)sourceData.bytes;
+                                    const uint16_t *fromBytes  = (const uint16_t *)sourceData.bytes;
                                     const uint16_t *lastSample = fromBytes + sampleCount;
                                     int32_t *toBytes           = (int32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -972,7 +967,7 @@
 
                                 case sizeof(int64_t):
                                 { // uint16_t -> int64_t
-                                    const uint16_t *fromBytes  = (uint16_t *)sourceData.bytes;
+                                    const uint16_t *fromBytes  = (const uint16_t *)sourceData.bytes;
                                     const uint16_t *lastSample = fromBytes + sampleCount;
                                     int64_t *toBytes           = (int64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -987,7 +982,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(uint8_t):
                                 { // uint16_t -> uint8_t
-                                    const uint16_t *fromBytes  = (uint16_t *)sourceData.bytes;
+                                    const uint16_t *fromBytes  = (const uint16_t *)sourceData.bytes;
                                     const uint16_t *lastSample = fromBytes + sampleCount;
                                     uint8_t *toBytes           = (uint8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1004,7 +999,7 @@
 
                                 case sizeof(uint32_t):
                                 { // uint16_t -> uint32_t
-                                    const uint16_t *fromBytes  = (uint16_t *)sourceData.bytes;
+                                    const uint16_t *fromBytes  = (const uint16_t *)sourceData.bytes;
                                     const uint16_t *lastSample = fromBytes + sampleCount;
                                     uint32_t *toBytes          = (uint32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1015,7 +1010,7 @@
 
                                 case sizeof(uint64_t):
                                 { // uint16_t -> uint64_t
-                                    const uint16_t *fromBytes  = (uint16_t *)sourceData.bytes;
+                                    const uint16_t *fromBytes  = (const uint16_t *)sourceData.bytes;
                                     const uint16_t *lastSample = fromBytes + sampleCount;
                                     uint64_t *toBytes          = (uint64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1030,7 +1025,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float):
                                 { // uint16_t -> float
-                                    const uint16_t *fromBytes  = (uint16_t *)sourceData.bytes;
+                                    const uint16_t *fromBytes  = (const uint16_t *)sourceData.bytes;
                                     const uint16_t *lastSample = fromBytes + sampleCount;
                                     float *toBytes             = (float *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1041,7 +1036,7 @@
 
                                 case sizeof(double):
                                 { // uint16_t -> double
-                                    const uint16_t *fromBytes  = (uint16_t *)sourceData.bytes;
+                                    const uint16_t *fromBytes  = (const uint16_t *)sourceData.bytes;
                                     const uint16_t *lastSample = fromBytes + sampleCount;
                                     double *toBytes            = (double *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1056,7 +1051,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float complex):
                                 { // uint16_t -> float complex
-                                    const uint16_t *fromBytes  = (uint16_t *)sourceData.bytes;
+                                    const uint16_t *fromBytes  = (const uint16_t *)sourceData.bytes;
                                     const uint16_t *lastSample = fromBytes + sampleCount;
                                     float complex *toBytes     = (float complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1067,7 +1062,7 @@
 
                                 case sizeof(double complex):
                                 { // uint16_t -> double complex
-                                    const uint16_t *fromBytes  = (uint16_t *)sourceData.bytes;
+                                    const uint16_t *fromBytes  = (const uint16_t *)sourceData.bytes;
                                     const uint16_t *lastSample = fromBytes + sampleCount;
                                     double complex *toBytes    = (double complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1082,7 +1077,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(NSDecimal):
                                 { // uint16_t -> NSDecimal
-                                    const uint16_t *fromBytes  = (uint16_t *)sourceData.bytes;
+                                    const uint16_t *fromBytes  = (const uint16_t *)sourceData.bytes;
                                     const uint16_t *lastSample = fromBytes + sampleCount;
                                     NSDecimal *toBytes         = (NSDecimal *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1104,7 +1099,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(int8_t):
                                 { // uint32_t -> int8_t
-                                    const uint32_t *fromBytes  = (uint32_t *)sourceData.bytes;
+                                    const uint32_t *fromBytes  = (const uint32_t *)sourceData.bytes;
                                     const uint32_t *lastSample = fromBytes + sampleCount;
                                     int8_t *toBytes            = (int8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1115,7 +1110,7 @@
 
                                 case sizeof(int16_t):
                                 { // uint32_t -> int16_t
-                                    const uint32_t *fromBytes  = (uint32_t *)sourceData.bytes;
+                                    const uint32_t *fromBytes  = (const uint32_t *)sourceData.bytes;
                                     const uint32_t *lastSample = fromBytes + sampleCount;
                                     int16_t *toBytes           = (int16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1126,7 +1121,7 @@
 
                                 case sizeof(int32_t):
                                 { // uint32_t -> int32_t
-                                    const uint32_t *fromBytes  = (uint32_t *)sourceData.bytes;
+                                    const uint32_t *fromBytes  = (const uint32_t *)sourceData.bytes;
                                     const uint32_t *lastSample = fromBytes + sampleCount;
                                     int32_t *toBytes           = (int32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1137,7 +1132,7 @@
 
                                 case sizeof(int64_t):
                                 { // uint32_t -> int64_t
-                                    const uint32_t *fromBytes  = (uint32_t *)sourceData.bytes;
+                                    const uint32_t *fromBytes  = (const uint32_t *)sourceData.bytes;
                                     const uint32_t *lastSample = fromBytes + sampleCount;
                                     int64_t *toBytes           = (int64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1152,7 +1147,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(uint8_t):
                                 { // uint32_t -> uint8_t
-                                    const uint32_t *fromBytes  = (uint32_t *)sourceData.bytes;
+                                    const uint32_t *fromBytes  = (const uint32_t *)sourceData.bytes;
                                     const uint32_t *lastSample = fromBytes + sampleCount;
                                     uint8_t *toBytes           = (uint8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1163,7 +1158,7 @@
 
                                 case sizeof(uint16_t):
                                 { // uint32_t -> uint16_t
-                                    const uint32_t *fromBytes  = (uint32_t *)sourceData.bytes;
+                                    const uint32_t *fromBytes  = (const uint32_t *)sourceData.bytes;
                                     const uint32_t *lastSample = fromBytes + sampleCount;
                                     uint16_t *toBytes          = (uint16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1180,7 +1175,7 @@
 
                                 case sizeof(uint64_t):
                                 { // uint32_t -> uint64_t
-                                    const uint32_t *fromBytes  = (uint32_t *)sourceData.bytes;
+                                    const uint32_t *fromBytes  = (const uint32_t *)sourceData.bytes;
                                     const uint32_t *lastSample = fromBytes + sampleCount;
                                     uint64_t *toBytes          = (uint64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1195,7 +1190,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float):
                                 { // uint32_t -> float
-                                    const uint32_t *fromBytes  = (uint32_t *)sourceData.bytes;
+                                    const uint32_t *fromBytes  = (const uint32_t *)sourceData.bytes;
                                     const uint32_t *lastSample = fromBytes + sampleCount;
                                     float *toBytes             = (float *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1206,7 +1201,7 @@
 
                                 case sizeof(double):
                                 { // uint32_t -> double
-                                    const uint32_t *fromBytes  = (uint32_t *)sourceData.bytes;
+                                    const uint32_t *fromBytes  = (const uint32_t *)sourceData.bytes;
                                     const uint32_t *lastSample = fromBytes + sampleCount;
                                     double *toBytes            = (double *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1221,7 +1216,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float complex):
                                 { // uint32_t -> float complex
-                                    const uint32_t *fromBytes  = (uint32_t *)sourceData.bytes;
+                                    const uint32_t *fromBytes  = (const uint32_t *)sourceData.bytes;
                                     const uint32_t *lastSample = fromBytes + sampleCount;
                                     float complex *toBytes     = (float complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1232,7 +1227,7 @@
 
                                 case sizeof(double complex):
                                 { // uint32_t -> double complex
-                                    const uint32_t *fromBytes  = (uint32_t *)sourceData.bytes;
+                                    const uint32_t *fromBytes  = (const uint32_t *)sourceData.bytes;
                                     const uint32_t *lastSample = fromBytes + sampleCount;
                                     double complex *toBytes    = (double complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1247,7 +1242,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(NSDecimal):
                                 { // uint32_t -> NSDecimal
-                                    const uint32_t *fromBytes  = (uint32_t *)sourceData.bytes;
+                                    const uint32_t *fromBytes  = (const uint32_t *)sourceData.bytes;
                                     const uint32_t *lastSample = fromBytes + sampleCount;
                                     NSDecimal *toBytes         = (NSDecimal *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1269,7 +1264,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(int8_t):
                                 { // uint64_t -> int8_t
-                                    const uint64_t *fromBytes  = (uint64_t *)sourceData.bytes;
+                                    const uint64_t *fromBytes  = (const uint64_t *)sourceData.bytes;
                                     const uint64_t *lastSample = fromBytes + sampleCount;
                                     int8_t *toBytes            = (int8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1280,7 +1275,7 @@
 
                                 case sizeof(int16_t):
                                 { // uint64_t -> int16_t
-                                    const uint64_t *fromBytes  = (uint64_t *)sourceData.bytes;
+                                    const uint64_t *fromBytes  = (const uint64_t *)sourceData.bytes;
                                     const uint64_t *lastSample = fromBytes + sampleCount;
                                     int16_t *toBytes           = (int16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1291,7 +1286,7 @@
 
                                 case sizeof(int32_t):
                                 { // uint64_t -> int32_t
-                                    const uint64_t *fromBytes  = (uint64_t *)sourceData.bytes;
+                                    const uint64_t *fromBytes  = (const uint64_t *)sourceData.bytes;
                                     const uint64_t *lastSample = fromBytes + sampleCount;
                                     int32_t *toBytes           = (int32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1302,7 +1297,7 @@
 
                                 case sizeof(int64_t):
                                 { // uint64_t -> int64_t
-                                    const uint64_t *fromBytes  = (uint64_t *)sourceData.bytes;
+                                    const uint64_t *fromBytes  = (const uint64_t *)sourceData.bytes;
                                     const uint64_t *lastSample = fromBytes + sampleCount;
                                     int64_t *toBytes           = (int64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1317,7 +1312,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(uint8_t):
                                 { // uint64_t -> uint8_t
-                                    const uint64_t *fromBytes  = (uint64_t *)sourceData.bytes;
+                                    const uint64_t *fromBytes  = (const uint64_t *)sourceData.bytes;
                                     const uint64_t *lastSample = fromBytes + sampleCount;
                                     uint8_t *toBytes           = (uint8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1328,7 +1323,7 @@
 
                                 case sizeof(uint16_t):
                                 { // uint64_t -> uint16_t
-                                    const uint64_t *fromBytes  = (uint64_t *)sourceData.bytes;
+                                    const uint64_t *fromBytes  = (const uint64_t *)sourceData.bytes;
                                     const uint64_t *lastSample = fromBytes + sampleCount;
                                     uint16_t *toBytes          = (uint16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1339,7 +1334,7 @@
 
                                 case sizeof(uint32_t):
                                 { // uint64_t -> uint32_t
-                                    const uint64_t *fromBytes  = (uint64_t *)sourceData.bytes;
+                                    const uint64_t *fromBytes  = (const uint64_t *)sourceData.bytes;
                                     const uint64_t *lastSample = fromBytes + sampleCount;
                                     uint32_t *toBytes          = (uint32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1360,7 +1355,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float):
                                 { // uint64_t -> float
-                                    const uint64_t *fromBytes  = (uint64_t *)sourceData.bytes;
+                                    const uint64_t *fromBytes  = (const uint64_t *)sourceData.bytes;
                                     const uint64_t *lastSample = fromBytes + sampleCount;
                                     float *toBytes             = (float *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1371,7 +1366,7 @@
 
                                 case sizeof(double):
                                 { // uint64_t -> double
-                                    const uint64_t *fromBytes  = (uint64_t *)sourceData.bytes;
+                                    const uint64_t *fromBytes  = (const uint64_t *)sourceData.bytes;
                                     const uint64_t *lastSample = fromBytes + sampleCount;
                                     double *toBytes            = (double *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1386,7 +1381,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float complex):
                                 { // uint64_t -> float complex
-                                    const uint64_t *fromBytes  = (uint64_t *)sourceData.bytes;
+                                    const uint64_t *fromBytes  = (const uint64_t *)sourceData.bytes;
                                     const uint64_t *lastSample = fromBytes + sampleCount;
                                     float complex *toBytes     = (float complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1397,7 +1392,7 @@
 
                                 case sizeof(double complex):
                                 { // uint64_t -> double complex
-                                    const uint64_t *fromBytes  = (uint64_t *)sourceData.bytes;
+                                    const uint64_t *fromBytes  = (const uint64_t *)sourceData.bytes;
                                     const uint64_t *lastSample = fromBytes + sampleCount;
                                     double complex *toBytes    = (double complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1412,7 +1407,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(NSDecimal):
                                 { // uint64_t -> NSDecimal
-                                    const uint64_t *fromBytes  = (uint64_t *)sourceData.bytes;
+                                    const uint64_t *fromBytes  = (const uint64_t *)sourceData.bytes;
                                     const uint64_t *lastSample = fromBytes + sampleCount;
                                     NSDecimal *toBytes         = (NSDecimal *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1438,7 +1433,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(int8_t):
                                 { // float -> int8_t
-                                    const float *fromBytes  = (float *)sourceData.bytes;
+                                    const float *fromBytes  = (const float *)sourceData.bytes;
                                     const float *lastSample = fromBytes + sampleCount;
                                     int8_t *toBytes         = (int8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1449,7 +1444,7 @@
 
                                 case sizeof(int16_t):
                                 { // float -> int16_t
-                                    const float *fromBytes  = (float *)sourceData.bytes;
+                                    const float *fromBytes  = (const float *)sourceData.bytes;
                                     const float *lastSample = fromBytes + sampleCount;
                                     int16_t *toBytes        = (int16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1460,7 +1455,7 @@
 
                                 case sizeof(int32_t):
                                 { // float -> int32_t
-                                    const float *fromBytes  = (float *)sourceData.bytes;
+                                    const float *fromBytes  = (const float *)sourceData.bytes;
                                     const float *lastSample = fromBytes + sampleCount;
                                     int32_t *toBytes        = (int32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1471,7 +1466,7 @@
 
                                 case sizeof(int64_t):
                                 { // float -> int64_t
-                                    const float *fromBytes  = (float *)sourceData.bytes;
+                                    const float *fromBytes  = (const float *)sourceData.bytes;
                                     const float *lastSample = fromBytes + sampleCount;
                                     int64_t *toBytes        = (int64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1486,7 +1481,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(uint8_t):
                                 { // float -> uint8_t
-                                    const float *fromBytes  = (float *)sourceData.bytes;
+                                    const float *fromBytes  = (const float *)sourceData.bytes;
                                     const float *lastSample = fromBytes + sampleCount;
                                     uint8_t *toBytes        = (uint8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1497,7 +1492,7 @@
 
                                 case sizeof(uint16_t):
                                 { // float -> uint16_t
-                                    const float *fromBytes  = (float *)sourceData.bytes;
+                                    const float *fromBytes  = (const float *)sourceData.bytes;
                                     const float *lastSample = fromBytes + sampleCount;
                                     uint16_t *toBytes       = (uint16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1508,7 +1503,7 @@
 
                                 case sizeof(uint32_t):
                                 { // float -> uint32_t
-                                    const float *fromBytes  = (float *)sourceData.bytes;
+                                    const float *fromBytes  = (const float *)sourceData.bytes;
                                     const float *lastSample = fromBytes + sampleCount;
                                     uint32_t *toBytes       = (uint32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1519,7 +1514,7 @@
 
                                 case sizeof(uint64_t):
                                 { // float -> uint64_t
-                                    const float *fromBytes  = (float *)sourceData.bytes;
+                                    const float *fromBytes  = (const float *)sourceData.bytes;
                                     const float *lastSample = fromBytes + sampleCount;
                                     uint64_t *toBytes       = (uint64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1540,7 +1535,7 @@
 
                                 case sizeof(double):
                                 { // float -> double
-                                    const float *fromBytes  = (float *)sourceData.bytes;
+                                    const float *fromBytes  = (const float *)sourceData.bytes;
                                     const float *lastSample = fromBytes + sampleCount;
                                     double *toBytes         = (double *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1555,7 +1550,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float complex):
                                 { // float -> float complex
-                                    const float *fromBytes  = (float *)sourceData.bytes;
+                                    const float *fromBytes  = (const float *)sourceData.bytes;
                                     const float *lastSample = fromBytes + sampleCount;
                                     float complex *toBytes  = (float complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1566,7 +1561,7 @@
 
                                 case sizeof(double complex):
                                 { // float -> double complex
-                                    const float *fromBytes  = (float *)sourceData.bytes;
+                                    const float *fromBytes  = (const float *)sourceData.bytes;
                                     const float *lastSample = fromBytes + sampleCount;
                                     double complex *toBytes = (double complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1581,7 +1576,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(NSDecimal):
                                 { // float -> NSDecimal
-                                    const float *fromBytes  = (float *)sourceData.bytes;
+                                    const float *fromBytes  = (const float *)sourceData.bytes;
                                     const float *lastSample = fromBytes + sampleCount;
                                     NSDecimal *toBytes      = (NSDecimal *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1603,7 +1598,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(int8_t):
                                 { // double -> int8_t
-                                    const double *fromBytes  = (double *)sourceData.bytes;
+                                    const double *fromBytes  = (const double *)sourceData.bytes;
                                     const double *lastSample = fromBytes + sampleCount;
                                     int8_t *toBytes          = (int8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1614,7 +1609,7 @@
 
                                 case sizeof(int16_t):
                                 { // double -> int16_t
-                                    const double *fromBytes  = (double *)sourceData.bytes;
+                                    const double *fromBytes  = (const double *)sourceData.bytes;
                                     const double *lastSample = fromBytes + sampleCount;
                                     int16_t *toBytes         = (int16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1625,7 +1620,7 @@
 
                                 case sizeof(int32_t):
                                 { // double -> int32_t
-                                    const double *fromBytes  = (double *)sourceData.bytes;
+                                    const double *fromBytes  = (const double *)sourceData.bytes;
                                     const double *lastSample = fromBytes + sampleCount;
                                     int32_t *toBytes         = (int32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1636,7 +1631,7 @@
 
                                 case sizeof(int64_t):
                                 { // double -> int64_t
-                                    const double *fromBytes  = (double *)sourceData.bytes;
+                                    const double *fromBytes  = (const double *)sourceData.bytes;
                                     const double *lastSample = fromBytes + sampleCount;
                                     int64_t *toBytes         = (int64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1651,7 +1646,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(uint8_t):
                                 { // double -> uint8_t
-                                    const double *fromBytes  = (double *)sourceData.bytes;
+                                    const double *fromBytes  = (const double *)sourceData.bytes;
                                     const double *lastSample = fromBytes + sampleCount;
                                     uint8_t *toBytes         = (uint8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1662,7 +1657,7 @@
 
                                 case sizeof(uint16_t):
                                 { // double -> uint16_t
-                                    const double *fromBytes  = (double *)sourceData.bytes;
+                                    const double *fromBytes  = (const double *)sourceData.bytes;
                                     const double *lastSample = fromBytes + sampleCount;
                                     uint16_t *toBytes        = (uint16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1673,7 +1668,7 @@
 
                                 case sizeof(uint32_t):
                                 { // double -> uint32_t
-                                    const double *fromBytes  = (double *)sourceData.bytes;
+                                    const double *fromBytes  = (const double *)sourceData.bytes;
                                     const double *lastSample = fromBytes + sampleCount;
                                     uint32_t *toBytes        = (uint32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1684,7 +1679,7 @@
 
                                 case sizeof(uint64_t):
                                 { // double -> uint64_t
-                                    const double *fromBytes  = (double *)sourceData.bytes;
+                                    const double *fromBytes  = (const double *)sourceData.bytes;
                                     const double *lastSample = fromBytes + sampleCount;
                                     uint64_t *toBytes        = (uint64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1699,7 +1694,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float):
                                 { // double -> float
-                                    const double *fromBytes  = (double *)sourceData.bytes;
+                                    const double *fromBytes  = (const double *)sourceData.bytes;
                                     const double *lastSample = fromBytes + sampleCount;
                                     float *toBytes           = (float *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1720,7 +1715,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float complex):
                                 { // double -> float complex
-                                    const double *fromBytes  = (double *)sourceData.bytes;
+                                    const double *fromBytes  = (const double *)sourceData.bytes;
                                     const double *lastSample = fromBytes + sampleCount;
                                     float complex *toBytes   = (float complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1731,7 +1726,7 @@
 
                                 case sizeof(double complex):
                                 { // double -> double complex
-                                    const double *fromBytes  = (double *)sourceData.bytes;
+                                    const double *fromBytes  = (const double *)sourceData.bytes;
                                     const double *lastSample = fromBytes + sampleCount;
                                     double complex *toBytes  = (double complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1746,7 +1741,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(NSDecimal):
                                 { // double -> NSDecimal
-                                    const double *fromBytes  = (double *)sourceData.bytes;
+                                    const double *fromBytes  = (const double *)sourceData.bytes;
                                     const double *lastSample = fromBytes + sampleCount;
                                     NSDecimal *toBytes       = (NSDecimal *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1772,7 +1767,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(int8_t):
                                 { // float complex -> int8_t
-                                    const float complex *fromBytes  = (float complex *)sourceData.bytes;
+                                    const float complex *fromBytes  = (const float complex *)sourceData.bytes;
                                     const float complex *lastSample = fromBytes + sampleCount;
                                     int8_t *toBytes                 = (int8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1783,7 +1778,7 @@
 
                                 case sizeof(int16_t):
                                 { // float complex -> int16_t
-                                    const float complex *fromBytes  = (float complex *)sourceData.bytes;
+                                    const float complex *fromBytes  = (const float complex *)sourceData.bytes;
                                     const float complex *lastSample = fromBytes + sampleCount;
                                     int16_t *toBytes                = (int16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1794,7 +1789,7 @@
 
                                 case sizeof(int32_t):
                                 { // float complex -> int32_t
-                                    const float complex *fromBytes  = (float complex *)sourceData.bytes;
+                                    const float complex *fromBytes  = (const float complex *)sourceData.bytes;
                                     const float complex *lastSample = fromBytes + sampleCount;
                                     int32_t *toBytes                = (int32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1805,7 +1800,7 @@
 
                                 case sizeof(int64_t):
                                 { // float complex -> int64_t
-                                    const float complex *fromBytes  = (float complex *)sourceData.bytes;
+                                    const float complex *fromBytes  = (const float complex *)sourceData.bytes;
                                     const float complex *lastSample = fromBytes + sampleCount;
                                     int64_t *toBytes                = (int64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1820,7 +1815,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(uint8_t):
                                 { // float complex -> uint8_t
-                                    const float complex *fromBytes  = (float complex *)sourceData.bytes;
+                                    const float complex *fromBytes  = (const float complex *)sourceData.bytes;
                                     const float complex *lastSample = fromBytes + sampleCount;
                                     uint8_t *toBytes                = (uint8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1831,7 +1826,7 @@
 
                                 case sizeof(uint16_t):
                                 { // float complex -> uint16_t
-                                    const float complex *fromBytes  = (float complex *)sourceData.bytes;
+                                    const float complex *fromBytes  = (const float complex *)sourceData.bytes;
                                     const float complex *lastSample = fromBytes + sampleCount;
                                     uint16_t *toBytes               = (uint16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1842,7 +1837,7 @@
 
                                 case sizeof(uint32_t):
                                 { // float complex -> uint32_t
-                                    const float complex *fromBytes  = (float complex *)sourceData.bytes;
+                                    const float complex *fromBytes  = (const float complex *)sourceData.bytes;
                                     const float complex *lastSample = fromBytes + sampleCount;
                                     uint32_t *toBytes               = (uint32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1853,7 +1848,7 @@
 
                                 case sizeof(uint64_t):
                                 { // float complex -> uint64_t
-                                    const float complex *fromBytes  = (float complex *)sourceData.bytes;
+                                    const float complex *fromBytes  = (const float complex *)sourceData.bytes;
                                     const float complex *lastSample = fromBytes + sampleCount;
                                     uint64_t *toBytes               = (uint64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1868,7 +1863,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float):
                                 { // float complex -> float
-                                    const float complex *fromBytes  = (float complex *)sourceData.bytes;
+                                    const float complex *fromBytes  = (const float complex *)sourceData.bytes;
                                     const float complex *lastSample = fromBytes + sampleCount;
                                     float *toBytes                  = (float *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1879,7 +1874,7 @@
 
                                 case sizeof(double):
                                 { // float complex -> double
-                                    const float complex *fromBytes  = (float complex *)sourceData.bytes;
+                                    const float complex *fromBytes  = (const float complex *)sourceData.bytes;
                                     const float complex *lastSample = fromBytes + sampleCount;
                                     double *toBytes                 = (double *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1900,7 +1895,7 @@
 
                                 case sizeof(double complex):
                                 { // float complex -> double complex
-                                    const float complex *fromBytes  = (float complex *)sourceData.bytes;
+                                    const float complex *fromBytes  = (const float complex *)sourceData.bytes;
                                     const float complex *lastSample = fromBytes + sampleCount;
                                     double complex *toBytes         = (double complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1915,7 +1910,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(NSDecimal):
                                 { // float complex -> NSDecimal
-                                    const float complex *fromBytes  = (float complex *)sourceData.bytes;
+                                    const float complex *fromBytes  = (const float complex *)sourceData.bytes;
                                     const float complex *lastSample = fromBytes + sampleCount;
                                     NSDecimal *toBytes              = (NSDecimal *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1937,7 +1932,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(int8_t):
                                 { // double complex -> int8_t
-                                    const double complex *fromBytes  = (double complex *)sourceData.bytes;
+                                    const double complex *fromBytes  = (const double complex *)sourceData.bytes;
                                     const double complex *lastSample = fromBytes + sampleCount;
                                     int8_t *toBytes                  = (int8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1948,7 +1943,7 @@
 
                                 case sizeof(int16_t):
                                 { // double complex -> int16_t
-                                    const double complex *fromBytes  = (double complex *)sourceData.bytes;
+                                    const double complex *fromBytes  = (const double complex *)sourceData.bytes;
                                     const double complex *lastSample = fromBytes + sampleCount;
                                     int16_t *toBytes                 = (int16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1959,7 +1954,7 @@
 
                                 case sizeof(int32_t):
                                 { // double complex -> int32_t
-                                    const double complex *fromBytes  = (double complex *)sourceData.bytes;
+                                    const double complex *fromBytes  = (const double complex *)sourceData.bytes;
                                     const double complex *lastSample = fromBytes + sampleCount;
                                     int32_t *toBytes                 = (int32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1970,7 +1965,7 @@
 
                                 case sizeof(int64_t):
                                 { // double complex -> int64_t
-                                    const double complex *fromBytes  = (double complex *)sourceData.bytes;
+                                    const double complex *fromBytes  = (const double complex *)sourceData.bytes;
                                     const double complex *lastSample = fromBytes + sampleCount;
                                     int64_t *toBytes                 = (int64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1985,7 +1980,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(uint8_t):
                                 { // double complex -> uint8_t
-                                    const double complex *fromBytes  = (double complex *)sourceData.bytes;
+                                    const double complex *fromBytes  = (const double complex *)sourceData.bytes;
                                     const double complex *lastSample = fromBytes + sampleCount;
                                     uint8_t *toBytes                 = (uint8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -1996,7 +1991,7 @@
 
                                 case sizeof(uint16_t):
                                 { // double complex -> uint16_t
-                                    const double complex *fromBytes  = (double complex *)sourceData.bytes;
+                                    const double complex *fromBytes  = (const double complex *)sourceData.bytes;
                                     const double complex *lastSample = fromBytes + sampleCount;
                                     uint16_t *toBytes                = (uint16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2007,7 +2002,7 @@
 
                                 case sizeof(uint32_t):
                                 { // double complex -> uint32_t
-                                    const double complex *fromBytes  = (double complex *)sourceData.bytes;
+                                    const double complex *fromBytes  = (const double complex *)sourceData.bytes;
                                     const double complex *lastSample = fromBytes + sampleCount;
                                     uint32_t *toBytes                = (uint32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2018,7 +2013,7 @@
 
                                 case sizeof(uint64_t):
                                 { // double complex -> uint64_t
-                                    const double complex *fromBytes  = (double complex *)sourceData.bytes;
+                                    const double complex *fromBytes  = (const double complex *)sourceData.bytes;
                                     const double complex *lastSample = fromBytes + sampleCount;
                                     uint64_t *toBytes                = (uint64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2033,7 +2028,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float):
                                 { // double complex -> float
-                                    const double complex *fromBytes  = (double complex *)sourceData.bytes;
+                                    const double complex *fromBytes  = (const double complex *)sourceData.bytes;
                                     const double complex *lastSample = fromBytes + sampleCount;
                                     float *toBytes                   = (float *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2044,7 +2039,7 @@
 
                                 case sizeof(double):
                                 { // double complex -> double
-                                    const double complex *fromBytes  = (double complex *)sourceData.bytes;
+                                    const double complex *fromBytes  = (const double complex *)sourceData.bytes;
                                     const double complex *lastSample = fromBytes + sampleCount;
                                     double *toBytes                  = (double *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2059,7 +2054,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float complex):
                                 { // double complex -> float complex
-                                    const double complex *fromBytes  = (double complex *)sourceData.bytes;
+                                    const double complex *fromBytes  = (const double complex *)sourceData.bytes;
                                     const double complex *lastSample = fromBytes + sampleCount;
                                     float complex *toBytes           = (float complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2080,7 +2075,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(NSDecimal):
                                 { // double complex -> NSDecimal
-                                    const double complex *fromBytes  = (double complex *)sourceData.bytes;
+                                    const double complex *fromBytes  = (const double complex *)sourceData.bytes;
                                     const double complex *lastSample = fromBytes + sampleCount;
                                     NSDecimal *toBytes               = (NSDecimal *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2106,7 +2101,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(int8_t):
                                 { // NSDecimal -> int8_t
-                                    const NSDecimal *fromBytes  = (NSDecimal *)sourceData.bytes;
+                                    const NSDecimal *fromBytes  = (const NSDecimal *)sourceData.bytes;
                                     const NSDecimal *lastSample = fromBytes + sampleCount;
                                     int8_t *toBytes             = (int8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2117,7 +2112,7 @@
 
                                 case sizeof(int16_t):
                                 { // NSDecimal -> int16_t
-                                    const NSDecimal *fromBytes  = (NSDecimal *)sourceData.bytes;
+                                    const NSDecimal *fromBytes  = (const NSDecimal *)sourceData.bytes;
                                     const NSDecimal *lastSample = fromBytes + sampleCount;
                                     int16_t *toBytes            = (int16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2128,7 +2123,7 @@
 
                                 case sizeof(int32_t):
                                 { // NSDecimal -> int32_t
-                                    const NSDecimal *fromBytes  = (NSDecimal *)sourceData.bytes;
+                                    const NSDecimal *fromBytes  = (const NSDecimal *)sourceData.bytes;
                                     const NSDecimal *lastSample = fromBytes + sampleCount;
                                     int32_t *toBytes            = (int32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2139,7 +2134,7 @@
 
                                 case sizeof(int64_t):
                                 { // NSDecimal -> int64_t
-                                    const NSDecimal *fromBytes  = (NSDecimal *)sourceData.bytes;
+                                    const NSDecimal *fromBytes  = (const NSDecimal *)sourceData.bytes;
                                     const NSDecimal *lastSample = fromBytes + sampleCount;
                                     int64_t *toBytes            = (int64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2154,7 +2149,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(uint8_t):
                                 { // NSDecimal -> uint8_t
-                                    const NSDecimal *fromBytes  = (NSDecimal *)sourceData.bytes;
+                                    const NSDecimal *fromBytes  = (const NSDecimal *)sourceData.bytes;
                                     const NSDecimal *lastSample = fromBytes + sampleCount;
                                     uint8_t *toBytes            = (uint8_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2165,7 +2160,7 @@
 
                                 case sizeof(uint16_t):
                                 { // NSDecimal -> uint16_t
-                                    const NSDecimal *fromBytes  = (NSDecimal *)sourceData.bytes;
+                                    const NSDecimal *fromBytes  = (const NSDecimal *)sourceData.bytes;
                                     const NSDecimal *lastSample = fromBytes + sampleCount;
                                     uint16_t *toBytes           = (uint16_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2176,7 +2171,7 @@
 
                                 case sizeof(uint32_t):
                                 { // NSDecimal -> uint32_t
-                                    const NSDecimal *fromBytes  = (NSDecimal *)sourceData.bytes;
+                                    const NSDecimal *fromBytes  = (const NSDecimal *)sourceData.bytes;
                                     const NSDecimal *lastSample = fromBytes + sampleCount;
                                     uint32_t *toBytes           = (uint32_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2187,7 +2182,7 @@
 
                                 case sizeof(uint64_t):
                                 { // NSDecimal -> uint64_t
-                                    const NSDecimal *fromBytes  = (NSDecimal *)sourceData.bytes;
+                                    const NSDecimal *fromBytes  = (const NSDecimal *)sourceData.bytes;
                                     const NSDecimal *lastSample = fromBytes + sampleCount;
                                     uint64_t *toBytes           = (uint64_t *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2202,7 +2197,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float):
                                 { // NSDecimal -> float
-                                    const NSDecimal *fromBytes  = (NSDecimal *)sourceData.bytes;
+                                    const NSDecimal *fromBytes  = (const NSDecimal *)sourceData.bytes;
                                     const NSDecimal *lastSample = fromBytes + sampleCount;
                                     float *toBytes              = (float *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2213,7 +2208,7 @@
 
                                 case sizeof(double):
                                 { // NSDecimal -> double
-                                    const NSDecimal *fromBytes  = (NSDecimal *)sourceData.bytes;
+                                    const NSDecimal *fromBytes  = (const NSDecimal *)sourceData.bytes;
                                     const NSDecimal *lastSample = fromBytes + sampleCount;
                                     double *toBytes             = (double *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2228,7 +2223,7 @@
                             switch ( destDataType->sampleBytes ) {
                                 case sizeof(float complex):
                                 { // NSDecimal -> float complex
-                                    const NSDecimal *fromBytes  = (NSDecimal *)sourceData.bytes;
+                                    const NSDecimal *fromBytes  = (const NSDecimal *)sourceData.bytes;
                                     const NSDecimal *lastSample = fromBytes + sampleCount;
                                     float complex *toBytes      = (float complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {
@@ -2239,7 +2234,7 @@
 
                                 case sizeof(double complex):
                                 { // NSDecimal -> double complex
-                                    const NSDecimal *fromBytes  = (NSDecimal *)sourceData.bytes;
+                                    const NSDecimal *fromBytes  = (const NSDecimal *)sourceData.bytes;
                                     const NSDecimal *lastSample = fromBytes + sampleCount;
                                     double complex *toBytes     = (double complex *)destData.mutableBytes;
                                     while ( fromBytes < lastSample ) {

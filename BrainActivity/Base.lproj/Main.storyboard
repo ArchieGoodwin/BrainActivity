@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8173.3" systemVersion="15A263e" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="RpR-xa-Sh5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="RpR-xa-Sh5">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8142"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -178,7 +179,7 @@
                                     <constraint firstAttribute="height" constant="21" id="hK3-Tw-8fW"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -235,19 +236,19 @@
                                 <exclude reference="HcT-ML-ZxT"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="15N-oO-ufK"/>
-                                <exclude reference="q5v-3p-szI"/>
                                 <exclude reference="dnf-dy-q4n"/>
                                 <exclude reference="uss-vK-QZv"/>
                                 <exclude reference="qKC-sd-eAB"/>
                                 <exclude reference="vIU-Vi-yT4"/>
-                                <exclude reference="IAu-X4-dgE"/>
-                                <exclude reference="yQS-KY-eBe"/>
                                 <exclude reference="fjo-Pa-0sW"/>
                                 <exclude reference="iZe-lA-gf3"/>
                                 <exclude reference="v5o-nb-cvD"/>
                                 <exclude reference="GyR-4E-ugp"/>
+                                <exclude reference="IAu-X4-dgE"/>
+                                <exclude reference="yQS-KY-eBe"/>
                                 <exclude reference="jzm-2j-ago"/>
+                                <exclude reference="15N-oO-ufK"/>
+                                <exclude reference="q5v-3p-szI"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -260,19 +261,19 @@
                                 <include reference="HcT-ML-ZxT"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="15N-oO-ufK"/>
-                                <include reference="q5v-3p-szI"/>
                                 <include reference="dnf-dy-q4n"/>
                                 <include reference="uss-vK-QZv"/>
                                 <include reference="qKC-sd-eAB"/>
                                 <include reference="vIU-Vi-yT4"/>
-                                <include reference="IAu-X4-dgE"/>
-                                <include reference="yQS-KY-eBe"/>
                                 <exclude reference="fjo-Pa-0sW"/>
                                 <include reference="iZe-lA-gf3"/>
                                 <include reference="v5o-nb-cvD"/>
                                 <include reference="GyR-4E-ugp"/>
+                                <include reference="IAu-X4-dgE"/>
+                                <include reference="yQS-KY-eBe"/>
                                 <include reference="jzm-2j-ago"/>
+                                <include reference="15N-oO-ufK"/>
+                                <include reference="q5v-3p-szI"/>
                             </mask>
                         </variation>
                     </view>
@@ -648,7 +649,7 @@
                                             <segment title="T4"/>
                                             <segment title="O2"/>
                                         </segments>
-                                        <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="tcl-Im-6nE"/>
@@ -818,7 +819,7 @@
                                     </constraint>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -843,7 +844,7 @@
                                     </constraint>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
                                     <mask key="constraints">

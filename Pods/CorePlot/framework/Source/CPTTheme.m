@@ -8,7 +8,7 @@
  **/
 
 // Registered themes
-static NSMutableSet *themes = nil;
+static NSMutableSet<Class> *themes = nil;
 
 /** @brief Creates a CPTGraph instance formatted with a predefined style.
  *
@@ -38,7 +38,7 @@ static NSMutableSet *themes = nil;
  *
  *  @return The initialized object.
  **/
--(id)init
+-(instancetype)init
 {
     if ( (self = [super init]) ) {
         graphClass = Nil;
@@ -48,16 +48,6 @@ static NSMutableSet *themes = nil;
 
 /// @}
 
-/// @cond
-
--(void)dealloc
-{
-    [graphClass release];
-    [super dealloc];
-}
-
-/// @endcond
-
 #pragma mark -
 #pragma mark NSCoding Methods
 
@@ -66,16 +56,22 @@ static NSMutableSet *themes = nil;
 -(void)encodeWithCoder:(NSCoder *)coder
 {
     [coder encodeObject:[[self class] name] forKey:@"CPTTheme.name"];
-    [coder encodeObject:NSStringFromClass(self.graphClass) forKey:@"CPTTheme.graphClass"];
+
+    Class theGraphClass = self.graphClass;
+    if ( theGraphClass ) {
+        [coder encodeObject:NSStringFromClass(theGraphClass) forKey:@"CPTTheme.graphClass"];
+    }
 }
 
--(id)initWithCoder:(NSCoder *)coder
+-(instancetype)initWithCoder:(NSCoder *)coder
 {
-    [self release];
-    self = [[CPTTheme themeNamed:[coder decodeObjectForKey:@"CPTTheme.name"]] retain];
+    self = [CPTTheme themeNamed:[coder decodeObjectForKey:@"CPTTheme.name"]];
 
     if ( self ) {
-        self.graphClass = NSClassFromString([coder decodeObjectForKey:@"CPTTheme.graphClass"]);
+        NSString *className = [coder decodeObjectForKey:@"CPTTheme.graphClass"];
+        if ( className ) {
+            self.graphClass = NSClassFromString(className);
+        }
     }
     return self;
 }
@@ -85,25 +81,14 @@ static NSMutableSet *themes = nil;
 #pragma mark -
 #pragma mark Theme management
 
-/** @brief A list of the available theme classes, sorted by name.
+/** @brief List of the available theme classes, sorted by name.
  *  @return An NSArray containing all available theme classes, sorted by name.
- *  @if MacOnly
- *  @since Sorting is supported on MacOS 10.6 and later. Returns an unsorted array on earlier systems.
- *  @endif
- *  @if iOSOnly
- *  @since Sorting is supported on iOS 5 and later. Returns an unsorted array on earlier systems.
- *  @endif
  **/
-+(NSArray *)themeClasses
++(NSArray<Class> *)themeClasses
 {
-#if MAC_OS_X_VERSION_10_6 <= MAC_OS_X_VERSION_MAX_ALLOWED || __IPHONE_5_0 <= __IPHONE_OS_VERSION_MAX_ALLOWED
     NSSortDescriptor *nameSort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
 
-    return [themes sortedArrayUsingDescriptors:[NSArray arrayWithObject:nameSort]];
-
-#else
-    return [themes allObjects];
-#endif
+    return [themes sortedArrayUsingDescriptors:@[nameSort]];
 }
 
 /** @brief Gets a named theme.
@@ -111,7 +96,7 @@ static NSMutableSet *themes = nil;
  *  @return A CPTTheme instance with name matching @par{themeName} or @nil if no themes with a matching name were found.
  *  @see See @ref themeNames "Theme Names" for a list of named themes provided by Core Plot.
  **/
-+(CPTTheme *)themeNamed:(NSString *)themeName
++(instancetype)themeNamed:(NSString *)themeName
 {
     CPTTheme *newTheme = nil;
 
@@ -122,7 +107,7 @@ static NSMutableSet *themes = nil;
         }
     }
 
-    return [newTheme autorelease];
+    return newTheme;
 }
 
 /** @brief Register a theme class.
@@ -130,6 +115,8 @@ static NSMutableSet *themes = nil;
  **/
 +(void)registerTheme:(Class)themeClass
 {
+    NSParameterAssert(themeClass);
+
     @synchronized(self)
     {
         if ( !themes ) {
@@ -168,8 +155,7 @@ static NSMutableSet *themes = nil;
             [NSException raise:CPTException format:@"Invalid graph class for theme; must be a subclass of CPTGraph"];
         }
         else {
-            [graphClass release];
-            graphClass = [newGraphClass retain];
+            graphClass = newGraphClass;
         }
     }
 }

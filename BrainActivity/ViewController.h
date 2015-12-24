@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CorePlot-CocoaTouch.h"
+#import <CorePlot/ios/CorePlot.h>
 #import "CBManager.h"
 
 @interface ViewController : UIViewController <CPTPlotDataSource, CPTAxisDelegate>

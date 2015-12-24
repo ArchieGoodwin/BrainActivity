@@ -192,7 +192,6 @@ NSDecimal CPTDecimalFromChar(int8_t anInt)
         if ( !cacheValueInitialized[anInt] ) {
             NSString *stringValue = [[NSString alloc] initWithFormat:@"%hhd", anInt];
             cache[anInt] = CPTDecimalFromString(stringValue);
-            [stringValue release];
 
             cacheValueInitialized[anInt] = YES;
         }
@@ -201,7 +200,6 @@ NSDecimal CPTDecimalFromChar(int8_t anInt)
 
     NSString *stringValue = [[NSString alloc] initWithFormat:@"%hhd", anInt];
     NSDecimal result      = CPTDecimalFromString(stringValue);
-    [stringValue release];
 
     return result;
 }
@@ -217,7 +215,6 @@ NSDecimal CPTDecimalFromShort(int16_t anInt)
         if ( !cacheValueInitialized[anInt] ) {
             NSString *stringValue = [[NSString alloc] initWithFormat:@"%hd", anInt];
             cache[anInt] = CPTDecimalFromString(stringValue);
-            [stringValue release];
 
             cacheValueInitialized[anInt] = YES;
         }
@@ -226,7 +223,6 @@ NSDecimal CPTDecimalFromShort(int16_t anInt)
 
     NSString *stringValue = [[NSString alloc] initWithFormat:@"%hd", anInt];
     NSDecimal result      = CPTDecimalFromString(stringValue);
-    [stringValue release];
 
     return result;
 }
@@ -242,7 +238,6 @@ NSDecimal CPTDecimalFromLong(int32_t anInt)
         if ( !cacheValueInitialized[anInt] ) {
             NSString *stringValue = [[NSString alloc] initWithFormat:@"%d", anInt];
             cache[anInt] = CPTDecimalFromString(stringValue);
-            [stringValue release];
 
             cacheValueInitialized[anInt] = YES;
         }
@@ -251,7 +246,6 @@ NSDecimal CPTDecimalFromLong(int32_t anInt)
 
     NSString *stringValue = [[NSString alloc] initWithFormat:@"%d", anInt];
     NSDecimal result      = CPTDecimalFromString(stringValue);
-    [stringValue release];
 
     return result;
 }
@@ -267,7 +261,6 @@ NSDecimal CPTDecimalFromLongLong(int64_t anInt)
         if ( !cacheValueInitialized[anInt] ) {
             NSString *stringValue = [[NSString alloc] initWithFormat:@"%lld", anInt];
             cache[anInt] = CPTDecimalFromString(stringValue);
-            [stringValue release];
 
             cacheValueInitialized[anInt] = YES;
         }
@@ -276,7 +269,6 @@ NSDecimal CPTDecimalFromLongLong(int64_t anInt)
 
     NSString *stringValue = [[NSString alloc] initWithFormat:@"%lld", anInt];
     NSDecimal result      = CPTDecimalFromString(stringValue);
-    [stringValue release];
 
     return result;
 }
@@ -292,7 +284,6 @@ NSDecimal CPTDecimalFromInt(int anInt)
         if ( !cacheValueInitialized[anInt] ) {
             NSString *stringValue = [[NSString alloc] initWithFormat:@"%d", anInt];
             cache[anInt] = CPTDecimalFromString(stringValue);
-            [stringValue release];
 
             cacheValueInitialized[anInt] = YES;
         }
@@ -301,7 +292,6 @@ NSDecimal CPTDecimalFromInt(int anInt)
 
     NSString *stringValue = [[NSString alloc] initWithFormat:@"%d", anInt];
     NSDecimal result      = CPTDecimalFromString(stringValue);
-    [stringValue release];
 
     return result;
 }
@@ -317,7 +307,6 @@ NSDecimal CPTDecimalFromInteger(NSInteger anInt)
         if ( !cacheValueInitialized[anInt] ) {
             NSString *stringValue = [[NSString alloc] initWithFormat:@"%ld", (long)anInt];
             cache[anInt] = CPTDecimalFromString(stringValue);
-            [stringValue release];
 
             cacheValueInitialized[anInt] = YES;
         }
@@ -326,7 +315,6 @@ NSDecimal CPTDecimalFromInteger(NSInteger anInt)
 
     NSString *stringValue = [[NSString alloc] initWithFormat:@"%ld", (long)anInt];
     NSDecimal result      = CPTDecimalFromString(stringValue);
-    [stringValue release];
 
     return result;
 }
@@ -342,7 +330,6 @@ NSDecimal CPTDecimalFromUnsignedChar(uint8_t anInt)
         if ( !cacheValueInitialized[anInt] ) {
             NSString *stringValue = [[NSString alloc] initWithFormat:@"%hhu", anInt];
             cache[anInt] = CPTDecimalFromString(stringValue);
-            [stringValue release];
 
             cacheValueInitialized[anInt] = YES;
         }
@@ -351,7 +338,6 @@ NSDecimal CPTDecimalFromUnsignedChar(uint8_t anInt)
 
     NSString *stringValue = [[NSString alloc] initWithFormat:@"%hhu", anInt];
     NSDecimal result      = CPTDecimalFromString(stringValue);
-    [stringValue release];
 
     return result;
 }
@@ -367,7 +353,6 @@ NSDecimal CPTDecimalFromUnsignedShort(uint16_t anInt)
         if ( !cacheValueInitialized[anInt] ) {
             NSString *stringValue = [[NSString alloc] initWithFormat:@"%hu", anInt];
             cache[anInt] = CPTDecimalFromString(stringValue);
-            [stringValue release];
 
             cacheValueInitialized[anInt] = YES;
         }
@@ -376,7 +361,6 @@ NSDecimal CPTDecimalFromUnsignedShort(uint16_t anInt)
 
     NSString *stringValue = [[NSString alloc] initWithFormat:@"%hu", anInt];
     NSDecimal result      = CPTDecimalFromString(stringValue);
-    [stringValue release];
 
     return result;
 }
@@ -392,7 +376,6 @@ NSDecimal CPTDecimalFromUnsignedLong(uint32_t anInt)
         if ( !cacheValueInitialized[anInt] ) {
             NSString *stringValue = [[NSString alloc] initWithFormat:@"%u", anInt];
             cache[anInt] = CPTDecimalFromString(stringValue);
-            [stringValue release];
 
             cacheValueInitialized[anInt] = YES;
         }
@@ -401,7 +384,6 @@ NSDecimal CPTDecimalFromUnsignedLong(uint32_t anInt)
 
     NSString *stringValue = [[NSString alloc] initWithFormat:@"%u", anInt];
     NSDecimal result      = CPTDecimalFromString(stringValue);
-    [stringValue release];
 
     return result;
 }
@@ -417,7 +399,6 @@ NSDecimal CPTDecimalFromUnsignedLongLong(uint64_t anInt)
         if ( !cacheValueInitialized[anInt] ) {
             NSString *stringValue = [[NSString alloc] initWithFormat:@"%llu", anInt];
             cache[anInt] = CPTDecimalFromString(stringValue);
-            [stringValue release];
 
             cacheValueInitialized[anInt] = YES;
         }
@@ -426,7 +407,6 @@ NSDecimal CPTDecimalFromUnsignedLongLong(uint64_t anInt)
 
     NSString *stringValue = [[NSString alloc] initWithFormat:@"%llu", anInt];
     NSDecimal result      = CPTDecimalFromString(stringValue);
-    [stringValue release];
 
     return result;
 }
@@ -442,7 +422,6 @@ NSDecimal CPTDecimalFromUnsignedInt(unsigned int anInt)
         if ( !cacheValueInitialized[anInt] ) {
             NSString *stringValue = [[NSString alloc] initWithFormat:@"%u", anInt];
             cache[anInt] = CPTDecimalFromString(stringValue);
-            [stringValue release];
 
             cacheValueInitialized[anInt] = YES;
         }
@@ -451,7 +430,6 @@ NSDecimal CPTDecimalFromUnsignedInt(unsigned int anInt)
 
     NSString *stringValue = [[NSString alloc] initWithFormat:@"%u", anInt];
     NSDecimal result      = CPTDecimalFromString(stringValue);
-    [stringValue release];
 
     return result;
 }
@@ -467,7 +445,6 @@ NSDecimal CPTDecimalFromUnsignedInteger(NSUInteger anInt)
         if ( !cacheValueInitialized[anInt] ) {
             NSString *stringValue = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)anInt];
             cache[anInt] = CPTDecimalFromString(stringValue);
-            [stringValue release];
 
             cacheValueInitialized[anInt] = YES;
         }
@@ -476,7 +453,6 @@ NSDecimal CPTDecimalFromUnsignedInteger(NSUInteger anInt)
 
     NSString *stringValue = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)anInt];
     NSDecimal result      = CPTDecimalFromString(stringValue);
-    [stringValue release];
 
     return result;
 }
@@ -488,12 +464,15 @@ NSDecimal CPTDecimalFromUnsignedInteger(NSUInteger anInt)
  **/
 NSDecimal CPTDecimalFromFloat(float aFloat)
 {
-    NSString *stringValue = [[NSString alloc] initWithFormat:@"%f", aFloat];
-    NSDecimal result      = CPTDecimalFromString(stringValue);
+    if ( isnan(aFloat) ) {
+        return CPTDecimalNaN();
+    }
+    else {
+        NSString *stringValue = [[NSString alloc] initWithFormat:@"%f", aFloat];
+        NSDecimal result      = CPTDecimalFromString(stringValue);
 
-    [stringValue release];
-
-    return result;
+        return result;
+    }
 }
 
 /**
@@ -503,12 +482,15 @@ NSDecimal CPTDecimalFromFloat(float aFloat)
  **/
 NSDecimal CPTDecimalFromDouble(double aDouble)
 {
-    NSString *stringValue = [[NSString alloc] initWithFormat:@"%f", aDouble];
-    NSDecimal result      = CPTDecimalFromString(stringValue);
+    if ( isnan(aDouble) ) {
+        return CPTDecimalNaN();
+    }
+    else {
+        NSString *stringValue = [[NSString alloc] initWithFormat:@"%f", aDouble];
+        NSDecimal result      = CPTDecimalFromString(stringValue);
 
-    [stringValue release];
-
-    return result;
+        return result;
+    }
 }
 
 /**
@@ -518,12 +500,15 @@ NSDecimal CPTDecimalFromDouble(double aDouble)
  **/
 NSDecimal CPTDecimalFromCGFloat(CGFloat aCGFloat)
 {
-    NSString *stringValue = [[NSString alloc] initWithFormat:@"%f", aCGFloat];
-    NSDecimal result      = CPTDecimalFromString(stringValue);
+    if ( isnan(aCGFloat) ) {
+        return CPTDecimalNaN();
+    }
+    else {
+        NSString *stringValue = [[NSString alloc] initWithFormat:@"%f", aCGFloat];
+        NSDecimal result      = CPTDecimalFromString(stringValue);
 
-    [stringValue release];
-
-    return result;
+        return result;
+    }
 }
 
 /**
@@ -544,7 +529,6 @@ NSDecimal CPTDecimalFromString(NSString *stringRepresentation)
     NSScanner *theScanner = [[NSScanner alloc] initWithString:stringRepresentation];
 
     [theScanner scanDecimal:&result];
-    [theScanner release];
 
     return result;
 }
@@ -822,11 +806,7 @@ CGPoint CPTAlignPointToUserSpace(CGContextRef context, CGPoint point)
     // Ensure that coordinates are at exactly the corner
     // of a device pixel.
     point.x = round( point.x - CPTFloat(0.5) ) + CPTFloat(0.5);
-#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-    point.y = round( point.y - CPTFloat(0.5) ) + CPTFloat(0.5);
-#else
     point.y = ceil(point.y) - CPTFloat(0.5);
-#endif
 
     // Convert the device aligned coordinate back to user space.
     return CGContextConvertPointToUserSpace(context, point);
@@ -876,14 +856,8 @@ CGRect CPTAlignRectToUserSpace(CGContextRef context, CGRect rect)
     rect.size.width = round( oldOrigin.x + rect.size.width - CPTFloat(0.5) ) - rect.origin.x;
     rect.origin.x  += CPTFloat(0.5);
 
-#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-    rect.origin.y    = round( rect.origin.y - CPTFloat(0.5) );
-    rect.size.height = round( oldOrigin.y + rect.size.height - CPTFloat(0.5) ) - rect.origin.y;
-    rect.origin.y   += CPTFloat(0.5);
-#else
     rect.origin.y    = ceil( CGRectGetMaxY(rect) ) - CPTFloat(0.5);
     rect.size.height = ceil(oldOrigin.y - CPTFloat(0.5) - rect.origin.y);
-#endif
 
     return CGContextConvertRectToUserSpace(context, rect);
 }
@@ -905,11 +879,7 @@ CGPoint CPTAlignIntegralPointToUserSpace(CGContextRef context, CGPoint point)
     point = CGContextConvertPointToDeviceSpace(context, point);
 
     point.x = round(point.x);
-#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-    point.y = round(point.y);
-#else
     point.y = ceil( point.y - CPTFloat(0.5) );
-#endif
 
     return CGContextConvertPointToUserSpace(context, point);
 }
@@ -933,13 +903,8 @@ CGRect CPTAlignIntegralRectToUserSpace(CGContextRef context, CGRect rect)
     rect.origin.x   = round(rect.origin.x);
     rect.size.width = round(oldOrigin.x + rect.size.width) - rect.origin.x;
 
-#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-    rect.origin.y    = round(rect.origin.y);
-    rect.size.height = round(oldOrigin.y + rect.size.height) - rect.origin.y;
-#else
     rect.origin.y    = ceil( CGRectGetMaxY(rect) - CPTFloat(0.5) );
     rect.size.height = ceil(oldOrigin.y - CPTFloat(0.5) - rect.origin.y);
-#endif
 
     return CGContextConvertRectToUserSpace(context, rect);
 }
@@ -1015,4 +980,75 @@ CGFloat squareOfDistanceBetweenPoints(CGPoint point1, CGPoint point2)
     CGFloat distanceSquared = deltaX * deltaX + deltaY * deltaY;
 
     return distanceSquared;
+}
+
+#pragma mark -
+#pragma mark Edge Inset Utilities
+
+/** @brief Returns a CPTEdgeInsets struct with the given insets.
+ *  @param top The top inset.
+ *  @param left The left inset.
+ *  @param bottom The bottom inset.
+ *  @param right The right inset.
+ *  @return A CPTEdgeInsets struct with the given insets.
+ **/
+CPTEdgeInsets CPTEdgeInsetsMake(CGFloat top, CGFloat left, CGFloat bottom, CGFloat right)
+{
+    CPTEdgeInsets insets;
+
+    insets.top    = top;
+    insets.left   = left;
+    insets.bottom = bottom;
+    insets.right  = right;
+
+    return insets;
+}
+
+/** @brief Compares two CPTEdgeInsets structstructs.
+ *  @param insets1 The first inset.
+ *  @param insets2 The second inset.
+ *  @return @YES if the two CPTEdgeInsets structs are equal.
+ **/
+BOOL CPTEdgeInsetsEqualToEdgeInsets(CPTEdgeInsets insets1, CPTEdgeInsets insets2)
+{
+    return (insets1.top == insets2.top) &&
+           (insets1.left == insets2.left) &&
+           (insets1.bottom == insets2.bottom) &&
+           (insets1.right == insets2.right);
+}
+
+#pragma mark -
+#pragma mark Log Modulus
+
+/** @brief Computes the log modulus of the given value.
+ *  @param value The value.
+ *  @return The log modulus of the given value.
+ *  @see <a href="http://blogs.sas.com/content/iml/2014/07/14/log-transformation-of-pos-neg.html">A log transformation of positive and negative values</a> for more information about the log-modulus transformation.
+ **/
+double CPTLogModulus(double value)
+{
+    if ( value != 0.0 ) {
+        double sign = (signbit(value) ? -1.0 : +1.0);
+
+        return sign * log10(fabs(value) + 1.0);
+    }
+    else {
+        return 0.0;
+    }
+}
+
+/** @brief Computes the inverse log modulus of the given value.
+ *  @param value The value.
+ *  @return The inverse log modulus of the given value.
+ **/
+double CPTInverseLogModulus(double value)
+{
+    if ( value != 0.0 ) {
+        double sign = (signbit(value) ? -1.0 : +1.0);
+
+        return sign * (pow( 10.0, fabs(value) ) - 1.0);
+    }
+    else {
+        return 0.0;
+    }
 }

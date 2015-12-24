@@ -2,20 +2,18 @@
 
 @class CPTImage;
 
-@interface _CPTFillImage : CPTFill<NSCopying, NSCoding> {
-    @private
-    CPTImage *fillImage;
-}
+@interface _CPTFillImage : CPTFill<NSCopying, NSCoding>
 
 /// @name Initialization
 /// @{
--(id)initWithImage:(CPTImage *)anImage;
+-(nonnull instancetype)initWithImage:(nullable CPTImage *)anImage NS_DESIGNATED_INITIALIZER;
+-(nonnull instancetype)initWithCoder:(nonnull NSCoder *)coder NS_DESIGNATED_INITIALIZER;
 /// @}
 
 /// @name Drawing
 /// @{
--(void)fillRect:(CGRect)rect inContext:(CGContextRef)context;
--(void)fillPathInContext:(CGContextRef)context;
+-(void)fillRect:(CGRect)rect inContext:(nonnull CGContextRef)context;
+-(void)fillPathInContext:(nonnull CGContextRef)context;
 /// @}
 
 @end

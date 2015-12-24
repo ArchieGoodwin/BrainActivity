@@ -7,24 +7,28 @@
 
 -(void)setStartValueFromObject:(id)boundObject propertyGetter:(SEL)boundGetter
 {
-    //IMP getterMethod = [boundObject methodForSelector:boundGetter];
     typedef NSValue *(*GetterType)(id, SEL);
-    GetterType getterMethod = (GetterType)[boundObject methodForSelector:boundGetter];
+    GetterType getterMethod = (GetterType)[boundObject methodForSelector : boundGetter];
+
     self.startValue = getterMethod(boundObject, boundGetter);
 }
 
 -(BOOL)canStartWithValueFromObject:(id)boundObject propertyGetter:(SEL)boundGetter
 {
-    //IMP getterMethod = [boundObject methodForSelector:boundGetter];
+    if ( !self.startValue ) {
+        [self setStartValueFromObject:boundObject propertyGetter:boundGetter];
+    }
+
     typedef CPTPlotRange *(*GetterType)(id, SEL);
-    GetterType getterMethod = (GetterType)[boundObject methodForSelector:boundGetter];
+    GetterType getterMethod = (GetterType)[boundObject methodForSelector : boundGetter];
+
     CPTPlotRange *current = getterMethod(boundObject, boundGetter);
     CPTPlotRange *start   = (CPTPlotRange *)self.startValue;
     CPTPlotRange *end     = (CPTPlotRange *)self.endValue;
 
-    NSDecimal currentLoc = current.location;
-    NSDecimal startLoc   = start.location;
-    NSDecimal endLoc     = end.location;
+    NSDecimal currentLoc = current.locationDecimal;
+    NSDecimal startLoc   = start.locationDecimal;
+    NSDecimal endLoc     = end.locationDecimal;
 
     return ( CPTDecimalGreaterThanOrEqualTo(currentLoc, startLoc) && CPTDecimalLessThanOrEqualTo(currentLoc, endLoc) ) ||
            ( CPTDecimalGreaterThanOrEqualTo(currentLoc, endLoc) && CPTDecimalLessThanOrEqualTo(currentLoc, startLoc) );
@@ -37,13 +41,13 @@
 
     NSDecimal progressDecimal = CPTDecimalFromCGFloat(progress);
 
-    NSDecimal locationDiff    = CPTDecimalSubtract(end.location, start.location);
-    NSDecimal tweenedLocation = CPTDecimalAdd( start.location, CPTDecimalMultiply(progressDecimal, locationDiff) );
+    NSDecimal locationDiff    = CPTDecimalSubtract(end.locationDecimal, start.locationDecimal);
+    NSDecimal tweenedLocation = CPTDecimalAdd( start.locationDecimal, CPTDecimalMultiply(progressDecimal, locationDiff) );
 
-    NSDecimal lengthDiff    = CPTDecimalSubtract(end.length, start.length);
-    NSDecimal tweenedLength = CPTDecimalAdd( start.length, CPTDecimalMultiply(progressDecimal, lengthDiff) );
+    NSDecimal lengthDiff    = CPTDecimalSubtract(end.lengthDecimal, start.lengthDecimal);
+    NSDecimal tweenedLength = CPTDecimalAdd( start.lengthDecimal, CPTDecimalMultiply(progressDecimal, lengthDiff) );
 
-    return (NSValue *)[CPTPlotRange plotRangeWithLocation:tweenedLocation length:tweenedLength];
+    return (NSValue *)[CPTPlotRange plotRangeWithLocationDecimal:tweenedLocation lengthDecimal:tweenedLength];
 }
 
 @end
