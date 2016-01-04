@@ -959,28 +959,28 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 -(NSDictionary *)processXYValues:(NSArray *)averages forChannel:(NSInteger)channel
 {
     
-    float X = [averages[0] floatValue] + [averages[1] floatValue];
-    float Y = [averages[2] floatValue];
+    double X = [averages[0] doubleValue] + [averages[1] doubleValue];
+    double Y = [averages[2] doubleValue];
     
     NSDictionary *basics = basicValues[channel - 1];
-    float X0 = [basics[@"X0"] floatValue];
-    float Y0 = [basics[@"Y0"] floatValue];
-    float X1p = [basics[@"X1p"] floatValue];
-    float X1m = [basics[@"X1m"] floatValue];
-    float Y1p = [basics[@"Y1p"] floatValue];
-    float Y1m = [basics[@"Y1m"] floatValue];
-    float X2p = [basics[@"X2p"] floatValue];
-    float X2m = [basics[@"X2m"] floatValue];
-    float Y2p = [basics[@"Y2p"] floatValue];
-    float Y2m = [basics[@"Y2m"] floatValue];
-    float X3p = [basics[@"X3p"] floatValue];
-    float X3m = [basics[@"X3m"] floatValue];
-    float Y3p = [basics[@"Y3p"] floatValue];
-    float Y3m = [basics[@"Y3m"] floatValue];
-    float X4p = [basics[@"X4p"] floatValue];
-    float X4m = [basics[@"X4m"] floatValue];
-    float Y4p = [basics[@"Y4p"] floatValue];
-    float Y4m = [basics[@"Y4m"] floatValue];
+    double X0 = [basics[@"X0"] doubleValue];
+    double Y0 = [basics[@"Y0"] doubleValue];
+    double X1p = [basics[@"X1p"] doubleValue];
+    double X1m = [basics[@"X1m"] doubleValue];
+    double Y1p = [basics[@"Y1p"] doubleValue];
+    double Y1m = [basics[@"Y1m"] doubleValue];
+    double X2p = [basics[@"X2p"] doubleValue];
+    double X2m = [basics[@"X2m"] doubleValue];
+    double Y2p = [basics[@"Y2p"] doubleValue];
+    double Y2m = [basics[@"Y2m"] doubleValue];
+    double X3p = [basics[@"X3p"] doubleValue];
+    double X3m = [basics[@"X3m"] doubleValue];
+    double Y3p = [basics[@"Y3p"] doubleValue];
+    double Y3m = [basics[@"Y3m"] doubleValue];
+    double X4p = [basics[@"X4p"] doubleValue];
+    double X4m = [basics[@"X4m"] doubleValue];
+    double Y4p = [basics[@"Y4p"] doubleValue];
+    double Y4m = [basics[@"Y4m"] doubleValue];
     
     
     CBManagerActivityZone activityZone = CBManagerActivityZone_NormalActivity;
@@ -1093,24 +1093,24 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 {
     for(int i = 0; i < 4; i++)
     {
-        float X0 = [averageBasicTeta[i] floatValue] + [averageBasicAlpha[i] floatValue];
-        float Y0 = [averageBasicBeta[i] floatValue];
-        float X1p = 1.3 * X0;
-        float X1m = 0.65 * (X0 - 0.1 * X0);
-        float Y1p = 0.9 * Y0;
-        float Y1m = 1.1 * Y0;
-        float X2p = 1.45 * X0;
-        float X2m = 0.45 * (X0 - 0.1 * X0);
-        float Y2p = 0.85 * Y0;
-        float Y2m = 1.15 * Y0;
-        float X3p = 1.55 * X0;
-        float X3m = 0.2 * (X0 - 0.1 * X0);
-        float Y3p = 0.8 * Y0;
-        float Y3m = 1.25 * Y0;
-        float X4p = 1.7 * X0;
-        float X4m = (X0 - 0.1 * X0);
-        float Y4p = 0.7 * Y0;
-        float Y4m = 1.3 * Y0;
+        double X0 = [averageBasicTeta[i] doubleValue] + [averageBasicAlpha[i] doubleValue];
+        double Y0 = [averageBasicBeta[i] doubleValue];
+        double X1p = 1.3 * X0;
+        double X1m = 0.65 * (X0 - 0.1 * X0);
+        double Y1p = 0.9 * Y0;
+        double Y1m = 1.1 * Y0;
+        double X2p = 1.45 * X0;
+        double X2m = 0.45 * (X0 - 0.1 * X0);
+        double Y2p = 0.85 * Y0;
+        double Y2m = 1.15 * Y0;
+        double X3p = 1.55 * X0;
+        double X3m = 0.2 * (X0 - 0.1 * X0);
+        double Y3p = 0.8 * Y0;
+        double Y3m = 1.25 * Y0;
+        double X4p = 1.7 * X0;
+        double X4m = (X0 - 0.1 * X0);
+        double Y4p = 0.7 * Y0;
+        double Y4m = 1.3 * Y0;
         
         NSDictionary *values = @{@"channel" : @(i + 1), @"data" : @{@"X0" : @(X0), @"Y0" : @(Y0), @"X1p" : @(X1p), @"X1m" : @(X1m), @"Y1p" : @(Y1p), @"Y1m" : @(Y1m), @"X2p" : @(X2p), @"X2m" : @(X2m), @"Y2p" : @(Y2p), @"Y2m" : @(Y2m), @"X3p" : @(X3p), @"X3m" : @(X3m), @"Y3p" : @(Y3p), @"Y3m" : @(Y3m), @"X4p" : @(X4p), @"X4m" : @(X4m), @"Y4p" : @(Y4p), @"Y4m" : @(Y4m)}};
         [basicValues addObject:values];
