@@ -68,6 +68,11 @@
 }
 
 
+-(void)CB_indicatorsStateWithDictionary:(NSDictionary *)data
+{
+    NSLog(@"indicators: %@", data);
+}
+
 -(void)CB_dataUpdatedWithDictionary:(NSDictionary *)data
 {
 

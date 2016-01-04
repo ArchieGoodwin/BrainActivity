@@ -61,7 +61,7 @@ CBManagerActivityZone;
 -(void)start;
 -(void)stop;
 -(void)startTestSequenceWithDominantFrequence:(float)frequence;
-
+-(void)startProcessAverageValues;
 -(NSInteger)batteryLevel;
 @end
 

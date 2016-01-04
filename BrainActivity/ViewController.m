@@ -48,6 +48,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnBack;
 @property (strong, nonatomic) IBOutlet UILabel *scopeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *zoomLabel;
+@property (strong, nonatomic) IBOutlet UIButton *btnStartIndicators;
 
 @property (nonatomic, strong) NSTimer *samplingTimer;
 @property (nonatomic, strong) NSTimer *yellowTimer;
@@ -126,7 +127,24 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    if(_manager.hasStartedIndicators)
+    {
+        _btnStartIndicators.enabled = NO;
+    }
+    else
+    {
+        _btnStartIndicators.enabled = YES;
+    }
     //currentIndex = 0;
+}
+
+- (IBAction)btnStartIndicatorsAction:(id)sender {
+    if(_manager.hasStarted)
+    {
+        [_manager startProcessAverageValues];
+        _btnStartIndicators.enabled = NO;
+    }
 }
 
 - (void)viewDidLoad {
@@ -144,6 +162,10 @@
     _btnBack.layer.borderColor = [UIColor darkGrayColor].CGColor;
     _btnBack.layer.borderWidth = 2.0;
     _btnBack.layer.cornerRadius = 15.0;
+    
+    _btnStartIndicators.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    _btnStartIndicators.layer.borderWidth = 2.0;
+    _btnStartIndicators.layer.cornerRadius = 15.0;
 
     _lblGreen.clipsToBounds = YES;
     _lblGreen.layer.borderWidth = 2.0;
@@ -206,8 +228,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fftDataReceived:) name:@"fft_data_received" object:nil];
 
     
-    _samplingTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(masterTimer) userInfo:nil repeats:YES];
-    _yellowTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(yellowTimerFire) userInfo:nil repeats:YES];
+    //_samplingTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(masterTimer) userInfo:nil repeats:YES];
+    //_yellowTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(yellowTimerFire) userInfo:nil repeats:YES];
 
 
     
@@ -229,14 +251,14 @@
         {
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                if([_manager processGreenForChannel:currentChannel])
+                /*if([_manager processGreenForChannel:currentChannel])
                 {
                     _greenView.backgroundColor = [UIColor colorWithRed:0.0/255.0 green:128.0/255.0 blue:0.0/255.0 alpha:1.0];
                 }
                 else
                 {
                     _greenView.backgroundColor = [UIColor lightGrayColor];
-                }
+                }*/
                 
                 
             });
@@ -259,7 +281,7 @@
         {
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                if([_manager processYellowForChannel:currentChannel])
+                /*if([_manager processYellowForChannel:currentChannel])
                 {
                     _yellowView.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:239.0/255.0 blue:54.0/255.0 alpha:1.0];
                     NSLog(@"yellow YES");
@@ -290,7 +312,7 @@
                 {
                     _yellowView.backgroundColor = [UIColor lightGrayColor];
                     NSLog(@"Red 2 NO");
-                }
+                }*/
                 
             });
         }
