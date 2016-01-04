@@ -99,6 +99,8 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     _counter = 0;
     _fftCounter = 0;
     _hasStarted = YES;
+    _hasStartedProcessBasicValues = NO;
+
 }
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
@@ -951,7 +953,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     [states addObject:@{@"ch3" : [self processXYValues:averages3 forChannel:3]}];
     [states addObject:@{@"ch4" : [self processXYValues:averages4 forChannel:4]}];
     
-    dict = @{@"indicators" : states};
+    dict = @{@"activities" : states};
     
     return dict;
 }

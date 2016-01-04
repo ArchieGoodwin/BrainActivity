@@ -45,6 +45,8 @@
     NSInteger limit;
     NSInteger currentChannel;
 }
+@property (strong, nonatomic) IBOutlet UIView *rightView;
+@property (strong, nonatomic) IBOutlet UIView *leftView;
 @property (strong, nonatomic) IBOutlet UIButton *btnBack;
 @property (strong, nonatomic) IBOutlet UILabel *scopeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *zoomLabel;
@@ -131,19 +133,24 @@
     if(_manager.hasStartedIndicators)
     {
         _btnStartIndicators.enabled = NO;
+        [_btnStartIndicators setBackgroundColor:[UIColor lightGrayColor]];
+
     }
     else
     {
         _btnStartIndicators.enabled = YES;
+        [_btnStartIndicators setBackgroundColor:[UIColor whiteColor]];
+
     }
     //currentIndex = 0;
 }
 
 - (IBAction)btnStartIndicatorsAction:(id)sender {
+
     if(_manager.hasStarted)
     {
         [_manager startProcessAverageValues];
-        _btnStartIndicators.enabled = NO;
+   
     }
 }
 
@@ -226,6 +233,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dataReceived:) name:@"data_received" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fftDataReceived:) name:@"fft_data_received" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(indiDataReceived:) name:@"indicators_data_received" object:nil];
 
     
     //_samplingTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(masterTimer) userInfo:nil repeats:YES];
@@ -598,6 +606,166 @@
     
 }
 
+-(void)indiDataReceived:(NSNotification *)notification
+{
+    _btnStartIndicators.enabled = NO;
+    [_btnStartIndicators setBackgroundColor:[UIColor lightGrayColor]];
+    
+    NSDictionary *data = notification.userInfo;
+
+    NSArray *activities = data[@"activities"];
+    
+    NSDictionary *channel = activities[0][@"ch1"];
+    if(currentChannel == 2)
+    {
+        channel = activities[1][@"ch2"];
+
+    }
+    if(currentChannel == 3)
+    {
+        channel = activities[2][@"ch3"];
+
+    }
+    if(currentChannel == 4)
+    {
+        channel = activities[3][@"ch4"];
+
+    }
+
+    for(UIView *v in _leftView.subviews)
+    {
+        [v removeFromSuperview];
+    }
+    CBManagerActivityZone zone = [channel[@"zone"] intValue];
+    float percents = [channel[@"percents"] floatValue];
+    
+    //remove!!!!
+    //zone = CBManagerActivityZone_Agitation;
+    //percents = 0.5;
+    
+    float viewWidth = _leftView.frame.size.width;
+    float center = viewWidth / 2;
+    if(zone == CBManagerActivityZone_Relaxation)
+    {
+        //30 35 35
+        
+        float left = (center * 0.3) + (center * 0.35) + center * (1 - percents) * 0.35;
+        UIView *view2place = [[UIView alloc] initWithFrame:CGRectMake(left, 0, center - left, _leftView.frame.size.height)];
+        view2place.backgroundColor = [UIColor greenColor];
+        view2place.tag = 4004;
+        [_leftView addSubview:view2place];
+    }
+    if(zone == CBManagerActivityZone_HighRelaxation)
+    {
+        //30 35 35
+        
+        float left = (center * 0.3) + center * (1 - percents) * 0.35;
+        UIView *view2place = [[UIView alloc] initWithFrame:CGRectMake(left, 0, center - left, _leftView.frame.size.height)];
+        view2place.backgroundColor = [UIColor greenColor];
+        view2place.tag = 4004;
+        [_leftView addSubview:view2place];
+    }
+    if(zone == CBManagerActivityZone_Dream)
+    {
+        //30 35 35
+        
+        float left = center * (1 - percents) * 0.3;
+        UIView *view2place = [[UIView alloc] initWithFrame:CGRectMake(left, 0, center - left, _leftView.frame.size.height)];
+        view2place.backgroundColor = [UIColor greenColor];
+        view2place.tag = 4004;
+        [_leftView addSubview:view2place];
+    }
+    if(zone == CBManagerActivityZone_NormalActivity)
+    {
+        //30 35 35
+        
+        float left = center + center * (1 - percents) * 0.35;
+        UIView *view2place = [[UIView alloc] initWithFrame:CGRectMake(left, 0, center - left, _leftView.frame.size.height)];
+        view2place.backgroundColor = [UIColor greenColor];
+        view2place.tag = 4004;
+        [_leftView addSubview:view2place];
+    }
+    if(zone == CBManagerActivityZone_Agitation)
+    {
+        //30 35 35
+        
+        float left = center + (center * 0.35) + center * (1 - percents) * 0.35;
+        UIView *view2place = [[UIView alloc] initWithFrame:CGRectMake(left, 0, center - left, _leftView.frame.size.height)];
+        view2place.backgroundColor = [UIColor greenColor];
+        view2place.tag = 4004;
+        [_leftView addSubview:view2place];
+    }
+    if(zone == CBManagerActivityZone_HighAgitation)
+    {
+        //30 35 35
+        
+        float left = center + (center * 0.35) + (center * 0.35) + center * (1 - percents) * 0.3;
+        UIView *view2place = [[UIView alloc] initWithFrame:CGRectMake(left, 0, center - left, _leftView.frame.size.height)];
+        view2place.backgroundColor = [UIColor greenColor];
+        view2place.tag = 4004;
+        [_leftView addSubview:view2place];
+    }
+    
+    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, center * 0.3, _leftView.frame.size.height)];
+    lbl.layer.borderColor  =[[UIColor lightGrayColor] CGColor];
+    lbl.layer.borderWidth = 1.0;
+    lbl.textAlignment = NSTextAlignmentCenter;
+    lbl.numberOfLines = 0;
+    lbl.lineBreakMode = NSLineBreakByWordWrapping;
+    lbl.text = @"Sleep";
+    lbl.font = [UIFont systemFontOfSize:9];
+    [_leftView addSubview:lbl];
+    
+    lbl = [[UILabel alloc] initWithFrame:CGRectMake(center * 0.3, 0, center * 0.35, _leftView.frame.size.height)];
+    lbl.layer.borderColor  =[[UIColor lightGrayColor] CGColor];
+    lbl.layer.borderWidth = 1.0;
+    lbl.textAlignment = NSTextAlignmentCenter;
+    lbl.numberOfLines = 0;
+    lbl.lineBreakMode = NSLineBreakByWordWrapping;
+    lbl.font = [UIFont systemFontOfSize:9];
+    lbl.text = @"Deep relaxation";
+    [_leftView addSubview:lbl];
+    
+    lbl = [[UILabel alloc] initWithFrame:CGRectMake(center * 0.3 + center * 0.35, 0, center * 0.35, _leftView.frame.size.height)];
+    lbl.layer.borderColor  =[[UIColor lightGrayColor] CGColor];
+    lbl.layer.borderWidth = 1.0;
+    lbl.textAlignment = NSTextAlignmentCenter;
+    lbl.numberOfLines = 0;
+    lbl.lineBreakMode = NSLineBreakByWordWrapping;
+    lbl.font = [UIFont systemFontOfSize:9];
+    lbl.text = @"Relaxation";
+    [_leftView addSubview:lbl];
+    
+    lbl = [[UILabel alloc] initWithFrame:CGRectMake(center, 0, center * 0.35, _leftView.frame.size.height)];
+    lbl.layer.borderColor  =[[UIColor lightGrayColor] CGColor];
+    lbl.layer.borderWidth = 1.0;
+    lbl.textAlignment = NSTextAlignmentCenter;
+    lbl.numberOfLines = 0;
+    lbl.lineBreakMode = NSLineBreakByWordWrapping;
+    lbl.font = [UIFont systemFontOfSize:9];
+    lbl.text = @"Normal activation";
+    [_leftView addSubview:lbl];
+    
+    lbl = [[UILabel alloc] initWithFrame:CGRectMake(center + center * 0.35, 0, center * 0.35, _leftView.frame.size.height)];
+    lbl.layer.borderColor  =[[UIColor lightGrayColor] CGColor];
+    lbl.layer.borderWidth = 1.0;
+    lbl.textAlignment = NSTextAlignmentCenter;
+    lbl.numberOfLines = 0;
+    lbl.lineBreakMode = NSLineBreakByWordWrapping;
+    lbl.font = [UIFont systemFontOfSize:9];
+    lbl.text = @"Excitement";
+    [_leftView addSubview:lbl];
+    
+    lbl = [[UILabel alloc] initWithFrame:CGRectMake(center + center * 0.35 + center * 0.35, 0, center * 0.3, _leftView.frame.size.height)];
+    lbl.layer.borderColor  =[[UIColor lightGrayColor] CGColor];
+    lbl.layer.borderWidth = 1.0;
+    lbl.textAlignment = NSTextAlignmentCenter;
+    lbl.numberOfLines = 0;
+    lbl.lineBreakMode = NSLineBreakByWordWrapping;
+    lbl.font = [UIFont systemFontOfSize:9];
+    lbl.text = @"Deep excitement";
+    [_leftView addSubview:lbl];
+}
 
 
 -(void)fftDataReceived:(NSNotification *)notification
