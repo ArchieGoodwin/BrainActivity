@@ -44,7 +44,8 @@ CBManagerMessage;
 @property (nonatomic, assign) double yellowFlagHigh;
 @property (nonatomic, assign) double red1Flag;
 @property (nonatomic, assign) double red2Flag;
-
+@property (nonatomic, assign, readonly) BOOL hasStartedIndicators;
+@property (nonatomic, assign, readonly) BOOL hasStartedProcessBasicValues;
 
 -(void)start;
 -(void)stop;
@@ -66,5 +67,6 @@ CBManagerMessage;
 
 -(void)CB_fftDataUpdatedWithDictionary:(NSDictionary *)data;
 -(void)CB_changedStatus:(CBManagerMessage)status message:(NSString *)statusMessage;
+-(void)CB_indicatorsStateWithDictionary:(NSDictionary *)data;
 
 @end

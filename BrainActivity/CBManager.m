@@ -19,7 +19,8 @@ const double K = 1000000000 * VRef / 0x7FFF;
 const double timeSpan = 180.0;
 const NSInteger step = 10;
 
-
+const NSInteger INDICATOR_PERIOD = 5;
+const NSInteger BASIC_VALUES_PERIOD = 10;
 
 @interface CBManager() < CBCentralManagerDelegate, CBPeripheralDelegate>
 
@@ -48,6 +49,11 @@ const NSInteger step = 10;
     CBCharacteristic *currentbatteryCharacteristic;
 
     NSTimer *timer;
+    NSTimer *indicatorTimer;
+    
+    NSArray *averageBasicTeta;
+    NSArray *averageBasicAlpha;
+    NSArray *averageBasicBeta;
 }
 
 #pragma mark -
@@ -65,6 +71,8 @@ const NSInteger step = 10;
         _yellowFlagHigh = 0.3;
         _red1Flag = 0.2;
         _red2Flag = 0.3;
+        _hasStartedIndicators = NO;
+        _hasStartedProcessBasicValues = NO;
     }
     
     return self;
@@ -491,15 +499,24 @@ const NSInteger step = 10;
                 
                 if(_counter % 250 == 0)
                 {
-                    
                     NSDictionary *ret = [self fillFFTData:NSMakeRange(_counter - 250, 256)];
                     if([_delegate respondsToSelector:@selector(CB_fftDataUpdatedWithDictionary:)])
                     {
                         [_delegate CB_fftDataUpdatedWithDictionary:ret];
                     }
-                    
                 }
                 
+                if(_counter % (250 * INDICATOR_PERIOD) == 0)
+                {
+                    if(_hasStartedIndicators)
+                    {
+                        NSDictionary *ret = [self indicatorsState];
+                        if([_delegate respondsToSelector:@selector(CB_indicatorsStateWithDictionary:)])
+                        {
+                            [_delegate CB_indicatorsStateWithDictionary:ret];
+                        }
+                    }
+                }
             }
             
         }
@@ -638,6 +655,12 @@ const NSInteger step = 10;
     {
         [timer invalidate];
         timer = nil;
+    }
+    
+    if(indicatorTimer)
+    {
+        [indicatorTimer invalidate];
+        indicatorTimer = nil;
     }
     
     _centralManager = nil;
@@ -824,6 +847,82 @@ const NSInteger step = 10;
 
 #pragma mark -
 #pragma mark Indicators
+
+
+-(void)startProcessAverageBasicValues
+{
+    indicatorTimer = [NSTimer scheduledTimerWithTimeInterval:BASIC_VALUES_PERIOD target:self selector:@selector(startIndicatorsProcessing) userInfo:nil repeats:NO];
+    [indicatorTimer fire];
+    _hasStartedProcessBasicValues = YES;
+}
+
+-(void)startIndicatorsProcessing
+{
+    NSArray *averages1 = [self defineBasicAverageValuesForRange:BASIC_VALUES_PERIOD channel:1];
+    NSArray *averages2 = [self defineBasicAverageValuesForRange:BASIC_VALUES_PERIOD channel:2];
+    NSArray *averages3 = [self defineBasicAverageValuesForRange:BASIC_VALUES_PERIOD channel:3];
+    NSArray *averages4 = [self defineBasicAverageValuesForRange:BASIC_VALUES_PERIOD channel:4];
+
+    averageBasicTeta = @[averages1[0], averages2[0], averages3[0], averages4[0]];
+    averageBasicAlpha = @[averages1[1], averages2[1], averages3[1], averages4[1]];
+    averageBasicBeta = @[averages1[2], averages2[2], averages3[2], averages4[2]];
+    
+    _hasStartedIndicators = YES;
+}
+
+-(NSArray *)defineBasicAverageValuesForRange:(NSInteger)range channel:(NSInteger)channel
+{
+    
+    NSMutableArray *teta = [NSMutableArray new];
+    for(NSInteger i = (_fftData.count - range); i < _fftData.count; i++)
+    {
+        NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+        NSDictionary *dict = _fftData[i][key];
+        [teta addObject:dict[@"data1"]];
+    }
+    NSExpression *expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:teta]]];
+    double averageTeta = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+    
+    
+    NSMutableArray *alpha = [NSMutableArray new];
+    for(NSInteger i = (_fftData.count - range); i < _fftData.count; i++)
+    {
+        NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+        NSDictionary *dict = _fftData[i][key];
+        [teta addObject:dict[@"data2"]];
+    }
+    expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:alpha]]];
+    double averageAlpha = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+    
+    
+    NSMutableArray *beta = [NSMutableArray new];
+    for(NSInteger i = (_fftData.count - range); i < _fftData.count; i++)
+    {
+        NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+        NSDictionary *dict = _fftData[i][key];
+        [teta addObject:dict[@"data3"]];
+    }
+    expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:beta]]];
+    double averageBeta = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+    
+    
+    return @[@(averageTeta), @(averageAlpha), @(averageBeta)];
+}
+
+-(NSDictionary *)indicatorsState
+{
+   
+    NSArray *averages1 = [self defineBasicAverageValuesForRange:INDICATOR_PERIOD channel:1];
+    NSArray *averages2 = [self defineBasicAverageValuesForRange:INDICATOR_PERIOD channel:2];
+    NSArray *averages3 = [self defineBasicAverageValuesForRange:INDICATOR_PERIOD channel:3];
+    NSArray *averages4 = [self defineBasicAverageValuesForRange:INDICATOR_PERIOD channel:4];
+    NSDictionary *dict = nil;
+    
+    
+    
+    
+    return dict;
+}
 
 
 -(BOOL)processGreenForChannel:(NSInteger)channel

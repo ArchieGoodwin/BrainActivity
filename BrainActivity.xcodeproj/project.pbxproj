@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DC1C20FF1BB96A770006B3C3 /* libCBManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC1C20FE1BB96A770006B3C3 /* libCBManager.a */; };
 		DCA7F4421ADA3F58000E38F5 /* MainVC.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA7F4411ADA3F58000E38F5 /* MainVC.m */; };
 		DCA7F4461ADA9931000E38F5 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA7F4441ADA9931000E38F5 /* Crashlytics.framework */; };
 		DCA7F4471ADA9931000E38F5 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA7F4451ADA9931000E38F5 /* Fabric.framework */; };
@@ -35,7 +34,6 @@
 		3533F97766504CF898B7C96D /* Pods-BrainActivity.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrainActivity.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BrainActivity/Pods-BrainActivity.debug.xcconfig"; sourceTree = "<group>"; };
 		5233106A17D46225BF50227F /* libPods-BrainActivity.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrainActivity.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D2E69BE9993C06DFD8C047E /* Pods-BrainActivity.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrainActivity.release.xcconfig"; path = "Pods/Target Support Files/Pods-BrainActivity/Pods-BrainActivity.release.xcconfig"; sourceTree = "<group>"; };
-		DC1C20FE1BB96A770006B3C3 /* libCBManager.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCBManager.a; sourceTree = "<group>"; };
 		DCA7F4401ADA3F58000E38F5 /* MainVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainVC.h; sourceTree = "<group>"; };
 		DCA7F4411ADA3F58000E38F5 /* MainVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainVC.m; sourceTree = "<group>"; };
 		DCA7F4441ADA9931000E38F5 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -79,7 +77,6 @@
 				DCDE51011A8792A500F54539 /* OpenGLES.framework in Frameworks */,
 				DCDE50FF1A87929C00F54539 /* QuartzCore.framework in Frameworks */,
 				DCDE50FD1A87929400F54539 /* Security.framework in Frameworks */,
-				DC1C20FF1BB96A770006B3C3 /* libCBManager.a in Frameworks */,
 				F0B19120459A2AED4B111995 /* libPods-BrainActivity.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,7 +87,6 @@
 		0F8887E665D7FDBEF0DAA73F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DC1C20FE1BB96A770006B3C3 /* libCBManager.a */,
 				DCA7F4441ADA9931000E38F5 /* Crashlytics.framework */,
 				DCA7F4451ADA9931000E38F5 /* Fabric.framework */,
 				DCE4B12B1AD6999300B3C75E /* CoreBluetooth.framework */,
@@ -440,7 +436,7 @@
 					"$(PROJECT_DIR)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "79074bd8-68d1-4d16-81f4-6a9bce9fa0f8";
+				PROVISIONING_PROFILE = "e6429bc3-f0f5-4744-8491-be0959cc9d99";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "arm64 armv7";
 			};
@@ -475,7 +471,7 @@
 					"$(PROJECT_DIR)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "79074bd8-68d1-4d16-81f4-6a9bce9fa0f8";
+				PROVISIONING_PROFILE = "e6429bc3-f0f5-4744-8491-be0959cc9d99";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "arm64 armv7";
 			};
