@@ -31,6 +31,17 @@ typedef enum CBManagerMessage {
 }
 CBManagerMessage;
 
+
+typedef enum CBManagerActivityZone {
+    CBManagerActivityZone_Relaxation = 0,
+    CBManagerActivityZone_HighRelaxation = 1,
+    CBManagerActivityZone_Dream = 2,
+    CBManagerActivityZone_NormalActivity = 3,
+    CBManagerActivityZone_Agitation = 4,
+    CBManagerActivityZone_HighAgitation = 5
+}
+CBManagerActivityZone;
+
 @interface CBManager : NSObject
 
 @property (nonatomic,strong) id <CBManagerDelegate> delegate;
@@ -51,10 +62,6 @@ CBManagerMessage;
 -(void)stop;
 -(void)startTestSequenceWithDominantFrequence:(float)frequence;
 
--(BOOL)processGreenForChannel:(NSInteger)channel;
--(BOOL)processYellowForChannel:(NSInteger)channel;
--(BOOL)processRed1ForChannel:(NSInteger)channel;
--(BOOL)processRed2ForChannel:(NSInteger)channel;
 -(NSInteger)batteryLevel;
 @end
 

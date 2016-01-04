@@ -54,6 +54,10 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     NSArray *averageBasicTeta;
     NSArray *averageBasicAlpha;
     NSArray *averageBasicBeta;
+    
+   
+    NSMutableArray *basicValues;
+
 }
 
 #pragma mark -
@@ -867,6 +871,8 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     averageBasicAlpha = @[averages1[1], averages2[1], averages3[1], averages4[1]];
     averageBasicBeta = @[averages1[2], averages2[2], averages3[2], averages4[2]];
     
+    [self fillStartXYValues];
+    
     _hasStartedIndicators = YES;
 }
 
@@ -918,272 +924,181 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     NSArray *averages4 = [self defineBasicAverageValuesForRange:INDICATOR_PERIOD channel:4];
     NSDictionary *dict = nil;
     
+    NSMutableArray *states = [NSMutableArray new];
     
+    [states addObject:@{@"ch1" : [self processXYValues:averages1 forChannel:1]}];
+    [states addObject:@{@"ch2" : [self processXYValues:averages2 forChannel:2]}];
+    [states addObject:@{@"ch3" : [self processXYValues:averages3 forChannel:3]}];
+    [states addObject:@{@"ch4" : [self processXYValues:averages4 forChannel:4]}];
     
+    dict = @{@"indicators" : states};
     
     return dict;
 }
 
-
--(BOOL)processGreenForChannel:(NSInteger)channel
+-(NSDictionary *)processXYValues:(NSArray *)averages forChannel:(NSInteger)channel
 {
-    NSInteger len = _fftData.count;
+    
+    float X = [averages[0] floatValue] + [averages[1] floatValue];
+    float Y = [averages[2] floatValue];
+    
+    NSDictionary *basics = basicValues[channel - 1];
+    float X0 = [basics[@"X0"] floatValue];
+    float Y0 = [basics[@"Y0"] floatValue];
+    float X1p = [basics[@"X1p"] floatValue];
+    float X1m = [basics[@"X1m"] floatValue];
+    float Y1p = [basics[@"Y1p"] floatValue];
+    float Y1m = [basics[@"Y1m"] floatValue];
+    float X2p = [basics[@"X2p"] floatValue];
+    float X2m = [basics[@"X2m"] floatValue];
+    float Y2p = [basics[@"Y2p"] floatValue];
+    float Y2m = [basics[@"Y2m"] floatValue];
+    float X3p = [basics[@"X3p"] floatValue];
+    float X3m = [basics[@"X3m"] floatValue];
+    float Y3p = [basics[@"Y3p"] floatValue];
+    float Y3m = [basics[@"Y3m"] floatValue];
+    float X4p = [basics[@"X4p"] floatValue];
+    float X4m = [basics[@"X4m"] floatValue];
+    float Y4p = [basics[@"Y4p"] floatValue];
+    float Y4m = [basics[@"Y4m"] floatValue];
     
     
-    NSMutableArray *greens = [NSMutableArray new];
-    
-    for(NSInteger i = lastGreenValue; i < len; i++)
+    CBManagerActivityZone activityZone = CBManagerActivityZone_NormalActivity;
+    float percent = 1.0;
+    if(X > X0)
     {
-        NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
-        NSDictionary *dict = _fftData[i][key];
-        [greens addObject:dict[@"data2"]];
-    }
-    
-    NSExpression *expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:greens]]];
-    double average = [[expression expressionValueWithObject:nil context:nil] doubleValue];
-
-
-    for(NSInteger i = 0; i < (len - lastGreenValue); i++)
-    {
-        double val = [greens[i] doubleValue];
-        
-        if(fabs(lastGreenAverage - val) > (lastGreenAverage * 0.2))
+        //positive values
+        if(X1p >= X && X > X0 && Y >= Y0)
         {
-            lastGreenAverage = (lastGreenAverage + average)/2.0;
-            lastGreenValue = len;
-            
-            //NSLog(@"%f  %f   %li", average, lastGreenAverage, lastGreenValue);
-
-            return NO;
+            activityZone = CBManagerActivityZone_Relaxation;
+            percent = 0.25;
+        }
+        if(X1p >= X && X > X0 && Y >= Y1p && Y0 >= Y)
+        {
+            activityZone = CBManagerActivityZone_Relaxation;
+            percent = 0.5;
+        }
+        if(X1p >= X && X > X0 && Y1p >= Y)
+        {
+            activityZone = CBManagerActivityZone_Relaxation;
+            percent = 0.75;
+        }
+        if(X2p >= X && X > X1p && Y0 >= Y && Y >= Y2p)
+        {
+            activityZone = CBManagerActivityZone_Relaxation;
+            percent = 1;
+        }
+        if(X3p >= X && X > X2p && Y >= Y0)
+        {
+            activityZone = CBManagerActivityZone_HighRelaxation;
+            percent = 0.25;
+        }
+        if(X3p >= X && X > X2p && Y0 >= Y && Y >= Y3p)
+        {
+            activityZone = CBManagerActivityZone_HighRelaxation;
+            percent = 0.5;
+        }
+        if(X3p >= X && X > X2p && Y3p >= Y)
+        {
+            activityZone = CBManagerActivityZone_HighRelaxation;
+            percent = 0.75;
+        }
+        if(X4p >= X && X > X3p && Y0 >= Y && Y >= Y4p)
+        {
+            activityZone = CBManagerActivityZone_HighRelaxation;
+            percent = 1;
+        }
+        if(X >= X4p)
+        {
+            activityZone = CBManagerActivityZone_Dream;
+            percent = 0.5;
+        }
+        
+    }
+    else
+    {
+        //negative values
+        if(X1m < X && X <= X0 && Y < Y0)
+        {
+            activityZone = CBManagerActivityZone_NormalActivity;
+            percent = 0.25;
+        }
+        if(X1m < X && X <= X0 && Y0 <= Y && Y <= Y1m)
+        {
+            activityZone = CBManagerActivityZone_NormalActivity;
+            percent = 0.5;
+        }
+        if(X1m < X && X <= X0 && Y1m < Y)
+        {
+            activityZone = CBManagerActivityZone_NormalActivity;
+            percent = 0.75;
+        }
+        if(X2m < X && X <= X1m && Y0 < Y && Y <= Y2m)
+        {
+            activityZone = CBManagerActivityZone_NormalActivity;
+            percent = 1;
+        }
+        if(X3m < X && X <= X2m && Y < Y0)
+        {
+            activityZone = CBManagerActivityZone_Agitation;
+            percent = 0.25;
+        }
+        if(X3m < X && X <= X2m && Y0 < Y && Y <= Y3m)
+        {
+            activityZone = CBManagerActivityZone_Agitation;
+            percent = 0.5;
+        }
+        if(X3m < X && X <= X2m && Y3m < Y)
+        {
+            activityZone = CBManagerActivityZone_Agitation;
+            percent = 0.75;
+        }
+        if(X4m < X && X <= X3m && Y0 < Y && Y <= Y4m)
+        {
+            activityZone = CBManagerActivityZone_Agitation;
+            percent = 1;
+        }
+        if(0 < X && X < 0.1 * X0)
+        {
+            activityZone = CBManagerActivityZone_HighAgitation;
+            percent = 0.5;
         }
     }
     
-    lastGreenAverage = (lastGreenAverage + average)/2.0;
-    lastGreenValue = len;
     
-    //NSLog(@"%f  %f   %li", average, lastGreenAverage, lastGreenValue);
+    return @{@"zone" : @(activityZone), @"percents" : @(percent)};
+}
 
-    return YES;
-    
+-(void)fillStartXYValues
+{
+    for(int i = 0; i < 4; i++)
+    {
+        float X0 = [averageBasicTeta[i] floatValue] + [averageBasicAlpha[i] floatValue];
+        float Y0 = [averageBasicBeta[i] floatValue];
+        float X1p = 1.3 * X0;
+        float X1m = 0.65 * (X0 - 0.1 * X0);
+        float Y1p = 0.9 * Y0;
+        float Y1m = 1.1 * Y0;
+        float X2p = 1.45 * X0;
+        float X2m = 0.45 * (X0 - 0.1 * X0);
+        float Y2p = 0.85 * Y0;
+        float Y2m = 1.15 * Y0;
+        float X3p = 1.55 * X0;
+        float X3m = 0.2 * (X0 - 0.1 * X0);
+        float Y3p = 0.8 * Y0;
+        float Y3m = 1.25 * Y0;
+        float X4p = 1.7 * X0;
+        float X4m = (X0 - 0.1 * X0);
+        float Y4p = 0.7 * Y0;
+        float Y4m = 1.3 * Y0;
+        
+        NSDictionary *values = @{@"channel" : @(i + 1), @"data" : @{@"X0" : @(X0), @"Y0" : @(Y0), @"X1p" : @(X1p), @"X1m" : @(X1m), @"Y1p" : @(Y1p), @"Y1m" : @(Y1m), @"X2p" : @(X2p), @"X2m" : @(X2m), @"Y2p" : @(Y2p), @"Y2m" : @(Y2m), @"X3p" : @(X3p), @"X3m" : @(X3m), @"Y3p" : @(Y3p), @"Y3m" : @(Y3m), @"X4p" : @(X4p), @"X4m" : @(X4m), @"Y4p" : @(Y4p), @"Y4m" : @(Y4m)}};
+        [basicValues addObject:values];
+    }
     
 }
 
 
-
--(BOOL)processYellowForChannel:(NSInteger)channel
-{
-    NSInteger len = _fftData.count;
-    
-    if(len >= step)
-    {
-        NSMutableArray *yellows = [NSMutableArray new];
-        
-        for(NSInteger i = len - step; i < len; i++)
-        {
-            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
-            NSDictionary *dict = _fftData[i][key];
-            [yellows addObject:dict[@"data2"]];
-        }
-        
-        NSMutableArray *yellowsUpper = [NSMutableArray new];
-        for(NSInteger i = len - step; i < len; i++)
-        {
-            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
-            NSDictionary *dict = _fftData[i][key];
-            [yellowsUpper addObject:dict[@"data3"]];
-        }
-        
-        
-        NSMutableArray *yellowsLower = [NSMutableArray new];
-        for(NSInteger i = len - step; i < len; i++)
-        {
-            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
-            NSDictionary *dict = _fftData[i][key];
-            [yellowsLower addObject:dict[@"data1"]];
-        }
-        
-        
-        double val1 = [yellows[0] doubleValue];
-        double val2 = [yellows[(step - 1)] doubleValue];
-        
-        double val1lower = [yellowsLower[0] doubleValue];
-        double val2lower = [yellowsLower[(step - 1)] doubleValue];
-        
-        double val1upper = [yellowsUpper[0] doubleValue];
-        double val2upper = [yellowsUpper[(step - 1)] doubleValue];
-        
-        if (val2 > val1)
-        {
-            BOOL mainCondition = (val2 - val1) > yellowDiffLow && (val2 - val1) < yellowDiffHigh;
-            BOOL lowCondition = val2lower > val1lower && (val2lower - val1lower) > (0.1 / (timeSpan / step));
-            BOOL highCondition = val2upper < val1upper && (val1upper - val2upper) > (0.05 / (timeSpan / step));
-
-            
-            if(mainCondition && lowCondition && highCondition)
-            {
-                return YES;
-            }
-            else
-            {
-                return NO;
-            }
-        }
-        else
-        {
-            return NO;
-        }
-        
-    }
-    
-    return NO;
-    
-    
-    
-}
-
-
--(BOOL)processRed1ForChannel:(NSInteger)channel
-{
-    NSInteger len = _fftData.count;
-    
-    if(len >= step)
-    {
-        NSMutableArray *reds = [NSMutableArray new];
-        
-        for(NSInteger i = len - step; i < len; i++)
-        {
-            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
-            NSDictionary *dict = _fftData[i][key];
-            [reds addObject:dict[@"data2"]];
-        }
-        
-        NSMutableArray *redsUpper = [NSMutableArray new];
-        for(NSInteger i = len - step; i < len; i++)
-        {
-            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
-            NSDictionary *dict = _fftData[i][key];
-            [redsUpper addObject:dict[@"data3"]];
-        }
-        
-        
-        NSMutableArray *redsLower = [NSMutableArray new];
-        for(NSInteger i = len - step; i < len; i++)
-        {
-            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
-            NSDictionary *dict = _fftData[i][key];
-            [redsLower addObject:dict[@"data1"]];
-        }
-        
-        
-        double val1 = [reds[0] doubleValue];
-        double val2 = [reds[(step - 1)] doubleValue];
-        
-        double val1lower = [redsLower[0] doubleValue];
-        double val2lower = [redsLower[(step - 1)] doubleValue];
-        
-        double val1upper = [redsUpper[0] doubleValue];
-        double val2upper = [redsUpper[(step - 1)] doubleValue];
-        
-        if (val2 < val1)
-        {
-            BOOL mainCondition = (val1 - val2) > red1DiffHigh;
-            BOOL lowCondition = val2lower < val1lower && (val1lower - val2lower) > (0.1 / (timeSpan / step));
-            BOOL highCondition = val2upper > val1upper && (val2upper - val1upper) > (0.05 / (timeSpan / step));
-            
-            
-            if(mainCondition && lowCondition && highCondition)
-            {
-                return YES;
-            }
-            else
-            {
-                return NO;
-            }
-        }
-        else
-        {
-            return NO;
-        }
-        
-    }
-    
-    return NO;
-    
-    
-    
-}
-
-
--(BOOL)processRed2ForChannel:(NSInteger)channel
-{
-    NSInteger len = _fftData.count;
-    
-    if(len >= step)
-    {
-        NSMutableArray *reds = [NSMutableArray new];
-        
-        for(NSInteger i = len - step; i < len; i++)
-        {
-            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
-            NSDictionary *dict = _fftData[i][key];
-            [reds addObject:dict[@"data2"]];
-        }
-        
-        NSMutableArray *redsUpper = [NSMutableArray new];
-        for(NSInteger i = len - step; i < len; i++)
-        {
-            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
-            NSDictionary *dict = _fftData[i][key];
-            [redsUpper addObject:dict[@"data3"]];
-        }
-        
-        
-        NSMutableArray *redsLower = [NSMutableArray new];
-        for(NSInteger i = len - step; i < len; i++)
-        {
-            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
-            NSDictionary *dict = _fftData[i][key];
-            [redsLower addObject:dict[@"data1"]];
-        }
-        
-        
-        double val1 = [reds[0] doubleValue];
-        double val2 = [reds[(step - 1)] doubleValue];
-        
-        double val1lower = [redsLower[0] doubleValue];
-        double val2lower = [redsLower[(step - 1)] doubleValue];
-        
-        double val1upper = [redsUpper[0] doubleValue];
-        double val2upper = [redsUpper[(step - 1)] doubleValue];
-        
-        if (val2 > val1)
-        {
-            BOOL mainCondition = (val2 - val1) > red2DiffHigh;
-            BOOL lowCondition = val2lower > val1lower && (val2lower - val1lower) > (0.15 / (timeSpan / step));
-            BOOL highCondition = val2upper < val1upper && (val1upper - val2upper) > (0.15 / (timeSpan / step));
-            
-            
-            if(mainCondition && lowCondition && highCondition)
-            {
-                return YES;
-            }
-            else
-            {
-                return NO;
-            }
-        }
-        else
-        {
-            return NO;
-        }
-        
-    }
-    
-    return NO;
-    
-    
-    
-}
 
 
 -(NSInteger)batteryLevel
