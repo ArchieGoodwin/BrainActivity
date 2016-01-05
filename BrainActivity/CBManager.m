@@ -953,10 +953,54 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     [states addObject:@{@"ch3" : [self processXYValues:averages3 forChannel:3]}];
     [states addObject:@{@"ch4" : [self processXYValues:averages4 forChannel:4]}];
     
-    dict = @{@"activities" : states};
+    
+    NSMutableArray *colors = [NSMutableArray new];
+    
+    [colors addObject:@{@"ch1" : [self processColorIndicators:averages1 forChannel:1]}];
+    [colors addObject:@{@"ch2" : [self processColorIndicators:averages2 forChannel:2]}];
+    [colors addObject:@{@"ch3" : [self processColorIndicators:averages3 forChannel:3]}];
+    [colors addObject:@{@"ch4" : [self processColorIndicators:averages4 forChannel:4]}];
+    
+    dict = @{@"activities" : states, @"colors" : colors};
+
     
     return dict;
 }
+
+-(NSDictionary *)processColorIndicators:(NSArray *)averages forChannel:(NSInteger)channel
+{
+    double X = [averages[0] doubleValue] + [averages[1] doubleValue];
+    double Y = [averages[2] doubleValue];
+
+    NSDictionary *basics = basicValues[channel - 1];
+    double X0 = [basics[@"X0"] doubleValue];
+    double Y0 = [basics[@"Y0"] doubleValue];
+
+    NSMutableArray *colors = [NSMutableArray new];
+    
+    if((0.7 * X0 <= X && X <= 1.3 * X0 && 0.9 * Y0 <= Y && Y <= 1.1 * Y0) || (1.3 * X0 < X && X <= 1.6 * X0 && Y0 < Y && Y < 1.2 * Y0) || ( X > 1.6 * X0 && Y > 1.25 * Y0))
+    {
+        [colors addObject:@{@"color" : @"green"}];
+    }
+    if((1.3 * X0 < X && X <= 1.6 * X0 && 0.75 * Y0 < Y && Y <= Y0) || ( 0 < X && X <= 0.75 * X0 && 0 < Y && Y < 0.75 * Y0))
+    {
+        [colors addObject:@{@"color" : @"yellow"}];
+
+    }
+    if(0 < X && X <= 0.7 * X0 && Y0 < Y && Y < 1.15 * Y0)
+    {
+        [colors addObject:@{@"color" : @"red"}];
+
+    }
+    if(X > 1.6 * X0 && 0.75 * Y0 < Y && Y <= Y0)
+    {
+        [colors addObject:@{@"color" : @"orange"}];
+        
+    }
+    
+    return @{@"colors" : colors};
+}
+
 
 -(NSDictionary *)processXYValues:(NSArray *)averages forChannel:(NSInteger)channel
 {

@@ -765,15 +765,61 @@
     lbl.font = [UIFont systemFontOfSize:9];
     lbl.text = @"Deep excitement";
     [_leftView addSubview:lbl];
+    
+    //colors
+    
+    
+    NSArray *colors = data[@"colors"];
+    
+    channel = colors[0][@"ch1"];
+    if(currentChannel == 2)
+    {
+        channel = colors[1][@"ch2"];
+        
+    }
+    if(currentChannel == 3)
+    {
+        channel = colors[2][@"ch3"];
+        
+    }
+    if(currentChannel == 4)
+    {
+        channel = colors[3][@"ch4"];
+        
+    }
+
+    _greenView.backgroundColor = [UIColor lightGrayColor];
+    _yellowView.backgroundColor = [UIColor lightGrayColor];
+    _red1View.backgroundColor = [UIColor lightGrayColor];
+    _red2View.backgroundColor = [UIColor lightGrayColor];
+    for(NSDictionary *dict in channel[@"colors"])
+    {
+        if([dict[@"color"] isEqualToString:@"green"])
+        {
+            _greenView.backgroundColor = [UIColor colorWithRed:0.0/255.0 green:128.0/255.0 blue:0.0/255.0 alpha:1.0];
+        }
+        if([dict[@"color"] isEqualToString:@"yellow"])
+        {
+            _greenView.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:239.0/255.0 blue:54.0/255.0 alpha:1.0];
+        }
+        if([dict[@"color"] isEqualToString:@"red"])
+        {
+            _greenView.backgroundColor = [UIColor redColor];
+        }
+        if([dict[@"color"] isEqualToString:@"orange"])
+        {
+            _greenView.backgroundColor = [UIColor orangeColor];
+        }
+
+    }
+
 }
 
 
 -(void)fftDataReceived:(NSNotification *)notification
 {
 
-    
-    
-    
+
     NSDictionary *data = notification.userInfo;
     
     

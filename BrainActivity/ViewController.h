@@ -33,6 +33,6 @@
 @property (strong, nonatomic) CBManager *manager;
 
 -(void)defaultValues;
-- (void)sendData ;
+//- (void)sendData ;
 @end
 
