@@ -72,7 +72,7 @@
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"indicators_data_received" object:nil userInfo:data];
 
-    NSLog(@"indicators: %@", data);
+    //NSLog(@"indicators: %@", data);
 }
 
 -(void)CB_dataUpdatedWithDictionary:(NSDictionary *)data

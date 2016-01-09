@@ -77,6 +77,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         _red2Flag = 0.3;
         _hasStartedIndicators = NO;
         _hasStartedProcessBasicValues = NO;
+        basicValues = [NSMutableArray new];
     }
     
     return self;
@@ -410,6 +411,31 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
             short orderNumber = _counter;
             
             double d = 100000*sin(2*M_PI*testDominantFreq*_counter/250);
+            //double channel1 = d * ([self randomFloatBetween:0.6 and:1.5]);
+            //double channel2 = d* ([self randomFloatBetween:0.6 and:1.5]);
+            //double channel3 = d* ([self randomFloatBetween:0.7 and:1.5]);
+            //double channel4 = d* ([self randomFloatBetween:0.7 and:1.5]);
+            
+            /*if(!_hasStartedIndicators)
+            {
+                d = 1000 * (50 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 20 * sin(2*M_PI*18*_counter/250));
+                
+            }
+            else
+            {
+                //d = 1000 * (36 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 19 * sin(2*M_PI*18*_counter/250)); //green 1
+                //d = 1000 * (64 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 21 * sin(2*M_PI*18*_counter/250)); //green 2
+                //d = 1000 * (75 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 23 * sin(2*M_PI*18*_counter/250)); //green 3
+                //d = 95 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 30 * sin(2*M_PI*18*_counter/250); //green 4
+                
+                //d = 1000 * (75 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 16 * sin(2*M_PI*18*_counter/250)); //yellow 1
+                //d = 1000 * (40 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 16 * sin(2*M_PI*18*_counter/250)); //yellow 2
+                
+                d = 1000 * (25 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 21 * sin(2*M_PI*18*_counter/250)); //red
+
+                //d = 1000 * (90 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 16 * sin(2*M_PI*18*_counter/250)); //orange
+
+            }*/
             double channel1 = d;
             double channel2 = d;
             double channel3 = d;
@@ -433,11 +459,36 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
             short orderNumber = _counter;
             
             double d = 100000*sin(2*M_PI*testDominantFreq*_counter/250);
+            //double channel1_ = d* ([self randomFloatBetween:0.6 and:1.5]);
+            //double channel2_ = d* ([self randomFloatBetween:0.6 and:1.5]);
+            //double channel3_ = d* ([self randomFloatBetween:0.7 and:1.7]);
+            //double channel4_ = d* ([self randomFloatBetween:0.7 and:1.7]);
+            
+            /*if(!_hasStartedIndicators)
+            {
+                d = 1000*(50 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 20 * sin(2*M_PI*18*_counter/250));
+                
+            }
+            else
+            {
+                //d = 1000 * (36 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 19 * sin(2*M_PI*18*_counter/250)); //green 1
+                //d = 1000 * (64 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 21 * sin(2*M_PI*18*_counter/250)); //green 2
+                //d = 1000 * (75 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 23 * sin(2*M_PI*18*_counter/250)); //green 3
+                //d = 95 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 30 * sin(2*M_PI*18*_counter/250); //green 4
+                
+                //d = 1000 * (75 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 16 * sin(2*M_PI*18*_counter/250)); //yellow 1
+                //d = 1000 * (40 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 16 * sin(2*M_PI*18*_counter/250)); //yellow 2
+
+                d = 1000 * (25 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 21 * sin(2*M_PI*18*_counter/250)); //red
+                
+                //d = 1000 * (90 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 16 * sin(2*M_PI*18*_counter/250)); //orange
+
+
+            }*/
             double channel1_ = d;
             double channel2_ = d;
             double channel3_ = d;
             double channel4_ = d;
-            
             
             NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_counter], @"timeframe" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000000], @"hardware_order_number" : [NSNumber numberWithShort:orderNumber + 1], @"ch1" : [NSNumber numberWithDouble:channel1_], @"ch2" : [NSNumber numberWithDouble:channel2_], @"ch3" : [NSNumber numberWithDouble:channel3_], @"ch4" : [NSNumber numberWithDouble:channel4_]};
             
@@ -455,6 +506,11 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     
     return nil;
     
+}
+
+- (float)randomFloatBetween:(float)smallNumber and:(float)bigNumber {
+    float diff = bigNumber - smallNumber;
+    return (((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * diff) + smallNumber;
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
@@ -512,7 +568,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
                     }
                 }
                 
-                if(_counter % (250 * INDICATOR_PERIOD) == 0)
+                if(_fftCounter % INDICATOR_PERIOD == 0 && _fftCounter > 0)
                 {
                     if(_hasStartedIndicators)
                     {
@@ -544,10 +600,10 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 
 -(void)startTestSequenceWithDominantFrequence:(float)frequence
 {
-    yellowDiffLow = _yellowFlagLow / (timeSpan / step);
-    yellowDiffHigh = _yellowFlagHigh / (timeSpan / step);
-    red1DiffHigh = _red1Flag / (timeSpan / step);
-    red2DiffHigh = _red2Flag / (timeSpan / step);
+    //yellowDiffLow = _yellowFlagLow / (timeSpan / step);
+    //yellowDiffHigh = _yellowFlagHigh / (timeSpan / step);
+    //red1DiffHigh = _red1Flag / (timeSpan / step);
+    //red2DiffHigh = _red2Flag / (timeSpan / step);
     
     
     //_centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
@@ -590,10 +646,12 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
                 }
                 
             }
-            if(_counter % (250 * INDICATOR_PERIOD) == 0)
+            if(_counter % (INDICATOR_PERIOD * 250) == 0 && _fftCounter > 0)
             {
                 if(_hasStartedIndicators)
                 {
+                    NSLog(@"%li", _fftCounter);
+
                     NSDictionary *ret = [self indicatorsState];
                     if([_delegate respondsToSelector:@selector(CB_indicatorsStateWithDictionary:)])
                     {
@@ -721,7 +779,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     for (int i = 0; i < nOver2; ++i)
     {
         output[i] = sqrt(fft_data.realp[i]*fft_data.realp[i] + fft_data.imagp[i]*fft_data.imagp[i]);
-        //NSLog(@"%f", output[i]);
+        //NSLog(@"%i %f",i, output[i]);
     }
   
     /*double *frequences = (double *)malloc(nOver2 * sizeof(double));
@@ -736,20 +794,21 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     }*/
     
     int val1 = [self findMaxIndex:output range:NSMakeRange(3, 4)];
+    double val1_ = [self findMaxValue:output range:NSMakeRange(3, 4)];
     //printf("max in 3-6: %8g  %f  max index: %d \n", frequences[val1], output[val1], val1);
     
     
     int val2 = [self findMaxIndex:output range:NSMakeRange(7, 7)];
+    double val2_ = [self findMaxValue:output range:NSMakeRange(7, 7)];
     //printf("max in 7-13: %8g  %f  max index: %d \n", frequences[val2], output[val2], val2);
     
     
     int val3 = [self findMaxIndex:output range:NSMakeRange(14, 11)];
+    double val3_ = [self findMaxValue:output range:NSMakeRange(14, 11)];
     //printf("max in 14-18: %8g  %f  max index: %d \n", frequences[val3], output[val3], val3);
    
     
-    
-    
-    return @{@"data1" : [NSNumber numberWithDouble:val1], @"data2" : [NSNumber numberWithDouble:val2], @"data3" : [NSNumber numberWithDouble:val3]};
+    return @{@"data1" : [NSNumber numberWithDouble:val1], @"data2" : [NSNumber numberWithDouble:val2], @"data3" : [NSNumber numberWithDouble:val3], @"data1_" : [NSNumber numberWithDouble:val1_], @"data2_" : [NSNumber numberWithDouble:val2_], @"data3_" : [NSNumber numberWithDouble:val3_]};
     
     
 }
@@ -804,6 +863,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 }
 
 -(int)findMaxIndex:(double *)array  range:(NSRange)range{
+    
     int returnI = (int)range.location;
     
     double *subArray = (double *)malloc(range.length * sizeof(double));
@@ -811,6 +871,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     for(int i = 0; i<range.length; i++)
     {
         subArray[i] = array[range.location + i];
+        //NSLog(@"subarr %f", subArray[i]);
     }
     
     double max = subArray[0];
@@ -823,6 +884,28 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     }
     return returnI;
 }
+
+-(double)findMaxValue:(double *)array range:(NSRange)range{
+    
+    double *subArray = (double *)malloc(range.length * sizeof(double));
+    
+    for(int i = 0; i<range.length; i++)
+    {
+        subArray[i] = array[range.location + i];
+        //NSLog(@"subarr %f", subArray[i]);
+    }
+    
+    double max = subArray[0];
+    for (int i = 1; i < range.length; i++) {
+        if(max<subArray[i])
+        {
+            max=subArray[i];
+        }
+    }
+    return max;
+}
+
+
 
 -(double)findMax:array arrayKey:obj {
     
@@ -904,7 +987,8 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         {
             NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
             NSDictionary *dict = _fftData[i][key];
-            [teta addObject:@([dict[@"data1"] doubleValue])];
+            [teta addObject:@([dict[@"data1_"] doubleValue])];
+            //NSLog(@"teta %@", dict[@"data1"]);
         }
         NSExpression *expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:teta]]];
         double averageTeta = [[expression expressionValueWithObject:nil context:nil] doubleValue];
@@ -915,7 +999,9 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         {
             NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
             NSDictionary *dict = _fftData[i][key];
-            [alpha addObject:@([dict[@"data2"] doubleValue])];
+            [alpha addObject:@([dict[@"data2_"] doubleValue])];
+            //NSLog(@"alpha %@", dict[@"data2"]);
+
         }
         expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:alpha]]];
         double averageAlpha = [[expression expressionValueWithObject:nil context:nil] doubleValue];
@@ -926,10 +1012,13 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         {
             NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
             NSDictionary *dict = _fftData[i][key];
-            [beta addObject:@([dict[@"data3"] doubleValue])];
+            [beta addObject:@([dict[@"data3_"] doubleValue])];
+            //NSLog(@"beta %@", dict[@"data3"]);
+
         }
         expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:beta]]];
         double averageBeta = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        
         
         
         return @[@(averageTeta), @(averageAlpha), @(averageBeta)];
@@ -973,16 +1062,16 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     double Y = [averages[2] doubleValue];
 
     NSDictionary *basics = basicValues[channel - 1];
-    double X0 = [basics[@"X0"] doubleValue];
-    double Y0 = [basics[@"Y0"] doubleValue];
-
+    double X0 = [basics[@"data"][@"X0"] doubleValue];
+    double Y0 = [basics[@"data"][@"Y0"] doubleValue];
+    NSLog(@"X = %f  Y = %f, X0 = %f  Y0 = %f", X, Y, X0, Y0);
     NSMutableArray *colors = [NSMutableArray new];
     
     if((0.7 * X0 <= X && X <= 1.3 * X0 && 0.9 * Y0 <= Y && Y <= 1.1 * Y0) || (1.3 * X0 < X && X <= 1.6 * X0 && Y0 < Y && Y < 1.2 * Y0) || ( X > 1.6 * X0 && Y > 1.25 * Y0))
     {
         [colors addObject:@{@"color" : @"green"}];
     }
-    if((1.3 * X0 < X && X <= 1.6 * X0 && 0.75 * Y0 < Y && Y <= Y0) || ( 0 < X && X <= 0.75 * X0 && 0 < Y && Y < 0.75 * Y0))
+    if(((1.3 * X0) < X && X <= (1.6 * X0) && (0.75 * Y0) < Y && Y <= Y0) || ( 0 < X && X <= (0.75 * X0) && 0 < Y && Y < (0.75 * Y0)))
     {
         [colors addObject:@{@"color" : @"yellow"}];
 
@@ -1009,24 +1098,24 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     double Y = [averages[2] doubleValue];
     
     NSDictionary *basics = basicValues[channel - 1];
-    double X0 = [basics[@"X0"] doubleValue];
-    double Y0 = [basics[@"Y0"] doubleValue];
-    double X1p = [basics[@"X1p"] doubleValue];
-    double X1m = [basics[@"X1m"] doubleValue];
-    double Y1p = [basics[@"Y1p"] doubleValue];
-    double Y1m = [basics[@"Y1m"] doubleValue];
-    double X2p = [basics[@"X2p"] doubleValue];
-    double X2m = [basics[@"X2m"] doubleValue];
-    double Y2p = [basics[@"Y2p"] doubleValue];
-    double Y2m = [basics[@"Y2m"] doubleValue];
-    double X3p = [basics[@"X3p"] doubleValue];
-    double X3m = [basics[@"X3m"] doubleValue];
-    double Y3p = [basics[@"Y3p"] doubleValue];
-    double Y3m = [basics[@"Y3m"] doubleValue];
-    double X4p = [basics[@"X4p"] doubleValue];
-    double X4m = [basics[@"X4m"] doubleValue];
-    double Y4p = [basics[@"Y4p"] doubleValue];
-    double Y4m = [basics[@"Y4m"] doubleValue];
+    double X0 = [basics[@"data"][@"X0"] doubleValue];
+    double Y0 = [basics[@"data"][@"Y0"] doubleValue];
+    double X1p = [basics[@"data"][@"X1p"] doubleValue];
+    double X1m = [basics[@"data"][@"X1m"] doubleValue];
+    double Y1p = [basics[@"data"][@"Y1p"] doubleValue];
+    double Y1m = [basics[@"data"][@"Y1m"] doubleValue];
+    double X2p = [basics[@"data"][@"X2p"] doubleValue];
+    double X2m = [basics[@"data"][@"X2m"] doubleValue];
+    double Y2p = [basics[@"data"][@"Y2p"] doubleValue];
+    double Y2m = [basics[@"data"][@"Y2m"] doubleValue];
+    double X3p = [basics[@"data"][@"X3p"] doubleValue];
+    double X3m = [basics[@"data"][@"X3m"] doubleValue];
+    double Y3p = [basics[@"data"][@"Y3p"] doubleValue];
+    double Y3m = [basics[@"data"][@"Y3m"] doubleValue];
+    double X4p = [basics[@"data"][@"X4p"] doubleValue];
+    double X4m = [basics[@"data"][@"X4m"] doubleValue];
+    double Y4p = [basics[@"data"][@"Y4p"] doubleValue];
+    double Y4m = [basics[@"data"][@"Y4m"] doubleValue];
     
     
     CBManagerActivityZone activityZone = CBManagerActivityZone_NormalActivity;

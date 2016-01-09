@@ -800,15 +800,15 @@
         }
         if([dict[@"color"] isEqualToString:@"yellow"])
         {
-            _greenView.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:239.0/255.0 blue:54.0/255.0 alpha:1.0];
+            _yellowView.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:239.0/255.0 blue:54.0/255.0 alpha:1.0];
         }
         if([dict[@"color"] isEqualToString:@"red"])
         {
-            _greenView.backgroundColor = [UIColor redColor];
+            _red1View.backgroundColor = [UIColor redColor];
         }
         if([dict[@"color"] isEqualToString:@"orange"])
         {
-            _greenView.backgroundColor = [UIColor orangeColor];
+            _red2View.backgroundColor = [UIColor orangeColor];
         }
 
     }
