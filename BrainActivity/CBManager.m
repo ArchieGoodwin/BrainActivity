@@ -416,7 +416,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
             //double channel3 = d* ([self randomFloatBetween:0.7 and:1.5]);
             //double channel4 = d* ([self randomFloatBetween:0.7 and:1.5]);
             
-            /*if(!_hasStartedIndicators)
+            if(!_hasStartedIndicators)
             {
                 d = 1000 * (50 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 20 * sin(2*M_PI*18*_counter/250));
                 
@@ -435,7 +435,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 
                 //d = 1000 * (90 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 16 * sin(2*M_PI*18*_counter/250)); //orange
 
-            }*/
+            }
             double channel1 = d;
             double channel2 = d;
             double channel3 = d;
@@ -464,7 +464,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
             //double channel3_ = d* ([self randomFloatBetween:0.7 and:1.7]);
             //double channel4_ = d* ([self randomFloatBetween:0.7 and:1.7]);
             
-            /*if(!_hasStartedIndicators)
+            if(!_hasStartedIndicators)
             {
                 d = 1000*(50 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 20 * sin(2*M_PI*18*_counter/250));
                 
@@ -484,7 +484,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
                 //d = 1000 * (90 * (sin(2*M_PI*5*_counter/250) + sin(2*M_PI*10*_counter/250)) + 16 * sin(2*M_PI*18*_counter/250)); //orange
 
 
-            }*/
+            }
             double channel1_ = d;
             double channel2_ = d;
             double channel3_ = d;
@@ -636,7 +636,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
             
             _counter++;
             
-            if(_counter % 250 == 0)
+            if(_counter % 500 == 0)
             {
                 
                 NSDictionary *ret = [self fillFFTData:NSMakeRange(_counter - 250, 256)];
@@ -646,7 +646,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
                 }
                 
             }
-            if(_counter % (INDICATOR_PERIOD * 250) == 0 && _fftCounter > 0)
+            if(_counter % (INDICATOR_PERIOD * 500) == 0 && _fftCounter > 0)
             {
                 if(_hasStartedIndicators)
                 {
@@ -897,12 +897,15 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     
     double max = subArray[0];
     for (int i = 1; i < range.length; i++) {
-        if(max<subArray[i])
+
+        max= max + subArray[i];
+        /*if(max<subArray[i])
         {
             max=subArray[i];
-        }
+        }*/
     }
-    return max;
+    
+    return max / range.length;
 }
 
 
@@ -953,7 +956,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 {
     //NSLog(@"%li", _counter / 250);
     //NSLog(@"%li", BASIC_VALUES_PERIOD);
-    if(BASIC_VALUES_PERIOD < (_counter / 250))
+    if(BASIC_VALUES_PERIOD < (_counter / (timer == nil ? 250 : 500)))
     {
         indicatorTimer = [NSTimer scheduledTimerWithTimeInterval:BASIC_VALUES_PERIOD target:self selector:@selector(startIndicatorsProcessing) userInfo:nil repeats:NO];
         [indicatorTimer fire];
@@ -965,13 +968,10 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 -(void)startIndicatorsProcessing
 {
     NSArray *averages1 = [self defineBasicAverageValuesForRange:BASIC_VALUES_PERIOD channel:1];
-    NSArray *averages2 = [self defineBasicAverageValuesForRange:BASIC_VALUES_PERIOD channel:2];
-    NSArray *averages3 = [self defineBasicAverageValuesForRange:BASIC_VALUES_PERIOD channel:3];
-    NSArray *averages4 = [self defineBasicAverageValuesForRange:BASIC_VALUES_PERIOD channel:4];
+    
 
-    averageBasicTeta = @[averages1[0], averages2[0], averages3[0], averages4[0]];
-    averageBasicAlpha = @[averages1[1], averages2[1], averages3[1], averages4[1]];
-    averageBasicBeta = @[averages1[2], averages2[2], averages3[2], averages4[2]];
+    averageBasicAlpha = @[averages1[0]];
+    averageBasicBeta = @[averages1[1]];
     
     [self fillStartXYValues];
     
@@ -982,7 +982,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 {
     if(_fftData.count > range)
     {
-        NSMutableArray *teta = [NSMutableArray new];
+        /*NSMutableArray *teta = [NSMutableArray new];
         for(NSInteger i = (_fftData.count - range); i < _fftData.count; i++)
         {
             NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
@@ -992,36 +992,60 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         }
         NSExpression *expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:teta]]];
         double averageTeta = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        */
         
-        
-        NSMutableArray *alpha = [NSMutableArray new];
+        NSMutableArray *alpha2 = [NSMutableArray new];
         for(NSInteger i = (_fftData.count - range); i < _fftData.count; i++)
         {
-            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+            NSString *key = [NSString stringWithFormat:@"ch%i", 2];
             NSDictionary *dict = _fftData[i][key];
-            [alpha addObject:@([dict[@"data2_"] doubleValue])];
+            [alpha2 addObject:@([dict[@"data2_"] doubleValue])];
             //NSLog(@"alpha %@", dict[@"data2"]);
 
         }
-        expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:alpha]]];
-        double averageAlpha = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        NSExpression *expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:alpha2]]];
+        double averageAlpha2 = [[expression expressionValueWithObject:nil context:nil] doubleValue];
         
-        
-        NSMutableArray *beta = [NSMutableArray new];
+        NSMutableArray *alpha4 = [NSMutableArray new];
         for(NSInteger i = (_fftData.count - range); i < _fftData.count; i++)
         {
-            NSString *key = [NSString stringWithFormat:@"ch%li", ((long)channel)];
+            NSString *key = [NSString stringWithFormat:@"ch%i", 4];
             NSDictionary *dict = _fftData[i][key];
-            [beta addObject:@([dict[@"data3_"] doubleValue])];
+            [alpha4 addObject:@([dict[@"data2_"] doubleValue])];
+            //NSLog(@"alpha %@", dict[@"data2"]);
+            
+        }
+        expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:alpha4]]];
+        double averageAlpha4 = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        
+        
+        NSMutableArray *beta1 = [NSMutableArray new];
+        for(NSInteger i = (_fftData.count - range); i < _fftData.count; i++)
+        {
+            NSString *key = [NSString stringWithFormat:@"ch%i", 1];
+            NSDictionary *dict = _fftData[i][key];
+            [beta1 addObject:@([dict[@"data3_"] doubleValue])];
             //NSLog(@"beta %@", dict[@"data3"]);
 
         }
-        expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:beta]]];
-        double averageBeta = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:beta1]]];
+        double averageBeta1 = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        
+        NSMutableArray *beta3 = [NSMutableArray new];
+        for(NSInteger i = (_fftData.count - range); i < _fftData.count; i++)
+        {
+            NSString *key = [NSString stringWithFormat:@"ch%i", 3];
+            NSDictionary *dict = _fftData[i][key];
+            [beta3 addObject:@([dict[@"data3_"] doubleValue])];
+            //NSLog(@"beta %@", dict[@"data3"]);
+            
+        }
+        expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:beta3]]];
+        double averageBeta3 = [[expression expressionValueWithObject:nil context:nil] doubleValue];
         
         
         
-        return @[@(averageTeta), @(averageAlpha), @(averageBeta)];
+        return @[@((averageAlpha2 + averageAlpha4)/2), @((averageBeta1 + averageBeta3)/2)];
     }
     return nil;
 }
@@ -1030,41 +1054,31 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 {
    
     NSArray *averages1 = [self defineBasicAverageValuesForRange:INDICATOR_PERIOD channel:1];
-    NSArray *averages2 = [self defineBasicAverageValuesForRange:INDICATOR_PERIOD channel:2];
-    NSArray *averages3 = [self defineBasicAverageValuesForRange:INDICATOR_PERIOD channel:3];
-    NSArray *averages4 = [self defineBasicAverageValuesForRange:INDICATOR_PERIOD channel:4];
     NSDictionary *dict = nil;
     
     NSMutableArray *states = [NSMutableArray new];
     
     [states addObject:@{@"ch1" : [self processXYValues:averages1 forChannel:1]}];
-    [states addObject:@{@"ch2" : [self processXYValues:averages2 forChannel:2]}];
-    [states addObject:@{@"ch3" : [self processXYValues:averages3 forChannel:3]}];
-    [states addObject:@{@"ch4" : [self processXYValues:averages4 forChannel:4]}];
     
     
     NSMutableArray *colors = [NSMutableArray new];
     
     [colors addObject:@{@"ch1" : [self processColorIndicators:averages1 forChannel:1]}];
-    [colors addObject:@{@"ch2" : [self processColorIndicators:averages2 forChannel:2]}];
-    [colors addObject:@{@"ch3" : [self processColorIndicators:averages3 forChannel:3]}];
-    [colors addObject:@{@"ch4" : [self processColorIndicators:averages4 forChannel:4]}];
     
     dict = @{@"activities" : states, @"colors" : colors};
 
-    
     return dict;
 }
 
 -(NSDictionary *)processColorIndicators:(NSArray *)averages forChannel:(NSInteger)channel
 {
-    double X = [averages[0] doubleValue] + [averages[1] doubleValue];
-    double Y = [averages[2] doubleValue];
+    double X = [averages[0] doubleValue];
+    double Y = [averages[1] doubleValue];
 
     NSDictionary *basics = basicValues[channel - 1];
     double X0 = [basics[@"data"][@"X0"] doubleValue];
     double Y0 = [basics[@"data"][@"Y0"] doubleValue];
-    NSLog(@"X = %f  Y = %f, X0 = %f  Y0 = %f", X, Y, X0, Y0);
+    //NSLog(@"X = %f  Y = %f, X0 = %f  Y0 = %f", X, Y, X0, Y0);
     NSMutableArray *colors = [NSMutableArray new];
     
     if((0.7 * X0 <= X && X <= 1.3 * X0 && 0.9 * Y0 <= Y && Y <= 1.1 * Y0) || (1.3 * X0 < X && X <= 1.6 * X0 && Y0 < Y && Y < 1.2 * Y0) || ( X > 1.6 * X0 && Y > 1.25 * Y0))
@@ -1094,8 +1108,8 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 -(NSDictionary *)processXYValues:(NSArray *)averages forChannel:(NSInteger)channel
 {
     
-    double X = [averages[0] doubleValue] + [averages[1] doubleValue];
-    double Y = [averages[2] doubleValue];
+    double X = [averages[0] doubleValue];
+    double Y = [averages[1] doubleValue];
     
     NSDictionary *basics = basicValues[channel - 1];
     double X0 = [basics[@"data"][@"X0"] doubleValue];
@@ -1226,9 +1240,9 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 
 -(void)fillStartXYValues
 {
-    for(int i = 0; i < 4; i++)
+    for(int i = 0; i < 1; i++)
     {
-        double X0 = [averageBasicTeta[i] doubleValue] + [averageBasicAlpha[i] doubleValue];
+        double X0 = [averageBasicAlpha[i] doubleValue];
         double Y0 = [averageBasicBeta[i] doubleValue];
         double X1p = 1.3 * X0;
         double X1m = 0.65 * (X0 - 0.1 * X0);
