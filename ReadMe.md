@@ -1,5 +1,5 @@
 # CBManager Class Reference 
-###### (version 1.0 - 08/25/15)
+###### (SDK version 2.0 - 01/16/15)
 
 ## Overview
 The CBManager class handles connections and data transfer between Braniac hardware accessory and iOS device (iPhone 4s and higher).
@@ -44,7 +44,7 @@ Next you should implement required CB_dataUpdatedWithDictionary method to receiv
        
 		}
 
-Also you may implement two optional methods (to receive FFT data and status messages from device) 
+Also you may implement two optional methods (to receive FFT data, indicators state and status messages from device) 
 
 		-(void)CB_fftDataUpdatedWithDictionary:(NSDictionary *)data
 		{
@@ -52,6 +52,10 @@ Also you may implement two optional methods (to receive FFT data and status mess
     
 		}
 
+		-(void)CB_indicatorsStateWithDictionary:(NSDictionary *)data
+		{		
+    		//process indicators data
+		}
 
 		-(void)CB_changedStatus:(CBManagerMessage)status message:(NSString *)statusMessage
 		{
@@ -67,16 +71,11 @@ Also you may implement two optional methods (to receive FFT data and status mess
     CBManager *cbManager = [[CBManager alloc] init];
     cbManager.delegate = self;
 
-#### Setting Up CBManager
-* yellowFlagLow (float)
-* yellowFlagHigh (float)
-* red1Flag (float)
-* red2Flag (float)
-
-#### Starting and Stopping Connection and Data Stream
+#### Starting and Stopping Connection and Data Streams
 * start
 * stop
 * startTestSequenceWithDominantFrequence:
+* startProcessAverageValues
 
 #### Getting Information about CBManager state
 * hasStarted *property*
@@ -84,12 +83,8 @@ Also you may implement two optional methods (to receive FFT data and status mess
 * raw values (NSMutableArray *)
 * fftData (NSMutableArray *)
 * batteryLevel (NSInteger)
-
-#### Receiving information about examinee
-* processGreenForChannel
-* processYellowForChannel
-* processRed1ForChannel
-* processRed2ForChannel 
+* hasStartedIndicators *property*
+* hasStartedProcessBasicValues *property*
 
 #### Accessing the Delegate
 * delegate *property*
@@ -101,6 +96,18 @@ Also you may implement two optional methods (to receive FFT data and status mess
 A BOOL value indicating if the current CBManager instance object working: connected to hardware Braniac accessory and receiving data. Read-only
 
 		@property (nonatomic, assign, readonly) BOOL hasStarted;
+
+**hasStartedProcessBasicValues**
+
+A BOOL value indicating if the current CBManager instance object started to measure average values for current examinee indicators state. This state is needed before starting receiving real indicators state. Read-only
+
+		@property (nonatomic, assign, readonly) BOOL hasStartedProcessBasicValues;
+
+**hasStartedIndicators**
+
+A BOOL value indicating if the current CBManager instance object started to measure indicators values for current examinee brain state. This property becomes true after some time (1 min) after starting measuring average basic values. When this property becomes true then delegate CB_indicatorsStateWithDictionary starts firing. Read-only
+
+		@property (nonatomic, assign, readonly) BOOL hasStartedIndicators;
 
 **rawdata**
 
@@ -132,29 +139,6 @@ The object that acts as the delegate (CBManagerDelegate) of the accessory. All d
 
 		@property (nonatomic,strong) id <CBManagerDelegate> delegate;
 
-**yellowFlagLow**
-
-Bool property used to set the low limit of dominant frequency signal changing to detect relaxation of brain activity. The default value is 0.2
-
-		@property (nonatomic, assign) double yellowFlagLow;
-
-**yellowFlagHigh**
-
-Bool property used to set the high limit of dominant frequency signal changing to detect relaxation of brain activity. The default value is 0.3
-
-		@property (nonatomic, assign) double yellowFlagHigh;
-
-**red1Flag**
-
-Bool property used to set the minimum limit of dominant frequency signal changing to detect overexcitement of brain activity. The default value is 0.2
-
-		@property (nonatomic, assign) double red1Flag;
-
-**red2Flag**
-
-Bool property used to set the minimum limit of dominant frequency signal changing to detect damping of brain activity. The default value is 0.3
-
-		@property (nonatomic, assign) double red2Flag;
 
 ## Initialisation and Creating CBManager object
 
@@ -183,52 +167,18 @@ Starts sending test data values via delegate methods (without using hardware acc
 
 		-(void)startTestSequenceWithDominantFrequence:(float)fréquence;
 
-## Receiving periodical information about examinee 
+**startProcessAverageValues:**
 
-**processGreenForChannel**
+Starts to measure basic average values needed to set start level before measuring brain activity and show state indicator. After 1 min after firing this method the delegate CB_indicatorsStateWithDictionary becomes firing (each 10 sec). 
 
-Returns flag which define the state of examined man detecting if the state of brain activity is full and active. Defined as: When closing the eyes or with simple contemplation of neutral images dominant frequency in the range of alpha (7-13 Hz) has no oscillations more than 20% for 3 minutes during the registration process. Method returns flag for such activity for last 5 sec (so app should call this method each 5 sec to get trend activity)
+		-(void)startProcessAverageValues;
 
-		-(BOOL)processGreenForChannel:(NSInteger)channel;
-
-*Parameter*
-
-* **channel** - Number for processing channel (1-4)
-
-**processYellowForChannel**
-
-Returns flag which define the state of examined man detecting if the state of brain activity is Relaxation brain activity (EEG spectrum for simply “nice” relaxation, during which the person can not adequately drive or write software). Defined as: the dominant frequency in the range of alpha (7-13 Hz) increases in amplitude (power spectrum) on greater than 20% but less than 30% within 3 minutes. Method returns flag for such activity for last 5 sec (so app should call this method each 5 sec to get trend activity)
-
-		-(BOOL)processYellowForChannel:(NSInteger)channel;
-
-*Parameter*
-
-* **channel** - Number for processing channel (1-4)
-
-**processRed1ForChannel**
-
-Returns flag which define the state of examined man detecting if the state of brain activity is Excessive stimulation of neurons and therefore the beginning of inappropriate, excessive actions. Defined as: the dominant frequency (range) of alpha (7-13 Hz) is reduced in amplitude (power spectrum) on greater than 20% for 3 minutes. Method returns flag for such activity for last 5 sec (so app should call this method each 5 sec to get trend activity)
-
-		-(BOOL)processRed1ForChannel:(NSInteger)channel;
-
-*Parameter*
-
-* **channel** - Number for processing channel (1-4)
-
-**processRed2ForChannel**
-
-Returns flag which define the state of examined man detecting if the state of brain activity is in super relaxation. Defined as: the dominant frequency (range) of alpha (7-13 Hz) is increasing in amplitude (power spectrum) on greater than 30% for 3 minutes. Method returns flag for such activity for last 5 sec (so app should call this method each 5 sec to get trend activity)
-
-		-(BOOL)processRed2ForChannel:(NSInteger)channel;
-
-*Parameter*
-
-* **channel** - Number for processing channel (1-4)
 
 # CBManagerDelegate Protocol Reference
 ## Overview
 
 The CBManagerDelegate protocol defines the methods for handling accessory data flow and status messages dispatched from CBManager object.
+
 ## Tasks
 
 **CB_dataUpdatedWithDictionary:**
@@ -289,6 +239,36 @@ Optional method returning FFT data processed each 1 sec (so for 250 data packets
 
 * *data3* - dominant frequency value for current time range and frequencies range 14-24 Hz - *double*
 
+**CB_indicatorsStateWithDictionary**
+
+Optional method returning indicators state for examinee (each 10 sec). Each indicators state dictionary contains values for colour indicators and activity zone for current brain state.
+
+		-(void)CB_indicatorsStateWithDictionary:(NSDictionary *)data;
+
+*Parameters*
+
+* **data** - NSDictionary objects with returned data values with NSStrings as keys. See below the contents of data structure.
+
+*Description*
+
+* *activities* - contains dictionary with two values: activity zone indicator and level percent of current activity - *NSDictionary*
+
+*Activities dictionary structure*
+
+* *zone* - activity zone indicator of type CBManagerActivityZone (possible values see below) - *int*
+
+* *percent* - percent level for current activity (possible values 0.25, 0.5, 0.75, 1) - *float*
+
+
+* *colors* - contains array colour values dictionaries for each channel - *NSArray*
+
+*Colours dictionary structure*
+
+* *zone* - activity zone indicator of type CBManagerActivityZone (possible values see below) - *int*
+
+* *percent* - percent level for current activity (possible values 0.25, 0.5, 0.75, 1) - *float*
+
+
 **CB_changedStatus**
 
 Optional method returning status messages from CBManager object instance alongside with status code (see CBManagerMessage enum for possible values)
@@ -319,6 +299,15 @@ Optional method returning status messages from CBManager object instance alongsi
     CBManagerMessage_Ready = 13,
     CBManagerMessage_UnknownError = 14,
     CBManagerMessage_PeripheralDisconnected = 15,
+
+#CBManagerActivityZone enum
+
+    CBManagerActivityZone_Relaxation = 0,
+    CBManagerActivityZone_HighRelaxation = 1,
+    CBManagerActivityZone_Dream = 2,
+    CBManagerActivityZone_NormalActivity = 3,
+    CBManagerActivityZone_Agitation = 4,
+    CBManagerActivityZone_HighAgitation = 5
 
 ## Test procedure for Acceptance
 

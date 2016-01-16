@@ -613,24 +613,10 @@
     
     NSDictionary *data = notification.userInfo;
 
-    NSArray *activities = data[@"activities"];
+    //NSArray *activities = data[@"activities"];
     
-    NSDictionary *channel = activities[0][@"ch1"];
-    if(currentChannel == 2)
-    {
-        channel = activities[1][@"ch2"];
-
-    }
-    if(currentChannel == 3)
-    {
-        channel = activities[2][@"ch3"];
-
-    }
-    if(currentChannel == 4)
-    {
-        channel = activities[3][@"ch4"];
-
-    }
+    NSDictionary *channel =  data[@"activities"];
+    
 
     for(UIView *v in _leftView.subviews)
     {
@@ -771,20 +757,20 @@
     
     NSArray *colors = data[@"colors"];
     
-    channel = colors[0][@"ch1"];
+    NSArray *ch = colors[0][@"ch1"];
     if(currentChannel == 2)
     {
-        channel = colors[1][@"ch2"];
+        ch = colors[1][@"ch2"];
         
     }
     if(currentChannel == 3)
     {
-        channel = colors[2][@"ch3"];
+        ch = colors[2][@"ch3"];
         
     }
     if(currentChannel == 4)
     {
-        channel = colors[3][@"ch4"];
+        ch = colors[3][@"ch4"];
         
     }
 
@@ -792,7 +778,7 @@
     _yellowView.backgroundColor = [UIColor lightGrayColor];
     _red1View.backgroundColor = [UIColor lightGrayColor];
     _red2View.backgroundColor = [UIColor lightGrayColor];
-    for(NSDictionary *dict in channel[@"colors"])
+    for(NSDictionary *dict in ch)
     {
         if([dict[@"color"] isEqualToString:@"green"])
         {
@@ -818,7 +804,10 @@
 
 -(void)fftDataReceived:(NSNotification *)notification
 {
-
+    if(_manager.hasStartedProcessBasicValues)
+    {
+        _btnStartIndicators.enabled = NO;
+    }
 
     NSDictionary *data = notification.userInfo;
     

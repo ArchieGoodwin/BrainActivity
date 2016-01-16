@@ -71,10 +71,6 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         _hasStarted = NO;
         lastGreenValue = 0;
         lastGreenAverage = 0.0;
-        _yellowFlagLow = 0.2;
-        _yellowFlagHigh = 0.3;
-        _red1Flag = 0.2;
-        _red2Flag = 0.3;
         _hasStartedIndicators = NO;
         _hasStartedProcessBasicValues = NO;
         basicValues = [NSMutableArray new];
@@ -87,11 +83,6 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 //start connect and proceccing data from device
 -(void)start
 {
-    yellowDiffLow = _yellowFlagLow / (timeSpan / step);
-    yellowDiffHigh = _yellowFlagHigh / (timeSpan / step);
-    red1DiffHigh = _red1Flag / (timeSpan / step);
-    red2DiffHigh = _red2Flag / (timeSpan / step);
-
     
     _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     _rawdata = [[NSMutableData alloc] init];
@@ -568,7 +559,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
                     }
                 }
                 
-                if(_fftCounter % INDICATOR_PERIOD == 0 && _fftCounter > 0)
+                if((_counter % (INDICATOR_PERIOD * 250)) == 0 && _fftCounter > 0)
                 {
                     if(_hasStartedIndicators)
                     {
@@ -650,7 +641,6 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
             {
                 if(_hasStartedIndicators)
                 {
-                    NSLog(@"%li", _fftCounter);
 
                     NSDictionary *ret = [self indicatorsState];
                     if([_delegate respondsToSelector:@selector(CB_indicatorsStateWithDictionary:)])
@@ -1056,21 +1046,21 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     NSArray *averages1 = [self defineBasicAverageValuesForRange:INDICATOR_PERIOD channel:1];
     NSDictionary *dict = nil;
     
-    NSMutableArray *states = [NSMutableArray new];
+    //NSMutableArray *states = [NSMutableArray new];
     
-    [states addObject:@{@"ch1" : [self processXYValues:averages1 forChannel:1]}];
+    //[states addObject:@{@"ch1" : [self processXYValues:averages1 forChannel:1]}];
     
     
     NSMutableArray *colors = [NSMutableArray new];
     
     [colors addObject:@{@"ch1" : [self processColorIndicators:averages1 forChannel:1]}];
     
-    dict = @{@"activities" : states, @"colors" : colors};
+    dict = @{@"activities" : [self processXYValues:averages1 forChannel:1], @"colors" : colors};
 
     return dict;
 }
 
--(NSDictionary *)processColorIndicators:(NSArray *)averages forChannel:(NSInteger)channel
+-(NSMutableArray *)processColorIndicators:(NSArray *)averages forChannel:(NSInteger)channel
 {
     double X = [averages[0] doubleValue];
     double Y = [averages[1] doubleValue];
@@ -1100,8 +1090,8 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         [colors addObject:@{@"color" : @"orange"}];
         
     }
-    
-    return @{@"colors" : colors};
+
+    return colors;
 }
 
 

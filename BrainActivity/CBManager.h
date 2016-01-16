@@ -51,10 +51,6 @@ CBManagerActivityZone;
 @property (strong, nonatomic, readonly) NSMutableArray *fftData;
 
 @property (nonatomic, assign, readonly) BOOL hasStarted;
-@property (nonatomic, assign) double yellowFlagLow;
-@property (nonatomic, assign) double yellowFlagHigh;
-@property (nonatomic, assign) double red1Flag;
-@property (nonatomic, assign) double red2Flag;
 @property (nonatomic, assign, readonly) BOOL hasStartedIndicators;
 @property (nonatomic, assign, readonly) BOOL hasStartedProcessBasicValues;
 
