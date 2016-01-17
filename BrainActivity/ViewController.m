@@ -757,28 +757,11 @@
     
     NSArray *colors = data[@"colors"];
     
-    NSArray *ch = colors[0][@"ch1"];
-    if(currentChannel == 2)
-    {
-        ch = colors[1][@"ch2"];
-        
-    }
-    if(currentChannel == 3)
-    {
-        ch = colors[2][@"ch3"];
-        
-    }
-    if(currentChannel == 4)
-    {
-        ch = colors[3][@"ch4"];
-        
-    }
-
     _greenView.backgroundColor = [UIColor lightGrayColor];
     _yellowView.backgroundColor = [UIColor lightGrayColor];
     _red1View.backgroundColor = [UIColor lightGrayColor];
     _red2View.backgroundColor = [UIColor lightGrayColor];
-    for(NSDictionary *dict in ch)
+    for(NSDictionary *dict in colors)
     {
         if([dict[@"color"] isEqualToString:@"green"])
         {

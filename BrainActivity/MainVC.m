@@ -104,6 +104,11 @@
 - (IBAction)startTest:(id)sender {
     if(cbManager.hasStarted)
     {
+        if(batterTimer)
+        {
+            [batterTimer invalidate];
+            batterTimer = nil;
+        }
         if(vc)
         {
             [vc defaultValues];
@@ -113,7 +118,7 @@
         
         cbManager = [[CBManager alloc] init];
         cbManager.delegate = self;
-        
+        [_btnStart setTitle:@"Connect to device" forState:UIControlStateNormal];
         [_btnTest setTitle:@"Start test" forState:UIControlStateNormal];
         
     }
@@ -121,7 +126,8 @@
     {
         [cbManager startTestSequenceWithDominantFrequence:selectedFreq];
         [_btnTest setTitle:@"Stop" forState:UIControlStateNormal];
-        
+        [_btnStart setTitle:@"Stop" forState:UIControlStateNormal];
+
     }
 }
 
@@ -145,12 +151,14 @@
         cbManager.delegate = self;
         
         [_btnStart setTitle:@"Connect to device" forState:UIControlStateNormal];
-        
+        [_btnTest setTitle:@"Start test" forState:UIControlStateNormal];
+
     }
     else
     {
         [cbManager start];
         [_btnStart setTitle:@"Stop" forState:UIControlStateNormal];
+        
         [self batteryShow];
         batterTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(batteryShow) userInfo:nil repeats:YES];
 

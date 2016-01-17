@@ -241,7 +241,7 @@ Optional method returning FFT data processed each 1 sec (so for 250 data packets
 
 **CB_indicatorsStateWithDictionary**
 
-Optional method returning indicators state for examinee (each 10 sec). Each indicators state dictionary contains values for colour indicators and activity zone for current brain state.
+Optional method returning indicators state for examinee (each 10 sec). Each indicators state dictionary contains values for brain  activity colour indicators and activity zone for current brain state.
 
 		-(void)CB_indicatorsStateWithDictionary:(NSDictionary *)data;
 
@@ -249,24 +249,31 @@ Optional method returning indicators state for examinee (each 10 sec). Each indi
 
 * **data** - NSDictionary objects with returned data values with NSStrings as keys. See below the contents of data structure.
 
-*Description*
+*Description of returned indicators data*
 
-* *activities* - contains dictionary with two values: activity zone indicator and level percent of current activity - *NSDictionary*
+* **activities** - contains dictionary with two values: brain activity zone indicator and level percent of current activity - *NSDictionary*
 
-*Activities dictionary structure*
-
-* *zone* - activity zone indicator of type CBManagerActivityZone (possible values see below) - *int*
-
-* *percent* - percent level for current activity (possible values 0.25, 0.5, 0.75, 1) - *float*
-
-
-* *colors* - contains array colour values dictionaries for each channel - *NSArray*
-
-*Colours dictionary structure*
+Activities dictionary structure
 
 * *zone* - activity zone indicator of type CBManagerActivityZone (possible values see below) - *int*
 
 * *percent* - percent level for current activity (possible values 0.25, 0.5, 0.75, 1) - *float*
+
+*#CBManagerActivityZone enum*
+
+    	CBManagerActivityZone_Relaxation = 0,
+    	CBManagerActivityZone_HighRelaxation = 1,
+    	CBManagerActivityZone_Dream = 2,
+    	CBManagerActivityZone_NormalActivity = 3,
+    	CBManagerActivityZone_Agitation = 4,
+    	CBManagerActivityZone_HighAgitation = 5
+
+* **colors** - contains array with colour values for one of the 4 colour indicators (if brain signal fits in defined range) - *NSArray*
+
+Colours dictionary structure
+
+* *color* - contains one string value with one of 4 possible state: “green”, “yellow”, “red”, “orange” - NSString
+
 
 
 **CB_changedStatus**
@@ -281,33 +288,25 @@ Optional method returning status messages from CBManager object instance alongsi
 * **status** - CBManagerMessage NSInteger code describing the current status of CBManager object instance.
 
 
-#CBManagerMessage enum
+*#CBManagerMessage enum*
 
-    CBManagerMessage_ScanningStarted = 0,
-    CBManagerMessage_ScanningStopped = 1,
-    CBManagerMessage_ConnectingToPeripheral = 2,
-    CBManagerMessage_ConnectToPeripheralFailed = 3,
-    CBManagerMessage_ConnectToPeripheralSuccessful = 4,
-    CBManagerMessage_ConnectingToService = 5,
-    CBManagerMessage_ConnectToServiceFailed = 6,
-    CBManagerMessage_ConnectToServiceSuccessful = 7,
-    CBManagerMessage_DataTransferStarted = 8,
-    CBManagerMessage_DataTransferAborted = 9,
-    CBManagerMessage_DataTransferError = 10,
-    CBManagerMessage_CharacteristicDiscovered = 11,
-    CBManagerMessage_CharacteristicDiscoveringFailed = 12,
-    CBManagerMessage_Ready = 13,
-    CBManagerMessage_UnknownError = 14,
-    CBManagerMessage_PeripheralDisconnected = 15,
+    	CBManagerMessage_ScanningStarted = 0,
+    	CBManagerMessage_ScanningStopped = 1,
+    	CBManagerMessage_ConnectingToPeripheral = 2,
+    	CBManagerMessage_ConnectToPeripheralFailed = 3,
+    	CBManagerMessage_ConnectToPeripheralSuccessful = 4,
+    	CBManagerMessage_ConnectingToService = 5,
+    	CBManagerMessage_ConnectToServiceFailed = 6,
+    	CBManagerMessage_ConnectToServiceSuccessful = 7,
+    	CBManagerMessage_DataTransferStarted = 8,
+    	CBManagerMessage_DataTransferAborted = 9,
+    	CBManagerMessage_DataTransferError = 10,
+    	CBManagerMessage_CharacteristicDiscovered = 11,
+    	CBManagerMessage_CharacteristicDiscoveringFailed = 12,
+    	CBManagerMessage_Ready = 13,
+    	CBManagerMessage_UnknownError = 14,
+    	CBManagerMessage_PeripheralDisconnected = 15,
 
-#CBManagerActivityZone enum
-
-    CBManagerActivityZone_Relaxation = 0,
-    CBManagerActivityZone_HighRelaxation = 1,
-    CBManagerActivityZone_Dream = 2,
-    CBManagerActivityZone_NormalActivity = 3,
-    CBManagerActivityZone_Agitation = 4,
-    CBManagerActivityZone_HighAgitation = 5
 
 ## Test procedure for Acceptance
 

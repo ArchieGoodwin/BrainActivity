@@ -696,6 +696,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     _rawvalues = [NSMutableArray new];
     _fftData = [NSMutableArray new];
     _counter = 0;
+    _fftCounter = 0;
     
     if( _discoveredPeripheral && currentCharacteristic)
     {
@@ -1046,16 +1047,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     NSArray *averages1 = [self defineBasicAverageValuesForRange:INDICATOR_PERIOD channel:1];
     NSDictionary *dict = nil;
     
-    //NSMutableArray *states = [NSMutableArray new];
-    
-    //[states addObject:@{@"ch1" : [self processXYValues:averages1 forChannel:1]}];
-    
-    
-    NSMutableArray *colors = [NSMutableArray new];
-    
-    [colors addObject:@{@"ch1" : [self processColorIndicators:averages1 forChannel:1]}];
-    
-    dict = @{@"activities" : [self processXYValues:averages1 forChannel:1], @"colors" : colors};
+    dict = @{@"activities" : [self processXYValues:averages1 forChannel:1], @"colors" : [self processColorIndicators:averages1 forChannel:1]};
 
     return dict;
 }
@@ -1071,21 +1063,21 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     //NSLog(@"X = %f  Y = %f, X0 = %f  Y0 = %f", X, Y, X0, Y0);
     NSMutableArray *colors = [NSMutableArray new];
     
-    if((0.7 * X0 <= X && X <= 1.3 * X0 && 0.9 * Y0 <= Y && Y <= 1.1 * Y0) || (1.3 * X0 < X && X <= 1.6 * X0 && Y0 < Y && Y < 1.2 * Y0) || ( X > 1.6 * X0 && Y > 1.25 * Y0))
+    if((0.7 * X0 <= X && X <= 1.3 * X0 && 0 <= Y && Y <= 1.25 * Y0) || (1.3 * X0 < X && X <= 1.6 * X0 && Y0 <= Y && Y < 1.25 * Y0) || ( X > 1.6 * X0 && Y > Y0) || (0 < X && X <= 0.7 * X0 && Y0 > Y && Y > 0.75 * Y0))
     {
         [colors addObject:@{@"color" : @"green"}];
     }
-    if(((1.3 * X0) < X && X <= (1.6 * X0) && (0.75 * Y0) < Y && Y <= Y0) || ( 0 < X && X <= (0.75 * X0) && 0 < Y && Y < (0.75 * Y0)))
+    if(((1.3 * X0) < X && X <= (1.6 * X0) && 0 < Y && Y <= Y0) || ( 0 < X && X <= (0.7 * X0) && 0 < Y && Y <= (0.75 * Y0)))
     {
         [colors addObject:@{@"color" : @"yellow"}];
 
     }
-    if(0 < X && X <= 0.7 * X0 && Y0 < Y && Y < 1.15 * Y0)
+    if((0 < X && X <= 0.7 * X0 && Y0 < Y) || (1.3 * X0 < X && X <= 1.6 * X0 && Y >= 1.25 * Y0))
     {
         [colors addObject:@{@"color" : @"red"}];
 
     }
-    if(X > 1.6 * X0 && 0.75 * Y0 < Y && Y <= Y0)
+    if(X > 1.6 * X0 && 0.75 * 0 < Y && Y <= Y0)
     {
         [colors addObject:@{@"color" : @"orange"}];
         
