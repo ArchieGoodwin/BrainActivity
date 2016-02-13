@@ -608,11 +608,30 @@
 
 -(void)indiDataReceived:(NSNotification *)notification
 {
-    _btnStartIndicators.enabled = NO;
-    [_btnStartIndicators setBackgroundColor:[UIColor lightGrayColor]];
     
     NSDictionary *data = notification.userInfo;
 
+    if([data[@"activities"] isEqualToString:@"none"])
+    {
+        for(UIView *v in _leftView.subviews)
+        {
+            [v removeFromSuperview];
+        }
+        
+        UILabel *lbl = [[UILabel alloc] initWithFrame:_leftView.bounds];
+        lbl.textAlignment = NSTextAlignmentCenter;
+        lbl.textColor = [UIColor redColor];
+        lbl.font = [ UIFont boldSystemFontOfSize:16];
+        lbl.text = @"There are bad artifacts in signal. Check electrodes contact";
+        lbl.numberOfLines = 0;
+        lbl.lineBreakMode = NSLineBreakByWordWrapping;
+        [_leftView addSubview:lbl];
+        return;
+    }
+    
+    _btnStartIndicators.enabled = NO;
+    [_btnStartIndicators setBackgroundColor:[UIColor lightGrayColor]];
+    
     //NSArray *activities = data[@"activities"];
     
     NSDictionary *channel =  data[@"activities"];
@@ -1082,6 +1101,10 @@
             if([plot.identifier  isEqual: @"Blue Plot"])
             {
                 NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                if([key isEqualToString:@"data"] && dataFFT1[index][key][@"signal"] != nil)
+                {
+                    return 0;
+                }
                 NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT1[index][key] : dataFFT1[index][key][@"data1"];
                 return num;
                 
@@ -1089,6 +1112,10 @@
             if([plot.identifier  isEqual: @"Yellow Plot"])
             {
                 NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                if([key isEqualToString:@"data"] && dataFFT1[index][key][@"signal"] != nil)
+                {
+                    return 0;
+                }
                 NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT1[index][key] : dataFFT1[index][key][@"data2"];
                 return num;
                 
@@ -1096,6 +1123,10 @@
             if([plot.identifier  isEqual: @"Grey Plot"])
             {
                 NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                if([key isEqualToString:@"data"] && dataFFT1[index][key][@"signal"] != nil)
+                {
+                    return 0;
+                }
                 NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT1[index][key] : dataFFT1[index][key][@"data3"];
                 return num;
                 
@@ -1117,6 +1148,10 @@
             if([plot.identifier  isEqual: @"Blue Plot"])
             {
                 NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                if([key isEqualToString:@"data"] && dataFFT1[index][key][@"signal"] != nil)
+                {
+                    return 0;
+                }
                 NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT2[index][key] : dataFFT2[index][key][@"data1"];
                 return num;
                 
@@ -1124,6 +1159,10 @@
             if([plot.identifier  isEqual: @"Yellow Plot"])
             {
                 NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                if([key isEqualToString:@"data"] && dataFFT1[index][key][@"signal"] != nil)
+                {
+                    return 0;
+                }
                 NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT2[index][key] : dataFFT2[index][key][@"data2"];
                 return num;
                 
@@ -1131,6 +1170,10 @@
             if([plot.identifier  isEqual: @"Grey Plot"])
             {
                 NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                if([key isEqualToString:@"data"] && dataFFT1[index][key][@"signal"] != nil)
+                {
+                    return 0;
+                }
                 NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT2[index][key] : dataFFT2[index][key][@"data3"];
                 return num;
                 
@@ -1151,6 +1194,10 @@
             if([plot.identifier  isEqual: @"Blue Plot"])
             {
                 NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                if([key isEqualToString:@"data"] && dataFFT1[index][key][@"signal"] != nil)
+                {
+                    return 0;
+                }
                 NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT3[index][key] : dataFFT3[index][key][@"data1"];
                 return num;
                 
@@ -1158,6 +1205,10 @@
             if([plot.identifier  isEqual: @"Yellow Plot"])
             {
                 NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                if([key isEqualToString:@"data"] && dataFFT1[index][key][@"signal"] != nil)
+                {
+                    return 0;
+                }
                 NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT3[index][key] : dataFFT3[index][key][@"data2"];
                 return num;
                 
@@ -1165,6 +1216,10 @@
             if([plot.identifier  isEqual: @"Grey Plot"])
             {
                 NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                if([key isEqualToString:@"data"] && dataFFT1[index][key][@"signal"] != nil)
+                {
+                    return 0;
+                }
                 NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT3[index][key] : dataFFT3[index][key][@"data3"];
                 return num;
                 
@@ -1185,6 +1240,10 @@
             if([plot.identifier  isEqual: @"Blue Plot"])
             {
                 NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                if([key isEqualToString:@"data"] && dataFFT1[index][key][@"signal"] != nil)
+                {
+                    return 0;
+                }
                 NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT4[index][key] : dataFFT4[index][key][@"data1"];
                 return num;
                 
@@ -1192,6 +1251,10 @@
             if([plot.identifier  isEqual: @"Yellow Plot"])
             {
                 NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                if([key isEqualToString:@"data"] && dataFFT1[index][key][@"signal"] != nil)
+                {
+                    return 0;
+                }
                 NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT4[index][key] : dataFFT4[index][key][@"data2"];
                 return num;
                 
@@ -1199,6 +1262,10 @@
             if([plot.identifier  isEqual: @"Grey Plot"])
             {
                 NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"index" : @"data");
+                if([key isEqualToString:@"data"] && dataFFT1[index][key][@"signal"] != nil)
+                {
+                    return 0;
+                }
                 NSNumber *num = fieldEnum == CPTScatterPlotFieldX ? dataFFT4[index][key] : dataFFT4[index][key][@"data3"];
                 return num;
                 

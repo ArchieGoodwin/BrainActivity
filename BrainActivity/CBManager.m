@@ -16,6 +16,9 @@
 const double VRef = 2.4 / 6.0 / 32.0;
 const double K = 1000000000 * VRef / 0x7FFF;
 
+const double GROUP_2_LOW_LEVEL = 22000;
+const double GROUP_2_HIGH_LEVEL = 6000;
+
 const double timeSpan = 180.0;
 const NSInteger step = 10;
 
@@ -744,7 +747,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 #pragma mark -
 #pragma mark FFT
 
--(NSDictionary *)fft:(double *)inp
+-(NSDictionary *)fft:(double *)inp channel:(NSInteger)channel
 {
     //[self testFFT];
     
@@ -798,8 +801,9 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     double val3_ = [self findMaxValue:output range:NSMakeRange(14, 11)];
     //printf("max in 14-18: %8g  %f  max index: %d \n", frequences[val3], output[val3], val3);
    
+    BOOL signalClear = [self checkIfSignalIsClear:channel averageLow:val1_/1000.0 averageAlpha:val2_/1000.0 averageHigh:val3_/1000.0];
     
-    return @{@"data1" : [NSNumber numberWithDouble:val1], @"data2" : [NSNumber numberWithDouble:val2], @"data3" : [NSNumber numberWithDouble:val3], @"data1_" : [NSNumber numberWithDouble:val1_], @"data2_" : [NSNumber numberWithDouble:val2_], @"data3_" : [NSNumber numberWithDouble:val3_]};
+    return signalClear ? @{@"data1" : [NSNumber numberWithDouble:val1], @"data2" : [NSNumber numberWithDouble:val2], @"data3" : [NSNumber numberWithDouble:val3], @"data1_" : [NSNumber numberWithDouble:val1_], @"data2_" : [NSNumber numberWithDouble:val2_], @"data3_" : [NSNumber numberWithDouble:val3_]} : @{@"signal" : @"low quality"};
     
     
 }
@@ -836,10 +840,10 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         
     }
     
-    NSDictionary *fftData1 = [self fft:farray1];
-    NSDictionary *fftData2 = [self fft:farray2];
-    NSDictionary *fftData3 = [self fft:farray3];
-    NSDictionary *fftData4 = [self fft:farray4];
+    NSDictionary *fftData1 = [self fft:farray1 channel:1];
+    NSDictionary *fftData2 = [self fft:farray2 channel:2];
+    NSDictionary *fftData3 = [self fft:farray3 channel:3];
+    NSDictionary *fftData4 = [self fft:farray4 channel:4];
 
     
     NSDictionary *ret = @{@"counter" : [NSNumber numberWithInteger:_fftCounter], @"ch1" : fftData1, @"ch2" : fftData2, @"ch3" : fftData3, @"ch4" : fftData4, @"timeframe" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000000]};
@@ -899,6 +903,15 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     return max / range.length;
 }
 
+-(BOOL)checkIfSignalIsClear:(NSInteger)channel averageLow:(double)averageLow  averageAlpha:(double)averageAlpha averageHigh:(double)averageHigh
+{
+    double lowLevel = GROUP_2_LOW_LEVEL;
+    double highLevel = GROUP_2_HIGH_LEVEL;
+    return (averageLow < lowLevel) && (averageHigh < highLevel && (averageHigh < averageLow || averageHigh < averageAlpha));
+    
+    
+    return YES;
+}
 
 
 -(double)findMax:array arrayKey:obj {
@@ -960,6 +973,10 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 {
     NSArray *averages1 = [self defineBasicAverageValuesForRange:BASIC_VALUES_PERIOD channel:1];
     
+    if(averages1.count == 0)
+    {
+        return;
+    }
 
     averageBasicAlpha = @[averages1[0]];
     averageBasicBeta = @[averages1[1]];
@@ -990,6 +1007,10 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         {
             NSString *key = [NSString stringWithFormat:@"ch%i", 2];
             NSDictionary *dict = _fftData[i][key];
+            if(dict[@"signal"] != nil)
+            {
+                return @[];
+            }
             [alpha2 addObject:@([dict[@"data2_"] doubleValue])];
             //NSLog(@"alpha %@", dict[@"data2"]);
 
@@ -1002,6 +1023,10 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         {
             NSString *key = [NSString stringWithFormat:@"ch%i", 4];
             NSDictionary *dict = _fftData[i][key];
+            if(dict[@"signal"] != nil)
+            {
+                return @[];
+            }
             [alpha4 addObject:@([dict[@"data2_"] doubleValue])];
             //NSLog(@"alpha %@", dict[@"data2"]);
             
@@ -1015,6 +1040,10 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         {
             NSString *key = [NSString stringWithFormat:@"ch%i", 1];
             NSDictionary *dict = _fftData[i][key];
+            if(dict[@"signal"] != nil)
+            {
+                return @[];
+            }
             [beta1 addObject:@([dict[@"data3_"] doubleValue])];
             //NSLog(@"beta %@", dict[@"data3"]);
 
@@ -1027,6 +1056,10 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         {
             NSString *key = [NSString stringWithFormat:@"ch%i", 3];
             NSDictionary *dict = _fftData[i][key];
+            if(dict[@"signal"] != nil)
+            {
+                return @[];
+            }
             [beta3 addObject:@([dict[@"data3_"] doubleValue])];
             //NSLog(@"beta %@", dict[@"data3"]);
             
@@ -1046,7 +1079,11 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
    
     NSArray *averages1 = [self defineBasicAverageValuesForRange:INDICATOR_PERIOD channel:1];
     NSDictionary *dict = nil;
-    
+    if(averages1.count == 0)
+    {
+        dict = @{@"activities" : @"none", @"colors" : @"none"};
+        return dict;
+    }
     dict = @{@"activities" : [self processXYValues:averages1 forChannel:1], @"colors" : [self processColorIndicators:averages1 forChannel:1]};
 
     return dict;
