@@ -611,23 +611,28 @@
     
     NSDictionary *data = notification.userInfo;
 
-    if([data[@"activities"] isEqualToString:@"none"])
+    if(![data[@"activities"] isKindOfClass:[NSDictionary class]])
     {
-        for(UIView *v in _leftView.subviews)
+        if([data[@"activities"] isEqualToString:@"none"])
         {
-            [v removeFromSuperview];
+            for(UIView *v in _leftView.subviews)
+            {
+                [v removeFromSuperview];
+            }
+            
+            UILabel *lbl = [[UILabel alloc] initWithFrame:_leftView.bounds];
+            lbl.textAlignment = NSTextAlignmentCenter;
+            lbl.textColor = [UIColor redColor];
+            lbl.font = [ UIFont boldSystemFontOfSize:16];
+            lbl.text = @"There are bad artifacts in signal. Check electrodes contact";
+            lbl.numberOfLines = 0;
+            lbl.lineBreakMode = NSLineBreakByWordWrapping;
+            [_leftView addSubview:lbl];
+            return;
         }
-        
-        UILabel *lbl = [[UILabel alloc] initWithFrame:_leftView.bounds];
-        lbl.textAlignment = NSTextAlignmentCenter;
-        lbl.textColor = [UIColor redColor];
-        lbl.font = [ UIFont boldSystemFontOfSize:16];
-        lbl.text = @"There are bad artifacts in signal. Check electrodes contact";
-        lbl.numberOfLines = 0;
-        lbl.lineBreakMode = NSLineBreakByWordWrapping;
-        [_leftView addSubview:lbl];
-        return;
     }
+
+   
     
     _btnStartIndicators.enabled = NO;
     [_btnStartIndicators setBackgroundColor:[UIColor lightGrayColor]];
