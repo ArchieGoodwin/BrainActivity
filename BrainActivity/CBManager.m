@@ -630,7 +630,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
             
             _counter++;
             
-            if(_counter % 500 == 0)
+            if(_counter % 250 == 0)
             {
                 
                 NSDictionary *ret = [self fillFFTData:NSMakeRange(_counter - 250, 256)];
@@ -640,7 +640,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
                 }
                 
             }
-            if(_counter % (INDICATOR_PERIOD * 500) == 0 && _fftCounter > 0)
+            if(_counter % (INDICATOR_PERIOD * 250) == 0 && _fftCounter > 0)
             {
                 if(_hasStartedIndicators)
                 {
@@ -802,7 +802,11 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
     //printf("max in 14-18: %8g  %f  max index: %d \n", frequences[val3], output[val3], val3);
    
     BOOL signalClear = [self checkIfSignalIsClear:channel averageLow:val1_/1000.0 averageAlpha:val2_/1000.0 averageHigh:val3_/1000.0];
-    
+    if(_hasStartedProcessBasicValues && !_hasStartedIndicators)
+    {
+        signalClear = YES;
+    }
+    NSLog(@"%d   %d", _hasStartedProcessBasicValues, _hasStartedIndicators);
     return signalClear ? @{@"data1" : [NSNumber numberWithDouble:val1], @"data2" : [NSNumber numberWithDouble:val2], @"data3" : [NSNumber numberWithDouble:val3], @"data1_" : [NSNumber numberWithDouble:val1_], @"data2_" : [NSNumber numberWithDouble:val2_], @"data3_" : [NSNumber numberWithDouble:val3_]} : @{@"signal" : @"low quality"};
     
     
@@ -960,10 +964,13 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 {
     //NSLog(@"%li", _counter / 250);
     //NSLog(@"%li", BASIC_VALUES_PERIOD);
-    if(BASIC_VALUES_PERIOD < (_counter / (timer == nil ? 250 : 500)))
+    if(BASIC_VALUES_PERIOD < (_counter / (timer == nil ? 250 : 250)))
     {
-        indicatorTimer = [NSTimer scheduledTimerWithTimeInterval:BASIC_VALUES_PERIOD target:self selector:@selector(startIndicatorsProcessing) userInfo:nil repeats:NO];
-        [indicatorTimer fire];
+        
+        [self performSelector:@selector(startIndicatorsProcessing) withObject:nil afterDelay:BASIC_VALUES_PERIOD];
+        
+        //indicatorTimer = [NSTimer scheduledTimerWithTimeInterval:BASIC_VALUES_PERIOD target:self selector:@selector(startIndicatorsProcessing) userInfo:nil repeats:NO];
+        //[indicatorTimer fire];
         _hasStartedProcessBasicValues = YES;
     }
    

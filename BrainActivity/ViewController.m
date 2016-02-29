@@ -152,6 +152,11 @@
         [_manager startProcessAverageValues];
    
     }
+    if([_manager hasStartedProcessBasicValues])
+    {
+        _btnStartIndicators.enabled = NO;
+        [_btnStartIndicators setBackgroundColor:[UIColor lightGrayColor]];
+    }
 }
 
 - (void)viewDidLoad {
@@ -814,6 +819,7 @@
     if(_manager.hasStartedProcessBasicValues)
     {
         _btnStartIndicators.enabled = NO;
+        [_btnStartIndicators setBackgroundColor:[UIColor lightGrayColor]];
     }
 
     NSDictionary *data = notification.userInfo;
