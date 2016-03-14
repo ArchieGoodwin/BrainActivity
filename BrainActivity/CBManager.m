@@ -1008,75 +1008,122 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
         NSExpression *expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:teta]]];
         double averageTeta = [[expression expressionValueWithObject:nil context:nil] doubleValue];
         */
+
         
         NSMutableArray *alpha2 = [NSMutableArray new];
         for(NSInteger i = (_fftData.count - range); i < _fftData.count; i++)
         {
             NSString *key = [NSString stringWithFormat:@"ch%i", 2];
             NSDictionary *dict = _fftData[i][key];
-            if(dict[@"signal"] != nil)
+            if(dict[@"signal"] == nil)
             {
-                return @[];
+                [alpha2 addObject:@([dict[@"data2_"] doubleValue])];
             }
-            [alpha2 addObject:@([dict[@"data2_"] doubleValue])];
+            
             //NSLog(@"alpha %@", dict[@"data2"]);
-
         }
-        NSExpression *expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:alpha2]]];
-        double averageAlpha2 = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        NSExpression *expression = nil;
+        double averageAlpha2 = -1;
+        if(alpha2.count > 0)
+        {
+            expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:alpha2]]];
+            averageAlpha2 = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        }
         
         NSMutableArray *alpha4 = [NSMutableArray new];
         for(NSInteger i = (_fftData.count - range); i < _fftData.count; i++)
         {
             NSString *key = [NSString stringWithFormat:@"ch%i", 4];
             NSDictionary *dict = _fftData[i][key];
-            if(dict[@"signal"] != nil)
+            if(dict[@"signal"] == nil)
             {
-                return @[];
+                [alpha4 addObject:@([dict[@"data2_"] doubleValue])];
             }
-            [alpha4 addObject:@([dict[@"data2_"] doubleValue])];
             //NSLog(@"alpha %@", dict[@"data2"]);
-            
         }
-        expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:alpha4]]];
-        double averageAlpha4 = [[expression expressionValueWithObject:nil context:nil] doubleValue];
-        
+        double averageAlpha4 = -1;
+        if(alpha4.count > 0)
+        {
+            expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:alpha4]]];
+            averageAlpha4 = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        }
+       
         
         NSMutableArray *beta1 = [NSMutableArray new];
         for(NSInteger i = (_fftData.count - range); i < _fftData.count; i++)
         {
             NSString *key = [NSString stringWithFormat:@"ch%i", 1];
             NSDictionary *dict = _fftData[i][key];
-            if(dict[@"signal"] != nil)
+            if(dict[@"signal"] == nil)
             {
-                return @[];
+                [beta1 addObject:@([dict[@"data3_"] doubleValue])];
             }
-            [beta1 addObject:@([dict[@"data3_"] doubleValue])];
             //NSLog(@"beta %@", dict[@"data3"]);
-
         }
-        expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:beta1]]];
-        double averageBeta1 = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        double averageBeta1 = -1;
+        if(beta1.count > 0)
+        {
+            expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:beta1]]];
+            averageBeta1 = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        }
+        
         
         NSMutableArray *beta3 = [NSMutableArray new];
         for(NSInteger i = (_fftData.count - range); i < _fftData.count; i++)
         {
             NSString *key = [NSString stringWithFormat:@"ch%i", 3];
             NSDictionary *dict = _fftData[i][key];
-            if(dict[@"signal"] != nil)
+            if(dict[@"signal"] == nil)
             {
-                return @[];
+                [beta3 addObject:@([dict[@"data3_"] doubleValue])];
             }
-            [beta3 addObject:@([dict[@"data3_"] doubleValue])];
             //NSLog(@"beta %@", dict[@"data3"]);
-            
         }
-        expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:beta3]]];
-        double averageBeta3 = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        double averageBeta3 = -1;
+        if(beta3.count > 0)
+        {
+            expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:beta3]]];
+            averageBeta3 = [[expression expressionValueWithObject:nil context:nil] doubleValue];
+        }
+       
+        double alpharesult = 0;
+        double betaresult = 0;
         
+        if(averageAlpha2 == -1 && averageAlpha4 != -1)
+        {
+            alpharesult = averageAlpha4;
+        }
+        if(averageAlpha2 != -1 && averageAlpha4 == -1)
+        {
+            alpharesult = averageAlpha2;
+        }
+        if(averageAlpha2 != -1 && averageAlpha4 != -1)
+        {
+            alpharesult = (averageAlpha2 + averageAlpha4)/2;
+        }
+        if(averageAlpha2 == -1 && averageAlpha4 == -1)
+        {
+            return @[];
+        }
         
+        if(averageBeta1 == -1 && averageBeta3 != -1)
+        {
+            betaresult = averageBeta3;
+        }
+        if(averageBeta1 != -1 && averageBeta3 == -1)
+        {
+            betaresult = averageBeta1;
+        }
+        if(averageBeta1 != -1 && averageBeta3 != -1)
+        {
+            betaresult = (averageBeta1 + averageBeta3)/2;
+        }
+        if(averageBeta1 == -1 && averageBeta3 == -1)
+        {
+            return @[];
+        }
         
-        return @[@((averageAlpha2 + averageAlpha4)/2), @((averageBeta1 + averageBeta3)/2)];
+        return @[@(alpharesult), @(betaresult)];
     }
     return nil;
 }
