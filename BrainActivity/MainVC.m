@@ -21,14 +21,14 @@
 
 @implementation MainVC
 {
-    CBManager *cbManager;
+    CBBManager *cbManager;
     ViewController *vc;
     float selectedFreq;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    cbManager = [[CBManager alloc] init];
+    cbManager = [[CBBManager alloc] init];
     cbManager.delegate = self;
     
     selectedFreq = 3;
@@ -116,7 +116,7 @@
         
         [cbManager stop];
         
-        cbManager = [[CBManager alloc] init];
+        cbManager = [[CBBManager alloc] init];
         cbManager.delegate = self;
         [_btnStart setTitle:@"Connect to device" forState:UIControlStateNormal];
         [_btnTest setTitle:@"Start test" forState:UIControlStateNormal];
@@ -147,7 +147,7 @@
         
         [cbManager stop];
         
-        cbManager = [[CBManager alloc] init];
+        cbManager = [[CBBManager alloc] init];
         cbManager.delegate = self;
         
         [_btnStart setTitle:@"Connect to device" forState:UIControlStateNormal];

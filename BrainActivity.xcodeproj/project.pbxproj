@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC36D01E1E2DFDED00C59CE2 /* CBBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DC36D01C1E2DFDED00C59CE2 /* CBBManager.m */; };
 		DCA7F4421ADA3F58000E38F5 /* MainVC.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA7F4411ADA3F58000E38F5 /* MainVC.m */; };
 		DCA7F4461ADA9931000E38F5 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA7F4441ADA9931000E38F5 /* Crashlytics.framework */; };
 		DCA7F4471ADA9931000E38F5 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA7F4451ADA9931000E38F5 /* Fabric.framework */; };
@@ -26,7 +27,6 @@
 		DCDE51051A8792B500F54539 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCDE51041A8792B500F54539 /* libc++.dylib */; };
 		DCDE51071A88869B00F54539 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCDE51061A88869B00F54539 /* Accelerate.framework */; };
 		DCE4B12C1AD6999300B3C75E /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE4B12B1AD6999300B3C75E /* CoreBluetooth.framework */; };
-		DCE4B1301AD699A100B3C75E /* CBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE4B12E1AD699A100B3C75E /* CBManager.m */; };
 		F0B19120459A2AED4B111995 /* libPods-BrainActivity.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5233106A17D46225BF50227F /* libPods-BrainActivity.a */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +34,8 @@
 		3533F97766504CF898B7C96D /* Pods-BrainActivity.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrainActivity.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BrainActivity/Pods-BrainActivity.debug.xcconfig"; sourceTree = "<group>"; };
 		5233106A17D46225BF50227F /* libPods-BrainActivity.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrainActivity.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D2E69BE9993C06DFD8C047E /* Pods-BrainActivity.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrainActivity.release.xcconfig"; path = "Pods/Target Support Files/Pods-BrainActivity/Pods-BrainActivity.release.xcconfig"; sourceTree = "<group>"; };
+		DC36D01C1E2DFDED00C59CE2 /* CBBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBBManager.m; sourceTree = "<group>"; };
+		DC36D01D1E2DFDED00C59CE2 /* CBBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBBManager.h; sourceTree = "<group>"; };
 		DCA7F4401ADA3F58000E38F5 /* MainVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainVC.h; sourceTree = "<group>"; };
 		DCA7F4411ADA3F58000E38F5 /* MainVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainVC.m; sourceTree = "<group>"; };
 		DCA7F4441ADA9931000E38F5 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -58,8 +60,6 @@
 		DCDE51041A8792B500F54539 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		DCDE51061A88869B00F54539 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		DCE4B12B1AD6999300B3C75E /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
-		DCE4B12D1AD699A100B3C75E /* CBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBManager.h; sourceTree = "<group>"; };
-		DCE4B12E1AD699A100B3C75E /* CBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBManager.m; sourceTree = "<group>"; };
 		DCE4B12F1AD699A100B3C75E /* SERVICES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SERVICES.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,8 +133,8 @@
 			children = (
 				DCA7F4401ADA3F58000E38F5 /* MainVC.h */,
 				DCA7F4411ADA3F58000E38F5 /* MainVC.m */,
-				DCE4B12D1AD699A100B3C75E /* CBManager.h */,
-				DCE4B12E1AD699A100B3C75E /* CBManager.m */,
+				DC36D01D1E2DFDED00C59CE2 /* CBBManager.h */,
+				DC36D01C1E2DFDED00C59CE2 /* CBBManager.m */,
 				DCE4B12F1AD699A100B3C75E /* SERVICES.h */,
 				DCDE50D11A878B0000F54539 /* AppDelegate.h */,
 				DCDE50D21A878B0000F54539 /* AppDelegate.m */,
@@ -298,7 +298,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCE4B1301AD699A100B3C75E /* CBManager.m in Sources */,
+				DC36D01E1E2DFDED00C59CE2 /* CBBManager.m in Sources */,
 				DCDE50D61A878B0000F54539 /* BrainActivity.xcdatamodeld in Sources */,
 				DCDE50D31A878B0000F54539 /* AppDelegate.m in Sources */,
 				DCA7F4421ADA3F58000E38F5 /* MainVC.m in Sources */,
@@ -415,6 +415,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Sergey Dikarev (A2KE4XLMNK)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Sergey Dikarev (A2KE4XLMNK)";
+				DEVELOPMENT_TEAM = A2KE4XLMNK;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -429,14 +430,15 @@
 					"\"${PODS_ROOT}/Headers/Public/SDiPhoneVersion\"",
 				);
 				INFOPLIST_FILE = BrainActivity/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "964f7554-09d8-4858-862a-751ab9c1be26";
+				PROVISIONING_PROFILE = "6bdc7793-26cc-41d9-b454-e43f3e8091fa";
+				PROVISIONING_PROFILE_SPECIFIER = "Braniac AD-HOC";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "arm64 armv7";
 			};
@@ -450,6 +452,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Sergey Dikarev (A2KE4XLMNK)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Sergey Dikarev (A2KE4XLMNK)";
+				DEVELOPMENT_TEAM = A2KE4XLMNK;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -464,14 +467,15 @@
 					"\"${PODS_ROOT}/Headers/Public/SDiPhoneVersion\"",
 				);
 				INFOPLIST_FILE = BrainActivity/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "964f7554-09d8-4858-862a-751ab9c1be26";
+				PROVISIONING_PROFILE = "6bdc7793-26cc-41d9-b454-e43f3e8091fa";
+				PROVISIONING_PROFILE_SPECIFIER = "Braniac AD-HOC";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "arm64 armv7";
 			};

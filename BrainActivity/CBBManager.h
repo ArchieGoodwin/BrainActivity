@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol CBManagerDelegate;
+@protocol CBBManagerDelegate;
 
 typedef enum CBManagerMessage {
     CBManagerMessage_ScanningStarted = 0,
@@ -42,15 +42,15 @@ typedef enum CBManagerActivityZone {
 }
 CBManagerActivityZone;
 
-@interface CBManager : NSObject
+@interface CBBManager : NSObject
 
-@property (nonatomic,strong) id <CBManagerDelegate> delegate;
+@property (nonatomic,strong) id <CBBManagerDelegate> delegate;
 
 @property (strong, nonatomic, readonly) NSMutableData *rawdata;
 @property (strong, nonatomic, readonly) NSMutableArray *rawvalues;
 @property (strong, nonatomic, readonly) NSMutableArray *fftData;
 
-@property (nonatomic, assign, readonly) BOOL hasStarted;
+@property (nonatomic, assign) BOOL hasStarted;
 @property (nonatomic, assign, readonly) BOOL hasStartedIndicators;
 @property (nonatomic, assign, readonly) BOOL hasStartedProcessBasicValues;
 
@@ -61,7 +61,7 @@ CBManagerActivityZone;
 -(NSInteger)batteryLevel;
 @end
 
-@protocol CBManagerDelegate <NSObject>
+@protocol CBBManagerDelegate <NSObject>
 
 
 -(void)CB_dataUpdatedWithDictionary:(NSDictionary *)data;

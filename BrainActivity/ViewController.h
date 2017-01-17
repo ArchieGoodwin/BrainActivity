@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CorePlot/ios/CorePlot.h>
-#import "CBManager.h"
+#import "CBBManager.h"
 
 @interface ViewController : UIViewController <CPTPlotDataSource, CPTAxisDelegate>
 @property (strong, nonatomic) IBOutlet UILabel *ampl1;
@@ -30,7 +30,7 @@
 @property (strong, nonatomic) IBOutlet UIStepper *zoom;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *chooseCannelSegment;
 
-@property (strong, nonatomic) CBManager *manager;
+@property (strong, nonatomic) CBBManager *manager;
 
 -(void)defaultValues;
 //- (void)sendData ;

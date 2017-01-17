@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CBManager.h"
-@interface MainVC : UIViewController <CBManagerDelegate>
+#import "CBBManager.h"
+@interface MainVC : UIViewController <CBBManagerDelegate>
 @property (strong, nonatomic) IBOutlet UILabel *lblStatus;
 @property (strong, nonatomic) IBOutlet UIButton *btnShowPlot;
 @property (strong, nonatomic) IBOutlet UILabel *lblFreq;

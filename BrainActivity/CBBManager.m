@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Mobiletuts. All rights reserved.
 //
 
-#import "CBManager.h"
+#import "CBBManager.h"
 #import <CoreBluetooth/CoreBluetooth.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,8 +25,10 @@ const NSInteger step = 10;
 const NSInteger INDICATOR_PERIOD = 5;
 const NSInteger BASIC_VALUES_PERIOD = 10;
 
-@interface CBManager() < CBCentralManagerDelegate, CBPeripheralDelegate>
+@interface CBBManager() < CBCentralManagerDelegate, CBPeripheralDelegate>
+{
 
+}
 
 @property (strong, nonatomic) CBCentralManager *centralManager;
 @property (strong, nonatomic) CBPeripheral *discoveredPeripheral;
@@ -39,7 +41,7 @@ const NSInteger BASIC_VALUES_PERIOD = 10;
 
 @end
 
-@implementation CBManager
+@implementation CBBManager
 {
     NSInteger lastGreenValue;
     double lastGreenAverage;
